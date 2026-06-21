@@ -1,2 +1,4 @@
 # agency
-General LLM plans, tests, ideas and more
+General LLM configs, skills, plugins, agents etc.
+
+Will contain plans, tests, ideas and more
