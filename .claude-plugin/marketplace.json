@@ -13,9 +13,7 @@
 			"author": {
 				"name": "dotKnewt",
 				"email": "dotknewt@keemail.me"
-			}
-		},
-		{
+			},
 			"name": "ludus-cli",
 			"source": "./skills/ludus-cli",
 			"description": "Reference for Ludus CLI command syntax, flags, and workflows. Use this when users need to run CLI commands directly or when the Ludus API is unavailable.",
@@ -24,5 +22,6 @@
 				"name": "badsectorlabs",
 				"email": "badsectorlabs"
 			}
+		}
 	]
 }
