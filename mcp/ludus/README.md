@@ -43,15 +43,18 @@ env var inside the container (see `secrets:` in `ludus-catalog.yaml`).
 printf '%s' '<YOUR_LUDUS_API_KEY>' | docker mcp secret set ludus-mcp.api_key
 ```
 
-## 3. Point the catalog at your Ludus server
+## 3. Create a profile, attach the catalog, set the URL
 
-Set the `url` config variable (the gateway resolves it into `LUDUS_URL` via the
-`{{ludus-mcp.url}}` template in `ludus-catalog.yaml`):
+Config and server selection now live in a **profile** (the old
+`docker mcp config write` is gone). Create the profile, attach this file
+catalog to it, then set the `url` value — the gateway resolves it into
+`LUDUS_URL` via the `{{ludus-mcp.url}}` template in `ludus-catalog.yaml`:
 
 ```bash
-docker mcp config write 'ludus-mcp:
-  url: https://198.51.100.1:8080'
-docker mcp config read   # confirm the url is stored
+docker mcp profile create --name ludus
+docker mcp profile server add ludus --server file://ludus-catalog.yaml
+docker mcp profile config ludus --set ludus-mcp.url=https://198.51.100.1:8080
+docker mcp profile config ludus --get-all  # confirm the url is stored
 ```
 
 - Remote / LAN / cloud Ludus host → normal URL, e.g. `https://198.51.100.1:8080`.
@@ -59,17 +62,16 @@ docker mcp config read   # confirm the url is stored
   `https://host.docker.internal:8080` (a container cannot reach the host via
   `127.0.0.1`). Self-signed certs are fine — the client skips TLS verification.
 
-## 4. Run the gateway with this catalog
+## 4. Run the gateway with this profile
 
 ```bash
-docker mcp gateway run \
-  --catalog /Users/dotme/Code/agency/mcp/ludus/ludus-catalog.yaml \
-  --servers ludus-mcp
+docker mcp gateway run --profile ludus
 ```
 
-This is the verified, fully self-contained path: the gateway reads the local
-catalog, runs `ludus-mcp:local` (`--pull never`), injects the secret + URL, and
-exposes the 4 tools.
+The gateway loads the profile, runs `ludus-mcp:local` from the attached
+catalog, injects the secret + URL, and exposes the 4 tools. `--profile` is
+mutually exclusive with `--servers`/`--enable-all-servers`; the profile
+decides which servers are enabled.
 
 ## 5. Wire it to a client
 
@@ -77,18 +79,16 @@ Add the gateway as a stdio MCP server in Claude Code so it uses exactly this
 catalog:
 
 ```bash
-claude mcp add ludus -- \
-  docker mcp gateway run \
-  --catalog /Users/dotme/Code/agency/mcp/ludus/ludus-catalog.yaml \
-  --servers ludus-mcp
+claude mcp add ludus -- docker mcp gateway run --profile ludus
 ```
 
 ## 6. Verify end-to-end
 
 Ask the client to run `list_ludus_operations`. A populated operation list proves
 the container reached your Ludus server and the API key works. If it's empty or
-errors with a connection failure, re-check the `url` config (`docker mcp config
-read`; localhost → `host.docker.internal`) and that the secret is set.
+errors with a connection failure, re-check the `url` config (`docker mcp profile
+config ludus --get-all`; localhost → `host.docker.internal`) and that the
+secret is set.
 
 ---
 

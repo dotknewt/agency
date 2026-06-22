@@ -7,7 +7,9 @@ Node/TypeScript stdio MCP server wrapping the Ludus API. Build/test: `npm instal
 `ludus-catalog.yaml` is the gateway **file-catalog** (`registry:` map; flat `secrets`/`env`/`config`, where `config` is an array of objects). Run with `docker mcp gateway run --catalog`. It does not hardcode connection details:
 
 - `api_key` → **secret**: `docker mcp secret set ludus-mcp.api_key` → `LUDUS_API_KEY`
-- `url` → **config variable**: `docker mcp config write 'ludus-mcp:\n  url: https://HOST:8080'`, templated as `{{ludus-mcp.url}}` → `LUDUS_URL`
+- `url` → **profile config**: `docker mcp profile config <profile-id> --set ludus-mcp.url=https://HOST:8080`, templated as `{{ludus-mcp.url}}` → `LUDUS_URL`
+
+The old `docker mcp config write` is gone. The catalog is attached to a profile via `docker mcp profile server add <profile-id> --server file://ludus-catalog.yaml` and the gateway is run with `docker mcp gateway run --profile <profile-id>` (no `--catalog` flag needed; mutually exclusive with `--servers`).
 
 ## Gotcha
 
