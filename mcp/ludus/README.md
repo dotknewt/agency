@@ -16,7 +16,8 @@ as env vars / secrets, container isolation), see [README-docker.md](README-docke
 ```
 docker build -t ludus-mcp:local .
 printf '%s' '<API_KEY>' | docker mcp secret set ludus-mcp.api_key
-# edit LUDUS_URL in ludus-catalog.yaml, then:
+docker mcp config write 'ludus-mcp:
+  url: https://<LUDUS_HOST>:8080'
 docker mcp gateway run --catalog "$PWD/ludus-catalog.yaml" --servers ludus-mcp
 ```
 

@@ -7,9 +7,11 @@
 #   1. Build the image:  docker build -t ludus-mcp:local .
 #   2. Store the API key as a secret (keychain), mapped to LUDUS_API_KEY below:
 #        printf '%s' '<YOUR_LUDUS_API_KEY>' | docker mcp secret set ludus-mcp.api_key
-#   3. Edit LUDUS_URL below to point at your Ludus server. If Ludus runs on THIS
-#      machine's localhost, use host.docker.internal (not 127.0.0.1) so the
-#      container can reach it, e.g. https://host.docker.internal:8080
+#   3. Set the Ludus server URL as a config variable (resolved into LUDUS_URL):
+#        docker mcp config write 'ludus-mcp:
+#          url: https://198.51.100.1:8080'
+#      If Ludus runs on THIS machine's localhost, use host.docker.internal (not
+#      127.0.0.1) so the container can reach it, e.g. https://host.docker.internal:8080
 registry:
   ludus-mcp:
     description: Manage Ludus cyber ranges (deploy, template, snapshot, test) via the Ludus API.
@@ -31,7 +33,18 @@ registry:
         example: <YOUR_LUDUS_API_KEY>
     env:
       - name: LUDUS_URL
-        value: https://198.51.100.1:8080
+        value: '{{ludus-mcp.url}}'
+    config:
+      - name: ludus-mcp
+        description: Ludus server connection
+        type: object
+        properties:
+          url:
+            type: string
+          upload_dir:
+            type: string
+        required:
+          - url
     # Optional: to support call_ludus_api file-upload (multipart) operations,
     # mount a host directory and pass container-side paths (e.g. /uploads/x.tar.gz):
     # volumes:

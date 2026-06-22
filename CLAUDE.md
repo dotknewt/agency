@@ -8,10 +8,11 @@ Personal LLM configuration repository — skills, plugins, agents, and templates
 
 ## Repository layout
 
-All content lives under `claude/`:
+Top-level content directories:
 
-- `claude/skills/` — standalone skill definitions (each dir has a `SKILL.md` with YAML frontmatter + instructions)
-- `claude/plugins/` — distributable plugin bundles; the local marketplace (`/.claude-plugin/marketplace.json`) points here
+- `skills/` — standalone skill definitions (each dir has a `SKILL.md` with YAML frontmatter + instructions)
+- `plugins/` — distributable plugin bundles; the local marketplace (`/.claude-plugin/marketplace.json`) points here
+- `mcp/` — MCP servers and their packaging (e.g. `mcp/ludus`, a Node/TypeScript stdio server with a `Dockerfile` + Docker MCP Gateway catalog; see `mcp/ludus/README-docker.md`)
 - `claude/templates/` — reference material and copy-paste templates:
   - `project-directory.example/` — canonical `.claude/` layout (agents, commands, skills, hooks, settings)
   - `hooks/` — PreToolUse/PostToolUse shell scripts
@@ -23,7 +24,7 @@ All content lives under `claude/`:
 
 ## Skill format
 
-Skills follow the Agent Skills spec (`claude/skills/Skill-Specification.md`). Minimum required:
+Skills follow the Agent Skills spec (`skills/Skill-Specification.md`). Minimum required:
 
 ```yaml
 ---
@@ -39,7 +40,7 @@ Skills have no `model` field — model selection is session/project level (via `
 
 ## Plugin format
 
-Plugins are directories with a `.claude-plugin/plugin.json` manifest. The local marketplace at `/.claude-plugin/marketplace.json` registers them. The currently active plugin is `memory-management` (enabled via `.claude/settings.local.json`).
+Plugins are directories with a `.claude-plugin/plugin.json` manifest. The local marketplace at `/.claude-plugin/marketplace.json` registers entries: the `memory-management` plugin (`./plugins/memory-management`) and the `ludus-cli` skill exposed as a plugin source (`./skills/ludus-cli`). `memory-management` is enabled via `.claude/settings.local.json`.
 
 The `memory-management` plugin provides three tools:
 - `memory-management` skill — audits CLAUDE.md quality against the current codebase
@@ -48,7 +49,7 @@ The `memory-management` plugin provides three tools:
 
 ## No build or test step
 
-There is no top-level build, lint, or test command. Validation for skills can be done with `skills-ref validate ./skill-dir` (from the agentskills reference library) if installed.
+There is no top-level build, lint, or test command. Validation for skills can be done with `skills-ref validate ./skill-dir` (from the agentskills reference library) if installed. Exception: `mcp/ludus` is a real Node/TypeScript project — `cd mcp/ludus && npm install && npm run build && npm test`.
 
 ## .claudeignore
 

@@ -46,7 +46,14 @@ printf '%s' '<YOUR_LUDUS_API_KEY>' | docker mcp secret set ludus-mcp.api_key
 
 ## 3. Point the catalog at your Ludus server
 
-Edit `LUDUS_URL` in `ludus-catalog.yaml` to your Ludus host.
+Set the `url` config variable (the gateway resolves it into `LUDUS_URL` via the
+`{{ludus-mcp.url}}` template in `ludus-catalog.yaml`):
+
+```bash
+docker mcp config write 'ludus-mcp:
+  url: https://198.51.100.1:8080'
+docker mcp config read   # confirm the url is stored
+```
 
 - Remote / LAN / cloud Ludus host → normal URL, e.g. `https://198.51.100.1:8080`.
 - Ludus on **this machine's** localhost → use `host.docker.internal`, e.g.
@@ -89,8 +96,8 @@ docker mcp client connect claude-desktop   # or: claude-code, cursor, vscode, ..
 
 Ask the client to run `list_ludus_operations`. A populated operation list proves
 the container reached your Ludus server and the API key works. If it's empty or
-errors with a connection failure, re-check `LUDUS_URL` (localhost →
-`host.docker.internal`) and that the secret is set.
+errors with a connection failure, re-check the `url` config (`docker mcp config
+read`; localhost → `host.docker.internal`) and that the secret is set.
 
 ---
 
