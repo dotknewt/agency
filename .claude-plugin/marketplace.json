@@ -7,13 +7,22 @@
 	"plugins": [
 		{
 			"name": "memory-management",
-			"source": "./claude/plugins/memory-management",
+			"source": "./plugins/memory-management",
 			"description": "Tools to maintain and improve CLAUDE.md files - audit quality, capture session learnings, and keep project memory current.",
 			"version": "1.0.1",
 			"author": {
 				"name": "dotKnewt",
 				"email": "dotknewt@keemail.me"
 			}
-		}
+		},
+		{
+			"name": "ludus-cli",
+			"source": "./skills/ludus-cli",
+			"description": "Reference for Ludus CLI command syntax, flags, and workflows. Use this when users need to run CLI commands directly or when the Ludus API is unavailable.",
+			"version": "1.0.0",
+			"author": {
+				"name": "badsectorlabs",
+				"email": "badsectorlabs"
+			}
 	]
 }

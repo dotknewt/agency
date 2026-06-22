@@ -1,0 +1,11 @@
+node_modules/
+build/
+*.tgz
+package/
+.git/
+.gitignore
+CLAUDE.md
+README.md
+README-docker.md
+server.yaml
+src/**/*.test.ts

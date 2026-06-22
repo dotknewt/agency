@@ -1,6 +1,6 @@
 {
   "name": "memory-management",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Tools to maintain and improve memory.md files - audit quality, capture session learnings, and keep project memory current.",
   "author": {
     "name": "dotKnewt",
