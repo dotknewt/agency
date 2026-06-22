@@ -6,6 +6,4 @@ package/
 .gitignore
 CLAUDE.md
 README.md
-README-docker.md
-server.yaml
 src/**/*.test.ts

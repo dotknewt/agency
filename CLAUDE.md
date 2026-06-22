@@ -12,7 +12,7 @@ Top-level content directories:
 
 - `skills/` — standalone skill definitions (each dir has a `SKILL.md` with YAML frontmatter + instructions)
 - `plugins/` — distributable plugin bundles; the local marketplace (`/.claude-plugin/marketplace.json`) points here
-- `mcp/` — MCP servers and their packaging (e.g. `mcp/ludus`, a Node/TypeScript stdio server with a `Dockerfile` + Docker MCP Gateway catalog; see `mcp/ludus/README-docker.md`)
+- `mcp/` — MCP servers and their packaging (e.g. `mcp/ludus`, a Node/TypeScript stdio server with a `Dockerfile` + Docker MCP Gateway catalog; see `mcp/ludus/README.md`)
 - `claude/templates/` — reference material and copy-paste templates:
   - `project-directory.example/` — canonical `.claude/` layout (agents, commands, skills, hooks, settings)
   - `hooks/` — PreToolUse/PostToolUse shell scripts
