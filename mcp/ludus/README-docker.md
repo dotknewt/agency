@@ -12,7 +12,6 @@ Files in this directory that make it work:
 | `Dockerfile` | Multi-stage build → non-root stdio image (`node build/index.js`) |
 | `.dockerignore` | Keeps the build context clean / forces an in-image build |
 | `ludus-catalog.yaml` | A local "file catalog" the gateway reads directly |
-| `server.yaml` | Catalog entry in Docker MCP registry schema (for the OCI/registry path) |
 
 Prerequisites: Docker Desktop with the MCP Toolkit (`docker mcp` CLI available).
 
@@ -74,22 +73,14 @@ exposes the 4 tools.
 
 ## 5. Wire it to a client
 
-**Claude Code (recommended for this local-catalog setup)** — add the gateway as
-a stdio MCP server so it uses exactly this catalog:
+Add the gateway as a stdio MCP server in Claude Code so it uses exactly this
+catalog:
 
 ```bash
 claude mcp add ludus -- \
   docker mcp gateway run \
   --catalog /Users/dotme/Code/agency/mcp/ludus/ludus-catalog.yaml \
   --servers ludus-mcp
-```
-
-**Claude Desktop / other clients via the Docker MCP Toolkit** — if instead you
-register the server into the Desktop-managed Toolkit (see "OCI catalog" below),
-connect a supported client with:
-
-```bash
-docker mcp client connect claude-desktop   # or: claude-code, cursor, vscode, ...
 ```
 
 ## 6. Verify end-to-end
@@ -115,27 +106,8 @@ pass the container-side path. Uncomment and edit the `volumes:` block in
 
 Then pass paths like `/uploads/role.tar.gz` to `call_ludus_api`.
 
-## Alternative: OCI catalog (Desktop Toolkit)
-
-Instead of a file catalog you can register the image into an OCI catalog managed
-by the Toolkit:
-
-```bash
-docker mcp catalog create ludus --title "Ludus" --server docker://ludus-mcp:local
-# inspect / manage:
-docker mcp catalog ls
-docker mcp catalog show ludus
-```
-
-The `server.yaml` here is written in the docker/mcp-registry schema (secrets,
-`env` ← `{{ludus-mcp.url}}` parameter, optional `upload_dir` volume) so it also
-serves as the basis for a future submission to the official registry — that path
-additionally requires the `Dockerfile` to live at the root of the upstream repo
-(`gitlab.com/badsectorlabs/ludus-mcp`) with a pinned `source.commit`.
-
 ## Reset
 
 ```bash
 docker mcp secret rm ludus-mcp.api_key
-docker mcp catalog reset      # only if you created an OCI catalog
 ```
