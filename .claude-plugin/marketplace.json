@@ -111,6 +111,16 @@
 				"name": "dotKnewt",
 				"email": "dotknewt@keemail.me"
 			}
+		},
+		{
+			"name": "github-scaffold",
+			"source": "./plugins/github-scaffold",
+			"description": "Scaffold GitHub repo metadata. /github-scaffold lists available subtasks; /create-issue-template walks through producing a YAML issue form in .github/ISSUE_TEMPLATE/.",
+			"version": "1.0.0",
+			"author": {
+				"name": "dotKnewt",
+				"email": "dotknewt@keemail.me"
+			}
 		}
 	]
 }
