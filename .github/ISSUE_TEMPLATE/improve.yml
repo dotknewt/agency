@@ -1,0 +1,65 @@
+name: "Improve Existing Artifact"
+description: Request improvements to an existing agent, skill, plugin, hook, or MCP server.
+title: "[improve] "
+labels:
+  - "action:improve"
+body:
+  - type: dropdown
+    id: artifact-type
+    attributes:
+      label: Artifact type
+      description: Selecting this adds the corresponding `type:*` label automatically.
+      options:
+        - agent
+        - skill
+        - plugin
+        - hook
+        - mcp
+    validations:
+      required: true
+
+  - type: input
+    id: target
+    attributes:
+      label: Target artifact
+      description: "Path or name (e.g. `skills/range-config`, `mcp/ludus`, `.claude/agents/code-reviewer.md`)."
+      placeholder: skills/my-skill
+    validations:
+      required: true
+
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: One paragraph — what should be better after this work is done.
+    validations:
+      required: true
+
+  - type: textarea
+    id: scope
+    attributes:
+      label: What's wrong / what to improve
+      description: |
+        Describe the current pain point in detail. Include:
+        - Specific failure modes or edge cases (with examples if possible)
+        - Metrics or observations that surfaced the issue
+        - Which parts of the artifact are in scope (don't touch the rest)
+    validations:
+      required: true
+
+  - type: textarea
+    id: acceptance-criteria
+    attributes:
+      label: Acceptance criteria
+      description: Bullet checklist the implementing agent can self-verify against.
+      placeholder: |
+        - [ ] The described failure mode no longer reproduces
+        - [ ] Existing behavior outside the stated scope is unchanged
+    validations:
+      required: true
+
+  - type: textarea
+    id: references
+    attributes:
+      label: References
+      description: Optional.

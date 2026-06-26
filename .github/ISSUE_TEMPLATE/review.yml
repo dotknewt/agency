@@ -1,0 +1,79 @@
+name: "Review Existing Artifact"
+description: Request a structured review of an existing agent, skill, plugin, hook, or MCP server.
+title: "[review] "
+labels:
+  - "action:review"
+body:
+  - type: dropdown
+    id: artifact-type
+    attributes:
+      label: Artifact type
+      description: Selecting this adds the corresponding `type:*` label automatically.
+      options:
+        - agent
+        - skill
+        - plugin
+        - hook
+        - mcp
+    validations:
+      required: true
+
+  - type: input
+    id: target
+    attributes:
+      label: Target artifact
+      description: "Path or name (e.g. `skills/range-config`, `mcp/ludus`)."
+      placeholder: skills/my-skill
+    validations:
+      required: true
+
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: One paragraph — what you want the reviewer to assess.
+    validations:
+      required: true
+
+  - type: textarea
+    id: scope
+    attributes:
+      label: Review focus
+      description: |
+        What dimensions should the review cover? Examples:
+        - Correctness: does it do what it claims?
+        - Trigger precision: will it activate at the wrong times?
+        - Security: does it expose sensitive data or allow injection?
+        - Completeness: are edge cases handled?
+        - Maintainability: is the structure clear enough for a future agent to extend?
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: review-dimensions
+    attributes:
+      label: Checklist for reviewer
+      options:
+        - label: Correctness — behavior matches the stated description
+        - label: Trigger precision — activates when expected, not when unexpected
+        - label: Security — no injection vectors, no hardcoded secrets
+        - label: Completeness — edge cases and failure modes covered
+        - label: Maintainability — clear structure, comments where non-obvious
+
+  - type: textarea
+    id: acceptance-criteria
+    attributes:
+      label: Acceptance criteria
+      description: When is this review done?
+      placeholder: |
+        - [ ] Review findings posted as a comment on this issue
+        - [ ] Each finding classified as: blocker / suggestion / FYI
+        - [ ] Follow-up improvement issues filed for any blockers
+    validations:
+      required: true
+
+  - type: textarea
+    id: references
+    attributes:
+      label: References
+      description: Optional.

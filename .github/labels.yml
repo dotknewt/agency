@@ -1,0 +1,37 @@
+# Artifact type labels — blue-purple family
+- name: "type:agent"
+  color: "7C3AED"
+  description: "Relates to a Claude Code subagent definition"
+
+- name: "type:skill"
+  color: "5B21B6"
+  description: "Relates to a Claude Code skill (SKILL.md)"
+
+- name: "type:plugin"
+  color: "4338CA"
+  description: "Relates to a distributable plugin bundle"
+
+- name: "type:hook"
+  color: "2563EB"
+  description: "Relates to a Claude Code lifecycle hook"
+
+- name: "type:mcp"
+  color: "0284C7"
+  description: "Relates to a Model Context Protocol server"
+
+# Action labels — teal-green family
+- name: "action:create"
+  color: "059669"
+  description: "Create a new artifact from scratch"
+
+- name: "action:improve"
+  color: "0D9488"
+  description: "Fix or improve an existing artifact"
+
+- name: "action:review"
+  color: "0891B2"
+  description: "Review an existing artifact for quality or correctness"
+
+- name: "action:extend"
+  color: "16A34A"
+  description: "Add a new capability to an existing artifact"

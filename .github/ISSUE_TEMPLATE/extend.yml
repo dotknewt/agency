@@ -1,0 +1,74 @@
+name: "Extend Existing Artifact"
+description: Request a new capability added to an existing agent, skill, plugin, hook, or MCP server.
+title: "[extend] "
+labels:
+  - "action:extend"
+body:
+  - type: dropdown
+    id: artifact-type
+    attributes:
+      label: Artifact type
+      description: Selecting this adds the corresponding `type:*` label automatically.
+      options:
+        - agent
+        - skill
+        - plugin
+        - hook
+        - mcp
+    validations:
+      required: true
+
+  - type: input
+    id: target
+    attributes:
+      label: Target artifact
+      description: "Path or name (e.g. `skills/range-config`, `mcp/ludus`)."
+      placeholder: skills/my-skill
+    validations:
+      required: true
+
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: One paragraph — what new capability this adds and why it belongs in the existing artifact rather than a new one.
+    validations:
+      required: true
+
+  - type: textarea
+    id: motivation
+    attributes:
+      label: Motivation
+      description: What use case is currently unhandled? Why extend rather than create a new artifact?
+    validations:
+      required: true
+
+  - type: textarea
+    id: scope
+    attributes:
+      label: Capability to add
+      description: |
+        Describe the new capability in detail:
+        - What inputs does it take?
+        - What outputs / side effects does it produce?
+        - How should it interact with existing behavior?
+        - Any constraints (size limit, tool access, etc.)?
+    validations:
+      required: true
+
+  - type: textarea
+    id: acceptance-criteria
+    attributes:
+      label: Acceptance criteria
+      placeholder: |
+        - [ ] New capability works as described
+        - [ ] Existing behavior is unchanged
+        - [ ] SKILL.md / agent definition stays under size limits
+    validations:
+      required: true
+
+  - type: textarea
+    id: references
+    attributes:
+      label: References
+      description: Optional.
