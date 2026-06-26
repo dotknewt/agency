@@ -55,8 +55,8 @@ See [references/migration.md](references/migration.md) for full recipes and rati
 
 When a directory has `CLAUDE.md` but no `AGENTS.md`:
 
-- **(A) Rename** — `git mv CLAUDE.md AGENTS.md`. Single file. Use when the user is moving off Claude Code or doesn't rely on Claude Code's auto-load of `CLAUDE.md`.
-- **(B) Migrate + stub** *(recommended when Claude Code is still in active use)* — move content into `AGENTS.md`, then replace `CLAUDE.md` with a `@AGENTS.md` stub so Claude Code keeps auto-loading the same content. One source of truth, both worlds happy.
+- **(A) Migrate + stub** *(recommended)* — move content into `AGENTS.md`, then replace `CLAUDE.md` with a `@AGENTS.md` stub so Claude Code keeps auto-loading the same content. One source of truth, both worlds happy.
+- **(B) Rename** — `git mv CLAUDE.md AGENTS.md`. Single file. Use when the user is moving off Claude Code or doesn't rely on Claude Code's auto-load of `CLAUDE.md`.
 
 Show both. Explain the trade-off. **End with an explicit "Option A or B?" question** before doing anything.
 
@@ -118,7 +118,7 @@ For each memory file, score against the rubric. See [references/quality-criteria
 After the report, propose edits and ask for confirmation. Two kinds of changes:
 
 1. **Content updates** — additions, corrections, deletions inside a memory file.
-2. **Migration edits** — `git mv CLAUDE.md AGENTS.md` and (option B only) writing the stub.
+2. **Migration edits** — `git mv CLAUDE.md AGENTS.md` and (option A only) writing the stub.
 
 See [references/update-guidelines.md](references/update-guidelines.md) for what to add and what to skip.
 
@@ -147,15 +147,7 @@ See [references/update-guidelines.md](references/update-guidelines.md) for what 
 
 **Why:** Switch to the cross-agent standard. Pick one strategy and apply it repo-wide.
 
-**Option A — Rename only**
-
-```bash
-git mv CLAUDE.md AGENTS.md
-```
-
-Trade-off: Claude Code no longer auto-loads the file. Fine if you're moving off Claude Code; a foot-gun otherwise.
-
-**Option B — Migrate + stub** *(recommended when Claude Code is still in use)*
+**Option A — Migrate + stub** *(recommended)*
 
 ```bash
 git mv CLAUDE.md AGENTS.md
@@ -169,6 +161,14 @@ Then write `CLAUDE.md`:
 ```
 
 Claude Code auto-loads the stub → `@`-references inline `AGENTS.md` → same content. Other agents read `AGENTS.md` directly.
+
+**Option B — Rename only**
+
+```bash
+git mv CLAUDE.md AGENTS.md
+```
+
+Trade-off: Claude Code no longer auto-loads the file. Fine if you're moving off Claude Code; a foot-gun otherwise.
 
 **Which option do you want?** (A or B)
 ````
