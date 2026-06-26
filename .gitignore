@@ -51,3 +51,5 @@ Temporary Items
 
 # Skill-creator eval workspaces (per-skill scratchpads: fixtures, baselines, iteration outputs)
 *-workspace/
+# 
+settings.local.json
