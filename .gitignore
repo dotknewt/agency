@@ -48,3 +48,6 @@ Temporary Items
 # Ignore all local history of files
 .history
 .ionide
+
+# Skill-creator eval workspaces (per-skill scratchpads: fixtures, baselines, iteration outputs)
+*-workspace/

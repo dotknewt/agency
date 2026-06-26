@@ -1,4 +1,6 @@
-# CLAUDE.md Quality Criteria
+# AGENTS.md Quality Criteria
+
+Applies to `AGENTS.md` (canonical) and legacy `CLAUDE.md`. The rubric is filename-agnostic.
 
 ## Scoring Rubric
 
@@ -88,7 +90,7 @@
 
 ## Assessment Process
 
-1. Read the CLAUDE.md file completely
+1. Read the memory file (`AGENTS.md` or `CLAUDE.md`) completely
 2. Cross-reference with actual codebase:
    - Run documented commands (mentally or actually)
    - Check if referenced files exist
@@ -106,4 +108,5 @@
 - Copy-paste from templates without customization
 - Generic advice not specific to the project
 - "TODO" items never completed
-- Duplicate info across multiple CLAUDE.md files
+- Duplicate info across multiple memory files
+- A non-stub `CLAUDE.md` sitting alongside an `AGENTS.md` (drift — two sources of truth)

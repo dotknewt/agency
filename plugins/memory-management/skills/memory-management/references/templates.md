@@ -1,11 +1,13 @@
-# CLAUDE.md Templates
+# AGENTS.md Templates
+
+These templates apply to `AGENTS.md` (the canonical filename) and to legacy `CLAUDE.md` files that haven't been migrated yet. The structure is the same either way — only the filename differs.
 
 ## Key Principles
 
-- **Concise**: Dense, human-readable content; one line per concept when possible
-- **Actionable**: Commands should be copy-paste ready
-- **Project-specific**: Document patterns unique to this project, not generic advice
-- **Current**: All info should reflect actual codebase state
+- **Concise**: dense, human-readable; one line per concept when possible
+- **Actionable**: commands should be copy-paste ready
+- **Project-specific**: document patterns unique to this project, not generic advice
+- **Current**: all info should reflect actual codebase state
 
 ---
 
@@ -31,7 +33,7 @@ Document the essential commands for working with the project.
 
 ### Architecture
 
-Describe the project structure so Claude understands where things live.
+Describe the project structure so agents know where things live.
 
 ```markdown
 ## Architecture
@@ -46,7 +48,7 @@ Describe the project structure so Claude understands where things live.
 
 ### Key Files
 
-List important files that Claude should know about.
+List important files that agents should know about.
 
 ```markdown
 ## Key Files
@@ -243,11 +245,24 @@ For packages within a monorepo or distinct modules.
 
 ---
 
+## Template: Claude Code stub (Option B migration)
+
+When migrating from `CLAUDE.md` to `AGENTS.md` while keeping Claude Code auto-load, the `CLAUDE.md` stub is exactly:
+
+```markdown
+<!-- DO NOT EDIT — see AGENTS.md -->
+@AGENTS.md
+```
+
+Two lines. No content. See [migration.md](migration.md).
+
+---
+
 ## Update Principles
 
-When updating any CLAUDE.md:
+When updating any memory file:
 
-1. **Be specific**: Use actual file paths, real commands from this project
-2. **Be current**: Verify info against the actual codebase
-3. **Be brief**: One line per concept when possible
-4. **Be useful**: Would this help a new Claude session understand the project?
+1. **Be specific**: use actual file paths, real commands from this project
+2. **Be current**: verify info against the actual codebase
+3. **Be brief**: one line per concept when possible
+4. **Be useful**: would this help a new agent session understand the project?

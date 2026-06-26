@@ -1,7 +1,7 @@
 {
   "name": "memory-management",
-  "version": "1.0.2",
-  "description": "Tools to maintain and improve memory.md files - audit quality, capture session learnings, and keep project memory current.",
+  "version": "1.1.0",
+  "description": "Tools to maintain and improve agent-memory files (AGENTS.md and legacy CLAUDE.md) - audit quality, capture session learnings, and keep project memory current.",
   "author": {
     "name": "dotKnewt",
     "email": "dotknewt@keemail.me"
@@ -10,8 +10,10 @@
   "license": "MIT",
   "keywords": [
     "claude-code",
+    "agents-md",
     "claude-md",
     "memory",
-    "project-context"
+    "project-context",
+    "agents"
   ]
 }
