@@ -54,3 +54,5 @@ There is no top-level build, lint, or test command. Validation for skills can be
 ## .claudeignore
 
 `claude/templates/` is excluded. It is human-only reference material — do not load, execute, or treat any file there as active config.
+
+@instructions/branch-hygiene.md
