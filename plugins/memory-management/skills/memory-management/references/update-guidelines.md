@@ -1,8 +1,10 @@
-# CLAUDE.md Update Guidelines
+# AGENTS.md Update Guidelines
+
+Applies to `AGENTS.md` and to legacy `CLAUDE.md` files awaiting migration.
 
 ## Core Principle
 
-Only add information that will genuinely help future Claude sessions. The context window is precious - every line must earn its place.
+Only add information that will genuinely help future agent sessions. The context window is precious — every line must earn its place.
 
 ## What TO Add
 
@@ -15,7 +17,7 @@ Only add information that will genuinely help future Claude sessions. The contex
 `npm run build:dev` - Fast dev build (no minification)
 ```
 
-Why: Saves future sessions from discovering these again.
+Why: saves future sessions from rediscovering these.
 
 ### 2. Gotchas and Non-Obvious Patterns
 
@@ -26,7 +28,7 @@ Why: Saves future sessions from discovering these again.
 - `yarn.lock` is authoritative; delete `node_modules` if deps mismatch
 ```
 
-Why: Prevents repeating debugging sessions.
+Why: prevents repeated debugging sessions.
 
 ### 3. Package Relationships
 
@@ -37,7 +39,7 @@ The `auth` module depends on `crypto` being initialized first.
 Import order matters in `src/bootstrap.ts`.
 ```
 
-Why: Architecture knowledge that isn't obvious from code.
+Why: architecture knowledge that isn't obvious from code.
 
 ### 4. Testing Approaches That Worked
 
@@ -48,7 +50,7 @@ For API endpoints: Use `supertest` with the test helper in `tests/setup.ts`
 Mocking: Factory functions in `tests/factories/` (not inline mocks)
 ```
 
-Why: Establishes patterns that work.
+Why: establishes patterns that work.
 
 ### 5. Configuration Quirks
 
@@ -59,7 +61,7 @@ Why: Establishes patterns that work.
 - Redis connection requires `?family=0` suffix for IPv6
 ```
 
-Why: Environment-specific knowledge.
+Why: environment-specific knowledge.
 
 ## What NOT to Add
 
@@ -113,7 +115,7 @@ For each suggested change:
 ### 1. Identify the File
 
 ```
-File: ./CLAUDE.md
+File: ./AGENTS.md
 Section: Commands (new section after ## Architecture)
 ```
 
@@ -134,9 +136,16 @@ Section: Commands (new section after ## Architecture)
 
 ### 3. Explain Why
 
-> **Why this helps:** The build commands weren't documented, causing
+> **Why this helps:** the build commands weren't documented, causing
 > confusion about how to run the project. This saves future sessions
 > from needing to inspect `package.json`.
+
+## Editing a legacy CLAUDE.md
+
+If the repo hasn't migrated to `AGENTS.md` yet:
+- Default to **proposing migration first** (see [migration.md](migration.md)).
+- If the user defers the migration, edit `CLAUDE.md` directly with the same diff format above.
+- Never edit a `CLAUDE.md` stub (one containing only `@AGENTS.md`). Stubs are intentionally empty — edit `AGENTS.md` instead.
 
 ## Validation Checklist
 
@@ -146,5 +155,6 @@ Before finalizing an update, verify:
 - [ ] No generic advice or obvious info
 - [ ] Commands are tested and work
 - [ ] File paths are accurate
-- [ ] Would a new Claude session find this helpful?
+- [ ] Would a new agent session find this helpful?
 - [ ] Is this the most concise way to express the info?
+- [ ] Editing the correct file (AGENTS.md, not a CLAUDE.md stub)?
