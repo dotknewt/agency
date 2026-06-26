@@ -16,6 +16,16 @@ Open a PR when:
 - **The correct approach is uncertain** — if the implementation required non-obvious choices, a PR surfaces those choices for inspection.
 - **The change touches shared infrastructure** — workflow files that affect CI/CD for the whole repo, `marketplace.json`, global settings.
 
+## Local-only commits (no push)
+
+A local commit without a push is acceptable **only as a checkpoint** — i.e., the work is intentionally incomplete and the next step is running tests or continuing implementation before the result is ready to share.
+
+In all other cases, a local commit is not a finished state:
+
+- **Working on a tracked issue** — push the branch and open a PR. The issue isn't closed until the work is visible and merged.
+- **Standalone improvement (no issue)** — push to main if the change is small and low-risk; open a PR if review is warranted. Either way, push.
+- **End of a work session** — push. A commit that exists only locally is invisible to collaborators and lost if the machine is wiped.
+
 ## Default rule
 
 When in doubt: **commit directly** for instructions and config; **open a PR** for anything that changes how an agent, skill, plugin, or MCP server behaves.
