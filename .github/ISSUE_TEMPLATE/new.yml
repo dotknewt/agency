@@ -1,0 +1,77 @@
+name: "New Artifact"
+description: Request a new agent, skill, plugin, hook, MCP server, or instruction file.
+title: "[new] "
+labels:
+  - "action:new"
+body:
+  - type: dropdown
+    id: artifact-type
+    attributes:
+      label: Artifact type
+      options:
+        - agent
+        - skill
+        - plugin
+        - hook
+        - mcp
+        - instruction
+    validations:
+      required: true
+
+  - type: input
+    id: name
+    attributes:
+      label: Name
+      description: "Lowercase, hyphens only. Becomes the directory or file name (e.g. `my-skill`, `my-agent`, `AGENTS.md`)."
+      placeholder: my-artifact-name
+    validations:
+      required: true
+
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: One paragraph — what this artifact does and when it should be used.
+    validations:
+      required: true
+
+  - type: textarea
+    id: motivation
+    attributes:
+      label: Motivation
+      description: What problem does this solve? Why is this artifact type the right fit?
+    validations:
+      required: true
+
+  - type: textarea
+    id: implementation-sketch
+    attributes:
+      label: Implementation sketch
+      description: |
+        Draft enough detail for the implementing agent to get started. Include what's relevant for your artifact type:
+
+        **agent** — system-prompt sketch, allowed tool set (read-only / standard / full / custom), trigger description (when to spawn it).
+        **skill** — SKILL.md trigger description (≤10 sentences, phrase patterns that activate it), example trigger phrases, instructions sketch (body stays ≤500 lines; heavy docs go in `references/`).
+        **plugin** — what it bundles (skills / commands / agents / hooks / MCP config), each bundled artifact's name and purpose, whether to register in `/.claude-plugin/marketplace.json`.
+        **hook** — event type (PreToolUse / PostToolUse / Stop / Notification / SubagentStop), tool matcher (e.g. `Bash`, `Edit`, `*`), command sketch, target settings file (project / user / local).
+        **mcp** — transport (stdio / SSE), language/runtime, packaging target (npx / Docker / Docker MCP Gateway), tools/resources list with name + description + key params, env var names needed (never values).
+        **instruction** — which file (e.g. `CLAUDE.md`, `AGENTS.md`, `.claude/agents/foo.md`), scope (project root / subdirectory / user-global `~/.claude/`), what content to add or replace and why.
+    validations:
+      required: true
+
+  - type: textarea
+    id: acceptance-criteria
+    attributes:
+      label: Acceptance criteria
+      placeholder: |
+        - [ ] Artifact exists at expected path
+        - [ ] Behaves as described in at least one real session
+        - [ ] No regressions to adjacent artifacts
+    validations:
+      required: true
+
+  - type: textarea
+    id: references
+    attributes:
+      label: References
+      description: Links to related issues, files, external docs, or prior art. Optional.

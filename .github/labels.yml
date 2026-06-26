@@ -20,7 +20,7 @@
   description: "Relates to a Model Context Protocol server"
 
 # Action labels — teal-green family
-- name: "action:create"
+- name: "action:new"
   color: "059669"
   description: "Create a new artifact from scratch"
 
@@ -28,10 +28,15 @@
   color: "0D9488"
   description: "Fix or improve an existing artifact"
 
-- name: "action:review"
+- name: "action:revise"
   color: "0891B2"
   description: "Review an existing artifact for quality or correctness"
 
 - name: "action:extend"
   color: "16A34A"
   description: "Add a new capability to an existing artifact"
+
+# Artifact type labels — blue-purple family (continued)
+- name: "type:instruction"
+  color: "1E40AF"
+  description: "Relates to a project-memory instruction file (CLAUDE.md / AGENTS.md)"

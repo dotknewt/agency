@@ -1,8 +1,8 @@
-name: "Review Existing Artifact"
-description: Request a structured review of an existing agent, skill, plugin, hook, or MCP server.
-title: "[review] "
+name: "Revise Existing Artifact"
+description: Request a structured review of an existing agent, skill, plugin, hook, MCP server, or instruction file.
+title: "[revise] "
 labels:
-  - "action:review"
+  - "action:revise"
 body:
   - type: dropdown
     id: artifact-type
@@ -15,6 +15,7 @@ body:
         - plugin
         - hook
         - mcp
+        - instruction
     validations:
       required: true
 

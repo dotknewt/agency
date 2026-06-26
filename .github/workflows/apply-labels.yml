@@ -1,0 +1,73 @@
+name: Apply type and action labels from dropdowns
+
+on:
+  issues:
+    types: [opened, edited]
+
+jobs:
+  label:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+      - name: Extract labels from issue body
+        id: extract
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const body = context.payload.issue.body || '';
+
+            // Issue forms render dropdowns as: "### Label\n\nvalue"
+            const typeMatch = body.match(/###\s+Artifact type\s*\n+\s*(agent|skill|plugin|hook|mcp|instruction)\b/i);
+            core.setOutput('type', typeMatch ? typeMatch[1].toLowerCase() : '');
+
+            const actionMatch = body.match(/###\s+Action\s*\n+\s*(improve|extend|new|revise)\b/i);
+            core.setOutput('action', actionMatch ? actionMatch[1].toLowerCase() : '');
+
+      - name: Apply labels
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const type = '${{ steps.extract.outputs.type }}';
+            const action = '${{ steps.extract.outputs.action }}';
+            const existing = context.payload.issue.labels.map(l => l.name);
+
+            const allTypeLabels = ['type:agent','type:skill','type:plugin','type:hook','type:mcp','type:instruction'];
+            const allActionLabels = ['action:new','action:improve','action:extend','action:revise'];
+
+            const toAdd = [];
+            const toRemove = [];
+
+            if (type) {
+              const typeLabel = `type:${type}`;
+              for (const stale of allTypeLabels.filter(l => l !== typeLabel && existing.includes(l))) {
+                toRemove.push(stale);
+              }
+              if (!existing.includes(typeLabel)) toAdd.push(typeLabel);
+            }
+
+            if (action) {
+              const actionLabel = `action:${action}`;
+              for (const stale of allActionLabels.filter(l => l !== actionLabel && existing.includes(l))) {
+                toRemove.push(stale);
+              }
+              if (!existing.includes(actionLabel)) toAdd.push(actionLabel);
+            }
+
+            for (const name of toRemove) {
+              await github.rest.issues.removeLabel({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                name,
+              });
+            }
+
+            if (toAdd.length) {
+              await github.rest.issues.addLabels({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                labels: toAdd,
+              });
+            }

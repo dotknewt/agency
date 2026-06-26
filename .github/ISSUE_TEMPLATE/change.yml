@@ -1,0 +1,70 @@
+name: "Change Existing Artifact"
+description: Improve or extend an existing agent, skill, plugin, hook, MCP server, or instruction file.
+title: "[change] "
+body:
+  - type: dropdown
+    id: action
+    attributes:
+      label: Action
+      options:
+        - improve
+        - extend
+    validations:
+      required: true
+
+  - type: dropdown
+    id: artifact-type
+    attributes:
+      label: Artifact type
+      options:
+        - agent
+        - skill
+        - plugin
+        - hook
+        - mcp
+        - instruction
+    validations:
+      required: true
+
+  - type: input
+    id: target
+    attributes:
+      label: Target artifact
+      description: "Path or name (e.g. `skills/range-config`, `mcp/ludus`, `CLAUDE.md`)."
+      placeholder: skills/my-skill
+    validations:
+      required: true
+
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: One paragraph — what should be different after this work is done.
+    validations:
+      required: true
+
+  - type: textarea
+    id: scope
+    attributes:
+      label: Scope
+      description: |
+        **improve** — Describe the current problem in detail: specific failure modes, edge cases (with examples), which parts of the artifact are in scope (don't touch the rest).
+        **extend** — Describe the new capability: what inputs it takes, what it produces, how it interacts with existing behavior, and why it belongs here rather than as a new artifact.
+    validations:
+      required: true
+
+  - type: textarea
+    id: acceptance-criteria
+    attributes:
+      label: Acceptance criteria
+      placeholder: |
+        - [ ] Described issue no longer reproduces (improve) / new capability works as described (extend)
+        - [ ] Existing behavior outside stated scope is unchanged
+    validations:
+      required: true
+
+  - type: textarea
+    id: references
+    attributes:
+      label: References
+      description: Optional.
