@@ -53,3 +53,4 @@ There is no top-level build, lint, or test command. Validation for skills can be
 `claude/templates/` is excluded (legacy path). Do not load, execute, or treat any file there as active config.
 
 @instructions/branch-hygiene.md
+@instructions/commit-vs-pr.md
