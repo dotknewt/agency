@@ -48,9 +48,10 @@ The `memory-management` plugin provides three tools:
 
 | Plugin | Version | Purpose | Primary entry points |
 |---|---|---|---|
-| `agency-development` | unversioned | Build new plugins, agents, skills, commands, hooks | `plugin-validator` agent, `agent-creator` agent, `/create-plugin` command |
+| `agency-development` | 1.0.0 | Build new plugins, agents, skills, commands, hooks | `plugin-validator` agent, `agent-creator` agent, `/create-plugin` command, `/create-skill` command |
 | `github-scaffold` | 1.1.1 | Scaffold `.github/` metadata; branch hygiene; issue/CI workflows | `/github-scaffold` command, `branch-warden` agent, `issue-filer` agent |
-| `memory-management` | 1.1.0 | Audit and maintain AGENTS.md | `/revise-memory`, `/restructure-memory`, `memory-management` skill |
+| `memory-management` | 1.2.0 | Audit and maintain AGENTS.md; nudges `/revise-memory` on busy sessions | `/revise-memory`, `/restructure-memory`, `memory-management` skill |
+| `hooks-toolkit` | 1.0.0 | Composable safety hooks — force-push guard, secret scanner, manifest validators, branch nudges | `hooks/hooks.json`, `/install-hook` command; validators reused by CI |
 
 Branch lifecycle rules and commit-vs-PR guidance are loaded via the `@`-references below.
 
