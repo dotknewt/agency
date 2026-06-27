@@ -44,6 +44,16 @@ The `memory-management` plugin provides three tools:
 - `/revise-memory` command — captures session learnings into AGENTS.md
 - `/restructure-memory` command — moves content to the right depth in the AGENTS.md hierarchy
 
+## Key plugins
+
+| Plugin | Version | Purpose | Primary entry points |
+|---|---|---|---|
+| `agency-development` | unversioned | Build new plugins, agents, skills, commands, hooks | `plugin-validator` agent, `agent-creator` agent, `/create-plugin` command |
+| `github-scaffold` | 1.1.1 | Scaffold `.github/` metadata; branch hygiene; issue/CI workflows | `/github-scaffold` command, `branch-warden` agent, `issue-filer` agent |
+| `memory-management` | 1.1.0 | Audit and maintain AGENTS.md | `/revise-memory`, `/restructure-memory`, `memory-management` skill |
+
+Branch lifecycle rules and commit-vs-PR guidance are loaded via the `@`-references below.
+
 ## No build or test step
 
 There is no top-level build, lint, or test command. Validation for skills can be done with `skills-ref validate ./skill-dir` (from the agentskills reference library) if installed. Exception: `mcp/ludus` is a real Node/TypeScript project — `cd mcp/ludus && npm install && npm run build && npm test`.
