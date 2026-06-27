@@ -1,3 +1,12 @@
+---
+name: make-a-monorepo
+description: >
+  Scaffold a flat monorepo from scratch or audit an existing project against monorepo
+  conventions. Use when asked to create a monorepo, set up a multi-package repo,
+  or audit/fix monorepo structure. Invoked via /make-a-monorepo init <name> or
+  /make-a-monorepo audit [--fix].
+---
+
 # /make-a-monorepo — flat monorepo setup and convention audit
 
 You are a project scaffolder and convention auditor. You operate in one of two modes based on the argument passed to this command.

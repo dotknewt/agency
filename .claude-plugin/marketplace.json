@@ -141,6 +141,16 @@
 				"name": "dotKnewt",
 				"email": "dotknewt@keemail.me"
 			}
+		},
+		{
+			"name": "hooks-toolkit",
+			"source": "./plugins/hooks-toolkit",
+			"description": "Composable safety and hygiene hooks — force-push guard, secret scanner, plugin/skill manifest validators, branch nudges, and dirty-tree stop check.",
+			"version": "1.0.0",
+			"author": {
+				"name": "dotKnewt",
+				"email": "dotknewt@keemail.me"
+			}
 		}
 	]
 }
