@@ -131,6 +131,16 @@
 				"name": "dotKnewt",
 				"email": "dotknewt@keemail.me"
 			}
+		},
+		{
+			"name": "context-engineering",
+			"source": "./skills/context-engineering",
+			"description": "Memory and context engineering concepts for LLMs — context window management, RAG patterns, prompt injection attacks (red-team), and defenses. Covers three angles: supporting development, exploiting, and defending.",
+			"version": "1.0.0",
+			"author": {
+				"name": "dotKnewt",
+				"email": "dotknewt@keemail.me"
+			}
 		}
 	]
 }
