@@ -1,9 +1,9 @@
 ---
-description: Scaffold a GitHub issue form (YAML schema) in .github/ISSUE_TEMPLATE/
+description: Scaffold one or more GitHub issue forms (YAML schema) in .github/ISSUE_TEMPLATE/
 allowed-tools: Read, Write, Bash, Glob
 ---
 
-Walk the user through creating a single GitHub issue form using the YAML issue-forms schema (`name`, `description`, `title`, `labels`, `body`). Model output on `.github/ISSUE_TEMPLATE/new.yml` in the current repo if it exists, otherwise use the canonical structure described here.
+Walk the user through creating one or more GitHub issue forms using the YAML issue-forms schema (`name`, `description`, `title`, `labels`, `body`). Collect all templates before writing anything; write them all in a single approval step at the end. Model output on `.github/ISSUE_TEMPLATE/new.yml` in the current repo if it exists, otherwise use the canonical structure described here.
 
 ## Step 1: Locate `.github/ISSUE_TEMPLATE/`
 
@@ -33,7 +33,11 @@ contact_links:
 
 Show the proposed file in a fenced block and ask the user to approve or skip. Do not write yet.
 
-## Step 3: Gather template metadata
+## Step 3: Gather all templates (loop)
+
+Repeat this loop until the user says they have no more templates to add.
+
+### 3a — Gather template metadata
 
 Ask the user (single conversational turn) for:
 
@@ -43,7 +47,7 @@ Ask the user (single conversational turn) for:
 - **`labels`** — optional comma-separated list (e.g. `"bug, needs-triage"`)
 - **filename** — default: kebab-case of `name` + `.yml` (e.g. `bug-report.yml`)
 
-## Step 4: Gather fields
+### 3b — Gather fields for this template
 
 Ask the user to describe the fields they want. For each field, collect:
 
@@ -59,16 +63,25 @@ Ask the user to describe the fields they want. For each field, collect:
 
 Suggest a `markdown` type for a section separator or header if the user wants one.
 
-## Step 5: Render and validate
+### 3c — Ask whether to add another template
 
-Print the full YAML in a fenced block. Before showing it, verify locally:
+After gathering fields for this template, ask: **"Add another template, or done?"**
+
+- If another: return to 3a for the next template.
+- If done: proceed to Step 4.
+
+Keep an internal list of all templates collected so far (name, filename, YAML content).
+
+## Step 4: Render and validate all templates
+
+For each template collected in Step 3, print its full YAML in a labeled fenced block (`## <filename>`). Before showing each one, verify:
 
 - Top-level keys present: `name`, `description`, `body`
 - Each `body` entry has `type`, `id` (or omit `id` only for `markdown`), `attributes.label`
 - `dropdown` entries have at least one option
-- All `id` values match `^[a-z][a-z0-9_-]*$` and are unique across the template
+- All `id` values match `^[a-z][a-z0-9_-]*$` and are unique within the template
 
-Surface any violations as a list before the YAML preview.
+Surface any violations as a list before the relevant YAML preview.
 
 Example shape (matches this repo's `.github/ISSUE_TEMPLATE/new.yml`):
 
@@ -99,15 +112,17 @@ body:
       required: true
 ```
 
-## Step 6: Approval gate, then write
+## Step 5: Approval gate, then write all
 
-Ask the user to confirm before writing any files. On approval:
+Show a summary list of all files that will be written (template files + `config.yml` if approved). Ask the user to confirm once before writing anything.
+
+On approval, write all files in one pass:
 
 1. Create `.github/ISSUE_TEMPLATE/` if absent:
    ```bash
    mkdir -p .github/ISSUE_TEMPLATE
    ```
-2. Write the template file.
+2. Write each template file.
 3. Write `config.yml` if approved in Step 2.
 
 Confirm each path written.
