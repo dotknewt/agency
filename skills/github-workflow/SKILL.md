@@ -102,15 +102,23 @@ git checkout pr-1-branch
 git checkout -b pr-2-branch
 ```
 
-Understand the recovery path before you do this. After PR #1 squash-merges:
+Understand the recovery path before you do this. **Before** following branch-hygiene.md cleanup, save `pr-1-branch`'s tip SHA — you need it as the exclusion point for the rebase:
+
+```bash
+git rev-parse pr-1-branch   # save this SHA, e.g. abc1234
+```
+
+After PR #1 squash-merges:
 
 ```bash
 git checkout main && git pull --ff-only origin main
-git rebase --onto main pr-1-branch pr-2-branch
+git rebase --onto main abc1234 pr-2-branch   # abc1234 = saved SHA of pr-1-branch tip
 git push --force-with-lease origin pr-2-branch
 ```
 
-`--onto main` replays only the commits unique to `pr-2-branch` (not those already in `pr-1-branch`) onto the new `main`. This keeps the history linear and the squash-merge of PR #2 clean.
+`--onto main abc1234` replays only the commits unique to `pr-2-branch` (i.e., above `abc1234`) onto the new `main`. If you already deleted `pr-1-branch` without saving the SHA, recover it with `git reflog | grep pr-1-branch`.
+
+This keeps the history linear and the squash-merge of PR #2 clean.
 
 ### Rebase-on-main cadence
 
