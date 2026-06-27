@@ -131,6 +131,16 @@
 				"name": "dotKnewt",
 				"email": "dotknewt@keemail.me"
 			}
+		},
+		{
+			"name": "github-workflow",
+			"source": "./skills/github-workflow",
+			"description": "CI defaults (push trigger, concurrency, path filters) and chained/stacked PR sequencing guidance — when to stack vs. sequence, overlap detection, rebase cadence, and squash-merge tangle recovery.",
+			"version": "1.0.0",
+			"author": {
+				"name": "dotKnewt",
+				"email": "dotknewt@keemail.me"
+			}
 		}
 	]
 }
