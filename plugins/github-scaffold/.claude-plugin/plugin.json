@@ -1,5 +1,5 @@
 {
 	"name": "github-scaffold",
 	"version": "1.0.0",
-	"description": "Scaffold GitHub repo metadata — issue templates, and (future) PR templates and workflows."
+	"description": "Scaffold GitHub repo metadata — issue templates and CI workflows. /github-scaffold picks the task; /create-issue-template and /scaffold-ci-workflow run the subtasks."
 }
