@@ -116,7 +116,7 @@
 			"name": "github-scaffold",
 			"source": "./plugins/github-scaffold",
 			"description": "Scaffold GitHub repo metadata — issue templates and CI workflows. /github-scaffold picks the task; /create-issue-template and /scaffold-ci-workflow run the subtasks.",
-			"version": "1.1.0",
+			"version": "1.1.1",
 			"author": {
 				"name": "dotKnewt",
 				"email": "dotknewt@keemail.me"
