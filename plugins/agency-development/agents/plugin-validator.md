@@ -31,7 +31,7 @@ description: |
   </commentary>
   assistant: "I'll use the plugin-validator agent to check the manifest."
   </example>
-model: inherit
+model: haiku
 color: yellow
 tools: ["Read", "Grep", "Glob", "Bash"]
 ---
