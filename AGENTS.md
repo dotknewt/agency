@@ -13,9 +13,9 @@ Top-level content directories:
 - `skills/` — standalone skill definitions (each dir has a `SKILL.md` with YAML frontmatter + instructions)
 - `plugins/` — distributable plugin bundles; the local marketplace (`/.claude-plugin/marketplace.json`) points here
 - `mcp/` — MCP servers and their packaging (e.g. `mcp/ludus`, a Node/TypeScript stdio server with a `Dockerfile` + Docker MCP Gateway catalog; see `mcp/ludus/README.md`)
-- `agents/` — reusable subagent definitions (e.g. `issue-filer.md`)
 - `templates/` — drop-in Claude Code settings variants: `settings.hooked.json`, `settings.unhooked.json`
-- `instructions/` — short, focused instruction snippets meant to be `@`-included from memory files (e.g. `branch-hygiene.md`)
+
+Plugins bundle their own agents and instructions under `plugins/<name>/agents/` and `plugins/<name>/instructions/` respectively.
 
 ## Skill format
 
@@ -52,5 +52,5 @@ There is no top-level build, lint, or test command. Validation for skills can be
 
 `claude/templates/` is excluded (legacy path). Do not load, execute, or treat any file there as active config.
 
-@instructions/branch-hygiene.md
-@instructions/commit-vs-pr.md
+@plugins/github-scaffold/instructions/branch-hygiene.md
+@plugins/github-scaffold/instructions/commit-vs-pr.md
