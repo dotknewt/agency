@@ -35,6 +35,16 @@ git branch --show-current   # confirm this matches your task
 gh pr list --state merged --head $(git branch --show-current)  # if this returns anything, the branch's PR has merged — do not add work here
 ```
 
+## One branch per initiative, not per file
+
+A branch represents an **initiative** — a goal, a theme, a feature — not a single file or commit. Multiple related changes belong on one branch as one PR:
+
+- Switching three agents from `inherit` to `haiku` → one branch, one PR.
+- Adding a new skill plus its README entry plus a marketplace registration → one branch, one PR.
+- Fixing a typo across four instruction files → one branch, one PR (or a direct commit).
+
+Split into separate branches only when the changes are genuinely independent (different motivation, different reviewers, different revert boundary).
+
 ## Check open PRs before branching
 
 Run this before creating a new branch:
@@ -75,6 +85,36 @@ git branch -r --merged origin/main | grep -vE 'origin/(main|HEAD)' || true
 ```
 
 These are candidates for `git push origin --delete <branch>`. Skip any branch that belongs to an open PR (rare, but possible in draft state).
+
+---
+
+## Staging branches for multi-PR initiatives
+
+Most work belongs on a single branch off `main`. But when an initiative is genuinely too large for one PR — e.g. building out a new plugin in 3–4 reviewable chunks — use a **staging branch** to keep the pieces serialized and avoid tangling with unrelated PRs to `main`.
+
+**Pattern:**
+```
+main
+ └── feat/<initiative>            ← staging branch, base for sub-PRs
+      ├── feat/<initiative>-part1 ← PR into staging
+      ├── feat/<initiative>-part2 ← PR into staging (base = part1 if dependent)
+      └── feat/<initiative>-part3
+```
+
+1. Branch `feat/<initiative>` from a freshly-pulled `main`.
+2. Branch each sub-PR from the staging branch (or from the previous sub-PR if sequentially dependent — see "Check open PRs before branching" for the stacked-PR pattern).
+3. Open each sub-PR with `base: feat/<initiative>`, **not** `main`. Use squash-merge into the staging branch.
+4. Periodically rebase the staging branch onto `main` to pick up unrelated merges.
+5. When all sub-PRs have landed in staging, open one final PR from `feat/<initiative>` → `main`.
+
+**When to use:**
+- The initiative requires ≥2 PRs that share context (e.g. a new plugin scaffolded across commands, agents, skills, and docs).
+- Sub-PRs would be hard to review or revert if landed directly on `main` interleaved with unrelated work.
+
+**When not to use:**
+- A single PR can carry the whole initiative — staging adds overhead, not safety.
+- The pieces are independent and could merge in any order — open separate branches off `main`.
+- Only one in-flight branch exists and there is no file overlap with open PRs.
 
 ---
 
