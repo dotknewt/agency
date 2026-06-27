@@ -1,5 +1,5 @@
 {
 	"name": "github-scaffold",
-	"version": "1.0.0",
-	"description": "Scaffold GitHub repo metadata — issue templates and CI workflows. /github-scaffold picks the task; /create-issue-template and /scaffold-ci-workflow run the subtasks."
+	"version": "1.1.0",
+	"description": "Scaffold GitHub repo metadata — issue templates and CI workflows. /github-scaffold picks the task; /create-issue-template and /scaffold-ci-workflow run the subtasks. Includes the branch-warden agent for automated branch prep and cleanup, and the issue-filer agent for lightweight issue creation."
 }

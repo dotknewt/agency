@@ -9,4 +9,4 @@ description: >
   lists available subtasks and dispatches to the right one.
 ---
 
-Run `/github-scaffold` to pick a subtask. The umbrella command lists what is currently available; today that is `/create-issue-template`.
+Run `/github-scaffold` to pick a subtask. The umbrella command lists what is currently available; today that is `/create-issue-template` (supports creating multiple templates in one run).
