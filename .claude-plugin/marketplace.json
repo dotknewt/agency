@@ -141,6 +141,16 @@
 				"name": "dotKnewt",
 				"email": "dotknewt@keemail.me"
 			}
+		},
+		{
+			"name": "naming-toolkit",
+			"source": "./plugins/naming-toolkit",
+			"description": "Conjures memorable, brandable name shortlists for any project by reading its code and folding in optional themes. One agent: name-alchemist.",
+			"version": "0.1.0",
+			"author": {
+				"name": "dotKnewt",
+				"email": "dotknewt@keemail.me"
+			}
 		}
 	]
 }
