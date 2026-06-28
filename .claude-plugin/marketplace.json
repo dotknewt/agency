@@ -126,7 +126,7 @@
 			"name": "agency-development",
 			"source": "./plugins/agency-development",
 			"description": "Local fork of Anthropic's plugin-dev toolkit — skills, agents, and commands for building Claude Code plugins.",
-			"version": "1.0.0",
+			"version": "1.0.1",
 			"author": {
 				"name": "dotKnewt",
 				"email": "dotknewt@keemail.me"
