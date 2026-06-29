@@ -51,3 +51,17 @@ For each move or removal:
 
 Ask the user to confirm before editing any files.
 
+## Step 5: Refresh the nudge sentinel
+
+After applying changes, run:
+
+```bash
+_proj="${CLAUDE_PROJECT_DIR:-.}"
+_hash=$(printf '%s' "$_proj" | md5sum | cut -c1-8)
+_dirty=$(git -C "$_proj" status --porcelain 2>/dev/null | wc -l | tr -d ' ')
+_recent=$(git -C "$_proj" diff --name-only "@{2 hours ago}" HEAD 2>/dev/null | wc -l | tr -d ' ' || echo 0)
+mkdir -p /tmp/revise-memory-nudge
+printf '%s' "$((_dirty + _recent))" > "/tmp/revise-memory-nudge/$_hash"
+```
+
+This prevents the stop hook from re-nudging after this command touches AGENTS.md.

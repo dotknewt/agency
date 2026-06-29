@@ -52,7 +52,7 @@ When a change deviates from `origin/main`, bump the version in **both** `plugins
 |---|---|---|---|
 | `agency-development` | 1.0.2 | Build new plugins, agents, skills, commands, hooks | `plugin-validator` agent, `agent-creator` agent, `/create-plugin` command, `/create-skill` command, `/create-agent` command, `/pin-plugins` command |
 | `github-scaffold` | 1.1.1 | Scaffold `.github/` metadata; branch hygiene; issue/CI workflows | `/github-scaffold` command, `branch-warden` agent, `issue-filer` agent |
-| `memory-management` | 1.3.0 | Audit and maintain AGENTS.md; nudges `/revise-memory` on busy sessions | `/revise-memory`, `/restructure-memory`, `memory-management` skill |
+| `memory-management` | 1.2.3 | Audit and maintain AGENTS.md; nudges `/revise-memory` on busy sessions | `/revise-memory`, `/restructure-memory`, `memory-management` skill |
 | `hooks-toolkit` | 0.1.0 | Composable safety hooks — force-push guard, secret scanner, manifest validators | `hooks/hooks.json`, `/install-hook` command |
 | `ember` | 1.0.2 | AI partner agent — carries fire from person to person for AI onboarding | `Ember` agent |
 | `naming-toolkit` | 0.1.0 | Conjures memorable, brandable name shortlists by reading a project and applying ≥4 naming techniques | `name-alchemist` agent |
