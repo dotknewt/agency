@@ -57,14 +57,14 @@ When a change deviates from `origin/main`, bump the version in **both** `plugins
 |---|---|---|---|
 | `agency-development` | 1.0.2 | Build new plugins, agents, skills, commands, hooks | `plugin-validator` agent, `agent-creator` agent, `/create-plugin` command, `/create-skill` command, `/create-agent` command, `/pin-plugins` command |
 | `github-scaffold` | 1.1.1 | Scaffold `.github/` metadata; branch hygiene; issue/CI workflows | `/github-scaffold` command, `branch-warden` agent, `issue-filer` agent |
-| `memory-management` | 1.2.0 | Audit and maintain AGENTS.md; nudges `/revise-memory` on busy sessions | `/revise-memory`, `/restructure-memory`, `memory-management` skill |
+| `memory-management` | 1.2.1 | Audit and maintain AGENTS.md; nudges `/revise-memory` on busy sessions | `/revise-memory`, `/restructure-memory`, `memory-management` skill |
 | `naming-toolkit` | 0.1.0 | Conjures memorable, brandable name shortlists by reading a project and applying ≥4 naming techniques | `name-alchemist` agent |
 
 Branch lifecycle rules and commit-vs-PR guidance are loaded via the `@`-references below.
 
 ## No build or test step
 
-There is no top-level build, lint, or test command. Validation for skills can be done with `skills-ref validate ./skill-dir` (from the agentskills reference library) if installed. Exception: `mcp/ludus` is a real Node/TypeScript project — `cd mcp/ludus && npm install && npm run build && npm test`.
+There is no top-level build, lint, or test command. Validation for skills can be done with `skills-ref validate ./skill-dir` (from the agentskills reference library) if installed.
 
 ## .claudeignore
 
