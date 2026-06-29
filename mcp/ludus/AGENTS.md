@@ -1,3 +1,7 @@
+## Build
+
+`npm install && npm run build` — required before running or testing. Tests: `npm test` (Node built-in runner; `*.test.ts` files).
+
 # mcp/ludus
 
 Node/TypeScript stdio MCP server wrapping the Ludus API. Build/test: `npm install && npm run build && npm test` (tests use node's built-in runner; `*.test.ts`).

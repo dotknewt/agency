@@ -37,12 +37,7 @@ Skills have no `model` field — model selection is session/project level (via `
 
 Plugins are directories with a `.claude-plugin/plugin.json` manifest. The local marketplace at `/.claude-plugin/marketplace.json` registers full plugins under `./plugins/` plus many skills exposed as plugin sources under `./skills/`. Check `marketplace.json` for the current list — it changes as new skills/plugins are added.
 
-Enable plugins per project in `.claude/settings.local.json` (or globally in `~/.claude/settings.json`).
-
-The `memory-management` plugin provides three tools:
-- `memory-management` skill — audits AGENTS.md quality against the current codebase
-- `/revise-memory` command — captures session learnings into AGENTS.md
-- `/restructure-memory` command — moves content to the right depth in the AGENTS.md hierarchy
+Enable plugins at project scope in `.claude/settings.json` (committed, follows the repo). Personal overrides go in `.claude/settings.local.json` (gitignored). Global defaults live in `~/.claude/settings.json`.
 
 ## Plugin versioning
 
@@ -58,6 +53,8 @@ When a change deviates from `origin/main`, bump the version in **both** `plugins
 | `agency-development` | 1.0.2 | Build new plugins, agents, skills, commands, hooks | `plugin-validator` agent, `agent-creator` agent, `/create-plugin` command, `/create-skill` command, `/create-agent` command, `/pin-plugins` command |
 | `github-scaffold` | 1.1.1 | Scaffold `.github/` metadata; branch hygiene; issue/CI workflows | `/github-scaffold` command, `branch-warden` agent, `issue-filer` agent |
 | `memory-management` | 1.2.2 | Audit and maintain AGENTS.md; nudges `/revise-memory` on busy sessions | `/revise-memory`, `/restructure-memory`, `memory-management` skill |
+| `hooks-toolkit` | 0.1.0 | Composable safety hooks — force-push guard, secret scanner, manifest validators | `hooks/hooks.json`, `/install-hook` command |
+| `ember` | 1.0.2 | AI partner agent — carries fire from person to person for AI onboarding | `Ember` agent |
 | `naming-toolkit` | 0.1.0 | Conjures memorable, brandable name shortlists by reading a project and applying ≥4 naming techniques | `name-alchemist` agent |
 
 Branch lifecycle rules and commit-vs-PR guidance are loaded via the `@`-references below.
@@ -69,6 +66,10 @@ There is no top-level build, lint, or test command. Validation for skills can be
 ## .claudeignore
 
 `claude/templates/` is excluded (legacy path). Do not load, execute, or treat any file there as active config.
+
+## Subdirectory context
+
+- MCP servers: @mcp/ludus/AGENTS.md
 
 @plugins/github-scaffold/instructions/branch-hygiene.md
 @plugins/github-scaffold/instructions/commit-vs-pr.md
