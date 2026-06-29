@@ -126,7 +126,7 @@
 			"name": "agency-development",
 			"source": "./plugins/agency-development",
 			"description": "Local fork of Anthropic's plugin-dev toolkit — skills, agents, and commands for building Claude Code plugins.",
-			"version": "1.0.0",
+			"version": "1.0.2",
 			"author": {
 				"name": "dotKnewt",
 				"email": "dotknewt@keemail.me"
@@ -141,6 +141,25 @@
 				"name": "dotKnewt",
 				"email": "dotknewt@keemail.me"
 			}
-		}
+		},
+		{
+			"name": "naming-toolkit",
+			"source": "./plugins/naming-toolkit",
+			"description": "Conjures memorable, brandable name shortlists for any project by reading its code and folding in optional themes. One agent: name-alchemist.",
+			"version": "0.1.0",
+			"author": {
+				"name": "dotKnewt",
+				"email": "dotknewt@keemail.me"
+			}
+		},
+    {
+			"name": "hooks-toolkit",
+			"source": "./plugins/hooks-toolkit",
+			"description": "Composable safety and hygiene hooks — force-push guard, secret scanner, plugin/skill manifest validators, branch nudges, and dirty-tree stop check.",
+			"version": "0.1.0",
+			"author": {
+				"name": "dotKnewt",
+				"email": "dotknewt@keemail.me"
+			}
 	]
 }
