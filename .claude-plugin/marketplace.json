@@ -8,8 +8,8 @@
 		{
 			"name": "memory-management",
 			"source": "./plugins/memory-management",
-			"description": "Tools to maintain and improve CLAUDE.md files - audit quality, capture session learnings, and keep project memory current.",
-			"version": "1.0.1",
+			"description": "Tools to maintain and improve agent-memory files (AGENTS.md and legacy CLAUDE.md) — audit quality, capture session learnings, and keep project memory current.",
+			"version": "1.2.0",
 			"author": {
 				"name": "dotKnewt",
 				"email": "dotknewt@keemail.me"
@@ -116,7 +116,7 @@
 			"name": "github-scaffold",
 			"source": "./plugins/github-scaffold",
 			"description": "Scaffold GitHub repo metadata — issue templates and CI workflows. /github-scaffold picks the task; /create-issue-template and /scaffold-ci-workflow run the subtasks.",
-			"version": "1.1.0",
+			"version": "1.1.1",
 			"author": {
 				"name": "dotKnewt",
 				"email": "dotknewt@keemail.me"
@@ -126,7 +126,7 @@
 			"name": "agency-development",
 			"source": "./plugins/agency-development",
 			"description": "Local fork of Anthropic's plugin-dev toolkit — skills, agents, and commands for building Claude Code plugins.",
-			"version": "1.0.0",
+			"version": "1.0.1",
 			"author": {
 				"name": "dotKnewt",
 				"email": "dotknewt@keemail.me"
@@ -143,14 +143,23 @@
 			}
 		},
 		{
-			"name": "hooks-toolkit",
-			"source": "./plugins/hooks-toolkit",
-			"description": "Composable safety and hygiene hooks — force-push guard, secret scanner, plugin/skill manifest validators, branch nudges, and dirty-tree stop check.",
-			"version": "1.0.0",
+			"name": "naming-toolkit",
+			"source": "./plugins/naming-toolkit",
+			"description": "Conjures memorable, brandable name shortlists for any project by reading its code and folding in optional themes. One agent: name-alchemist.",
+			"version": "0.1.0",
 			"author": {
 				"name": "dotKnewt",
 				"email": "dotknewt@keemail.me"
 			}
-		}
+		},
+    {
+			"name": "hooks-toolkit",
+			"source": "./plugins/hooks-toolkit",
+			"description": "Composable safety and hygiene hooks — force-push guard, secret scanner, plugin/skill manifest validators, branch nudges, and dirty-tree stop check.",
+			"version": "0.1.0",
+			"author": {
+				"name": "dotKnewt",
+				"email": "dotknewt@keemail.me"
+			}
 	]
 }

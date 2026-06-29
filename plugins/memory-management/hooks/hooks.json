@@ -1,0 +1,16 @@
+{
+  "description": "Nudge the user to run /revise-memory when the session has touched many files.",
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash ${CLAUDE_PLUGIN_ROOT}/scripts/revise-memory-nudge.sh",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  }
+}
