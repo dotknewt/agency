@@ -6,6 +6,26 @@ Applies to `AGENTS.md` and to legacy `CLAUDE.md` files awaiting migration.
 
 Only add information that will genuinely help future agent sessions. The context window is precious — every line must earn its place.
 
+## Placement Rule: Root vs. Subdirectory
+
+Before adding content to root AGENTS.md, ask: **does this apply repo-wide, or only when working under a specific directory?**
+
+| Content type | Where it goes |
+|---|---|
+| Repo layout, plugin format, global build commands | Root `AGENTS.md` |
+| Commands/gotchas for one package or server | `<that-dir>/AGENTS.md` |
+| Detail that only matters inside `mcp/ludus/` | `mcp/ludus/AGENTS.md` |
+
+When a subdirectory has its own AGENTS.md, add a reference in root so agents know where to look:
+
+```markdown
+## Subdirectory context
+- MCP servers: @mcp/ludus/AGENTS.md
+- Skills: @skills/AGENTS.md
+```
+
+This defers loading the content until an agent opens files in that area — subdirectory-specific detail doesn't bloat sessions that don't need it.
+
 ## What TO Add
 
 ### 1. Commands/Workflows Discovered

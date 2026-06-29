@@ -191,6 +191,8 @@ See [references/templates.md](references/templates.md) for `AGENTS.md` templates
 6. **Undocumented gotchas** — non-obvious patterns not captured
 7. **Legacy `CLAUDE.md` without `AGENTS.md`** — migration candidate
 8. **Drift between `CLAUDE.md` and `AGENTS.md`** — two sources of truth
+9. **Root AGENTS.md contains subdirectory-specific detail** — if content only applies when working under a specific directory (e.g. `mcp/`, `packages/api/`), it belongs in that directory's own AGENTS.md, not root. Root detail bloats every session regardless of task.
+10. **Root AGENTS.md missing `@subdir/AGENTS.md` references** — when a subdirectory has its own AGENTS.md, root should reference it with `@subdir/AGENTS.md` so agents know where to look without loading the content until they're in that directory.
 
 ## User Tips to Share
 
@@ -209,6 +211,7 @@ When presenting recommendations, remind the user:
 - Actionable commands that can be copy-pasted
 - Project-specific patterns, not generic advice
 - Non-obvious gotchas and warnings
+- **Right depth**: root AGENTS.md = orientation only. Detail that only applies under a subdirectory belongs in `<subdir>/AGENTS.md`. Root references subdirectories with `@subdir/AGENTS.md` — this defers loading until an agent actually works in that area.
 
 **Recommended sections** (use only what's relevant):
 - Commands (build, test, dev, lint)

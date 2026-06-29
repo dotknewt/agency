@@ -110,3 +110,5 @@ Applies to `AGENTS.md` (canonical) and legacy `CLAUDE.md`. The rubric is filenam
 - "TODO" items never completed
 - Duplicate info across multiple memory files
 - A non-stub `CLAUDE.md` sitting alongside an `AGENTS.md` (drift — two sources of truth)
+- Root AGENTS.md containing detail specific to one subdirectory (e.g. build commands for a single package, gotchas for one MCP server) — move it to that directory's own AGENTS.md
+- Root AGENTS.md not referencing subdirectory AGENTS.md files with `@subdir/AGENTS.md` when those files exist
