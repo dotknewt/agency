@@ -177,6 +177,17 @@ Trade-off: Claude Code no longer auto-loads the file. Fine if you're moving off 
 
 After user approval, apply edits with `Edit` / `Write` / `Bash` (for `git mv`). Preserve existing content structure; do not reorder sections gratuitously.
 
+Then refresh the nudge sentinel so the stop hook doesn't re-fire just because this skill touched AGENTS.md:
+
+```bash
+_proj="${CLAUDE_PROJECT_DIR:-.}"
+_hash=$(printf '%s' "$_proj" | md5sum | cut -c1-8)
+_dirty=$(git -C "$_proj" status --porcelain 2>/dev/null | wc -l | tr -d ' ')
+_recent=$(git -C "$_proj" diff --name-only "@{2 hours ago}" HEAD 2>/dev/null | wc -l | tr -d ' ' || echo 0)
+mkdir -p /tmp/revise-memory-nudge
+printf '%s' "$((_dirty + _recent))" > "/tmp/revise-memory-nudge/$_hash"
+```
+
 ## Templates
 
 See [references/templates.md](references/templates.md) for `AGENTS.md` templates by project type.

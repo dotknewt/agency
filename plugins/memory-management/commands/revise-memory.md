@@ -63,13 +63,17 @@ For each addition:
 
 Ask before editing. Only apply changes the user approves.
 
-## Step 6: Clear the nudge sentinel
+## Step 6: Refresh the nudge sentinel
 
 After applying changes, run:
 
 ```bash
-project_hash=$(printf '%s' "${CLAUDE_PROJECT_DIR:-.}" | md5sum | cut -c1-8)
-rm -f "/tmp/revise-memory-nudge/$project_hash"
+_proj="${CLAUDE_PROJECT_DIR:-.}"
+_hash=$(printf '%s' "$_proj" | md5sum | cut -c1-8)
+_dirty=$(git -C "$_proj" status --porcelain 2>/dev/null | wc -l | tr -d ' ')
+_recent=$(git -C "$_proj" diff --name-only "@{2 hours ago}" HEAD 2>/dev/null | wc -l | tr -d ' ' || echo 0)
+mkdir -p /tmp/revise-memory-nudge
+printf '%s' "$((_dirty + _recent))" > "/tmp/revise-memory-nudge/$_hash"
 ```
 
-This resets the stop-hook nudge counter so the hook can fire again if the session continues touching more files.
+This updates the sentinel to the current file count so the stop hook won't re-nudge just because this command touched AGENTS.md. It will still nudge if the session goes on to touch significantly more files.
