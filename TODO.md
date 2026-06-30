@@ -1,5 +1,5 @@
-# memory-management
-- additional command that performs memory-management only adding changes that surfaced in the last 5 commits
+# instruction-management
+- additional command that performs instruction-management only adding changes that surfaced in the last 5 commits
 # new skill: dockerize-mcp-server
 - convert/transform/adapt/create a dockerized version of an MCP server. example context:
 ```

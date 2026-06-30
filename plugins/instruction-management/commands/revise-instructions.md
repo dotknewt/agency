@@ -3,9 +3,9 @@ description: Update AGENTS.md (or legacy CLAUDE.md) with learnings from this ses
 allowed-tools: Read, Edit, Write, Glob, Bash
 ---
 
-Review this session for learnings about working with this codebase. Update the agent-memory file with context that would help future sessions be more effective.
+Review this session for learnings about working with this codebase. Update the instruction file with context that would help future sessions be more effective.
 
-This command writes to `AGENTS.md` by default. If the repo only has `CLAUDE.md`, surface the migration option (see `skills/memory-management/references/migration.md`) before adding new content there.
+This command writes to `AGENTS.md` by default. If the repo only has `CLAUDE.md`, surface the migration option (see `skills/instruction-management/references/migration.md`) before adding new content there.
 
 ## Step 1: Reflect
 
@@ -16,7 +16,7 @@ What context was missing that would have helped the agent work more effectively?
 - Environment/configuration quirks
 - Warnings or gotchas encountered
 
-## Step 2: Find memory files
+## Step 2: Find instruction files
 
 ```bash
 find . \( -name "AGENTS.md" -o -name "CLAUDE.md" -o -name ".claude.local.md" \) \
@@ -36,7 +36,7 @@ Decide where each addition belongs:
 
 ## Step 3: Draft additions
 
-**Keep it concise** — one line per concept. Memory files ride along in the prompt, so brevity matters.
+**Keep it concise** — one line per concept. Instruction files ride along in the prompt, so brevity matters.
 
 Format: `<command or pattern>` - `<brief description>`
 
@@ -69,7 +69,7 @@ After applying changes, run:
 
 ```bash
 project_hash=$(printf '%s' "${CLAUDE_PROJECT_DIR:-.}" | md5sum | cut -c1-8)
-rm -f "/tmp/revise-memory-nudge/$project_hash"
+rm -f "/tmp/revise-instructions-nudge/$project_hash"
 ```
 
 This resets the stop-hook nudge counter so the hook can fire again if the session continues touching more files.

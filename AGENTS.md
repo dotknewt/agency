@@ -39,10 +39,10 @@ Plugins are directories with a `.claude-plugin/plugin.json` manifest. The local 
 
 Enable plugins per project in `.claude/settings.local.json` (or globally in `~/.claude/settings.json`).
 
-The `memory-management` plugin provides three tools:
-- `memory-management` skill — audits AGENTS.md quality against the current codebase
-- `/revise-memory` command — captures session learnings into AGENTS.md
-- `/restructure-memory` command — moves content to the right depth in the AGENTS.md hierarchy
+The `instruction-management` plugin provides three tools:
+- `instruction-management` skill — audits AGENTS.md quality against the current codebase
+- `/revise-instructions` command — captures session learnings into AGENTS.md
+- `/restructure-instructions` command — moves content to the right depth in the AGENTS.md hierarchy
 
 ## Plugin versioning
 
@@ -57,7 +57,7 @@ When a change deviates from `origin/main`, bump the version in **both** `plugins
 |---|---|---|---|
 | `agency-development` | 1.0.2 | Build new plugins, agents, skills, commands, hooks | `plugin-validator` agent, `agent-creator` agent, `/create-plugin` command, `/create-skill` command, `/create-agent` command, `/pin-plugins` command |
 | `github-scaffold` | 1.1.1 | Scaffold `.github/` metadata; branch hygiene; issue/CI workflows | `/github-scaffold` command, `branch-warden` agent, `issue-filer` agent |
-| `memory-management` | 1.2.2 | Audit and maintain AGENTS.md; nudges `/revise-memory` on busy sessions | `/revise-memory`, `/restructure-memory`, `memory-management` skill |
+| `instruction-management` | 1.3.0 | Audit and maintain AGENTS.md; nudges `/revise-instructions` on busy sessions | `/revise-instructions`, `/restructure-instructions`, `instruction-management` skill |
 | `naming-toolkit` | 0.1.0 | Conjures memorable, brandable name shortlists by reading a project and applying ≥4 naming techniques | `name-alchemist` agent |
 
 Branch lifecycle rules and commit-vs-PR guidance are loaded via the `@`-references below.

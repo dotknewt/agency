@@ -32,7 +32,7 @@
     "superpowers@claude-plugins-official": true,
     "agentic-eval@dotknewt-claude-plugins": false,
     "ember@dotknewt-claude-plugins": true,
-    "memory-management@dotknewt-claude-plugins": true,
+    "instruction-management@dotknewt-claude-plugins": true,
     "agent-governance@dotknewt-claude-plugins": false,
     "agent-owasp-compliance@dotknewt-claude-plugins": true
   },

@@ -109,7 +109,7 @@ add `enabledPlugins` and `extraKnownMarketplaces` near the end if they are new k
 Show a compact diff summary:
 ```
 Pinned to .claude/settings.json:
-  + memory-management@dotknewt-claude-plugins
+  + instruction-management@dotknewt-claude-plugins
   + github-scaffold@dotknewt-claude-plugins
   (marketplace dotknewt-claude-plugins added to extraKnownMarketplaces)
 

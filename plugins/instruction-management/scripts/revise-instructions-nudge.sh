@@ -1,20 +1,20 @@
 #!/usr/bin/env bash
-# Stop hook: suggest /revise-memory when the session touched many files.
+# Stop hook: suggest /revise-instructions when the session touched many files.
 # Nudges at most once per session; re-nudges only if file count grows by
-# MEMORY_NUDGE_DELTA or more since the last nudge.
+# INSTRUCTIONS_NUDGE_DELTA or more since the last nudge.
 #
 # Configurable env vars:
-#   MEMORY_NUDGE_THRESHOLD  — min files to trigger first nudge (default 5)
-#   MEMORY_NUDGE_DELTA      — additional files needed to re-nudge (default 5)
+#   INSTRUCTIONS_NUDGE_THRESHOLD  — min files to trigger first nudge (default 5)
+#   INSTRUCTIONS_NUDGE_DELTA      — additional files needed to re-nudge (default 5)
 set -euo pipefail
 
-threshold="${MEMORY_NUDGE_THRESHOLD:-5}"
-delta="${MEMORY_NUDGE_DELTA:-5}"
+threshold="${INSTRUCTIONS_NUDGE_THRESHOLD:-5}"
+delta="${INSTRUCTIONS_NUDGE_DELTA:-5}"
 
 project_dir="${CLAUDE_PROJECT_DIR:-.}"
 
 # Sentinel file per project dir — stores file count at last nudge.
-sentinel_dir="/tmp/revise-memory-nudge"
+sentinel_dir="/tmp/revise-instructions-nudge"
 mkdir -p "$sentinel_dir"
 project_hash=$(printf '%s' "$project_dir" | md5sum | cut -c1-8)
 sentinel="$sentinel_dir/$project_hash"
@@ -39,6 +39,6 @@ if [ -f "$sentinel" ]; then
 fi
 
 printf '%s' "$total" > "$sentinel"
-printf '{"decision":"approve","systemMessage":"This session touched ~%s file(s). Consider running /revise-memory to capture key learnings in AGENTS.md before finishing."}\n' "$total"
+printf '{"decision":"approve","systemMessage":"This session touched ~%s file(s). Consider running /revise-instructions to capture key learnings in AGENTS.md before finishing."}\n' "$total"
 
 exit 0
