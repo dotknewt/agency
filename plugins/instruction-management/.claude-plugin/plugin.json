@@ -1,7 +1,7 @@
 {
-  "name": "memory-management",
+  "name": "instruction-management",
   "version": "1.2.2",
-  "description": "Tools to maintain and improve agent-memory files (AGENTS.md and legacy CLAUDE.md) - audit quality, capture session learnings, and keep project memory current.",
+  "description": "Tools to maintain and improve project instruction files (AGENTS.md and legacy CLAUDE.md) - audit quality, capture session learnings, and keep project instructions current.",
   "author": {
     "name": "dotKnewt",
     "email": "dotknewt@keemail.me"
@@ -12,7 +12,7 @@
     "claude-code",
     "agents-md",
     "claude-md",
-    "memory",
+    "instructions",
     "project-context",
     "agents"
   ]

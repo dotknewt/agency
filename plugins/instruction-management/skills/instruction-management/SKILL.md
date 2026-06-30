@@ -1,10 +1,10 @@
 ---
-name: memory-management
-description: Audit and improve agent-memory files (AGENTS.md and legacy CLAUDE.md). Use when the user asks to check, audit, update, improve, fix, restructure, or clean up AGENTS.md / CLAUDE.md, or mentions "agent memory", "project memory", "memory file", "memory maintenance", "memory structure", or filenames like AGENTS.md, agents.md, CLAUDE.md. Scans the repo, evaluates quality against a rubric, prints a report, and proposes targeted edits. When the repo still uses CLAUDE.md only, also proposes migrating to AGENTS.md.
+name: instruction-management
+description: Audit and improve AGENTS.md project instructions (and legacy CLAUDE.md). Use when the user asks to check, audit, update, improve, fix, restructure, or clean up AGENTS.md / CLAUDE.md, or mentions "agent memory", "project memory", "project instructions", "instruction file", "instruction maintenance", "instruction structure", or filenames like AGENTS.md, agents.md, CLAUDE.md. Scans the repo, evaluates quality against a rubric, prints a report, and proposes targeted edits. When the repo still uses CLAUDE.md only, also proposes migrating to AGENTS.md.
 tools: Read, Glob, Grep, Bash, Edit, Write
 ---
 
-# Agent-Memory Improver
+# Instruction Management
 
 Audit, evaluate, and improve agent-memory files (`AGENTS.md` by default; legacy `CLAUDE.md` is recognized) so any agent reading the repo has accurate, useful project context.
 

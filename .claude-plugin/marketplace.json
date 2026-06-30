@@ -6,9 +6,9 @@
 	},
 	"plugins": [
 		{
-			"name": "memory-management",
-			"source": "./plugins/memory-management",
-			"description": "Tools to maintain and improve agent-memory files (AGENTS.md and legacy CLAUDE.md) — audit quality, capture session learnings, and keep project memory current.",
+			"name": "instruction-management",
+			"source": "./plugins/instruction-management",
+			"description": "Tools to maintain and improve project instruction files (AGENTS.md and legacy CLAUDE.md) — audit quality, capture session learnings, and keep project instructions current.",
 			"version": "1.2.2",
 			"author": {
 				"name": "dotKnewt",

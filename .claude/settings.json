@@ -12,6 +12,6 @@
   "effortLevel": "medium",
   "advisorModel": "claude-opus-4-7",
   "enabledPlugins": {
-    "memory-management@dotknewt-claude-plugins": true
+    "instruction-management@dotknewt-claude-plugins": true
   }
 }

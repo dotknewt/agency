@@ -19,7 +19,7 @@
   },
   "model": "opus",
   "enabledPlugins": {
-    "memory-management@dotknewt-claude-plugins": true,
+    "instruction-management@dotknewt-claude-plugins": true,
     "agentic-eval@dotknewt-claude-plugins": true,
     "agency-development@dotknewt-claude-plugins": true,
     "github-scaffold@dotknewt-claude-plugins": true,
