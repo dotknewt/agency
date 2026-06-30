@@ -21,7 +21,7 @@
     "CLAUDE_CODE_DISABLE_FEEDBACK_SURVEY": "1"
   },
   "extraKnownMarketplaces": {
-    "dotknewt-claude-plugins": {
+    "agency": {
       "source": {
         "source": "github",
         "repo": "dotknewt/agency"
@@ -30,11 +30,11 @@
   },
   "enabledPlugins": {
     "superpowers@claude-plugins-official": true,
-    "agentic-eval@dotknewt-claude-plugins": false,
-    "ember@dotknewt-claude-plugins": true,
-    "instruction-management@dotknewt-claude-plugins": true,
-    "agent-governance@dotknewt-claude-plugins": false,
-    "agent-owasp-compliance@dotknewt-claude-plugins": true
+    "agentic-eval@agency": false,
+    "ember@agency": true,
+    "instruction-management@agency": true,
+    "agent-governance@agency": false,
+    "agent-owasp-compliance@agency": true
   },
   "hooks": {
     "SessionStart": [

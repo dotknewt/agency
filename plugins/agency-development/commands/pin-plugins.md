@@ -109,9 +109,9 @@ add `enabledPlugins` and `extraKnownMarketplaces` near the end if they are new k
 Show a compact diff summary:
 ```
 Pinned to .claude/settings.json:
-  + instruction-management@dotknewt-claude-plugins
-  + github-scaffold@dotknewt-claude-plugins
-  (marketplace dotknewt-claude-plugins added to extraKnownMarketplaces)
+  + instruction-management@agency
+  + github-scaffold@agency
+  (marketplace agency added to extraKnownMarketplaces)
 
 Removed (--prune):
   - old-plugin@claude-plugins-official
