@@ -6,17 +6,17 @@ tools: Read, Glob, Grep, Bash, Edit, Write
 
 # Instruction Management
 
-Audit, evaluate, and improve agent-memory files (`AGENTS.md` by default; legacy `CLAUDE.md` is recognized) so any agent reading the repo has accurate, useful project context.
+Audit, evaluate, and improve project instruction files (`AGENTS.md` by default; legacy `CLAUDE.md` is recognized) so any agent reading the repo has accurate, useful project context.
 
 `AGENTS.md` (the agents.md convention) is portable across agent CLIs — Claude Code, Codex, Cursor, and others. `CLAUDE.md` is Claude Code's legacy filename; this skill keeps it working through migration.
 
-**This skill writes to memory files.** It always prints a quality report and proposes diffs before editing, and waits for user approval.
+**This skill writes to instruction files.** It always prints a quality report and proposes diffs before editing, and waits for user approval.
 
 ## Workflow
 
 ### Phase 1 — Discovery
 
-Find every agent-memory file under the working tree, ignoring noise dirs:
+Find every project instruction file under the working tree, ignoring noise dirs:
 
 ```bash
 find . \( -name "AGENTS.md" -o -name "CLAUDE.md" -o -name ".claude.local.md" \) \
@@ -45,7 +45,7 @@ Group results by directory and classify each directory's state:
 | Package-specific | `./packages/*/AGENTS.md` | Module-level context in monorepos |
 | Subdirectory | Any nested location | Feature/domain-specific context |
 
-Most agents auto-discover memory files in parent directories, so monorepo nesting works automatically.
+Most agents auto-discover instruction files in parent directories, so monorepo nesting works automatically.
 
 ### Phase 1.5 — Migration (only when legacy `CLAUDE.md` is present)
 
@@ -64,7 +64,7 @@ Apply the user's choice across **all** legacy `CLAUDE.md` files in the repo cons
 
 ### Phase 2 — Quality Assessment
 
-For each memory file, score against the rubric. See [references/quality-criteria.md](references/quality-criteria.md) for the full rubric.
+For each instruction file, score against the rubric. See [references/quality-criteria.md](references/quality-criteria.md) for the full rubric.
 
 **Quick checklist:**
 
@@ -117,7 +117,7 @@ For each memory file, score against the rubric. See [references/quality-criteria
 
 After the report, propose edits and ask for confirmation. Two kinds of changes:
 
-1. **Content updates** — additions, corrections, deletions inside a memory file.
+1. **Content updates** — additions, corrections, deletions inside an instruction file.
 2. **Migration edits** — `git mv CLAUDE.md AGENTS.md` and (option A only) writing the stub.
 
 See [references/update-guidelines.md](references/update-guidelines.md) for what to add and what to skip.
@@ -199,8 +199,8 @@ See [references/templates.md](references/templates.md) for `AGENTS.md` templates
 
 When presenting recommendations, remind the user:
 
-- **`#` shortcut** (Claude Code): press `#` mid-session to have the agent auto-incorporate learnings into the memory file.
-- **Keep it concise.** Memory files ride along in the prompt — dense beats verbose.
+- **`#` shortcut** (Claude Code): press `#` mid-session to have the agent auto-incorporate learnings into the instruction file.
+- **Keep it concise.** Instruction files ride along in the prompt — dense beats verbose.
 - **Actionable commands.** Every documented command should be copy-paste ready.
 - **`.claude.local.md`** for personal preferences not shared with the team (gitignored).
 - **Global defaults** live in `~/.claude/CLAUDE.md` or `~/.codex/AGENTS.md`.

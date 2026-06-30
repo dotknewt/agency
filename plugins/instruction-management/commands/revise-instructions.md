@@ -3,7 +3,7 @@ description: Update AGENTS.md (or legacy CLAUDE.md) with learnings from this ses
 allowed-tools: Read, Edit, Write, Glob, Bash
 ---
 
-Review this session for learnings about working with this codebase. Update the agent-memory file with context that would help future sessions be more effective.
+Review this session for learnings about working with this codebase. Update the instruction file with context that would help future sessions be more effective.
 
 This command writes to `AGENTS.md` by default. If the repo only has `CLAUDE.md`, surface the migration option (see `skills/instruction-management/references/migration.md`) before adding new content there.
 
