@@ -19,15 +19,15 @@
   },
   "model": "opus",
   "enabledPlugins": {
-    "instruction-management@dotknewt-claude-plugins": true,
-    "agentic-eval@dotknewt-claude-plugins": true,
-    "agency-development@dotknewt-claude-plugins": true,
-    "github-scaffold@dotknewt-claude-plugins": true,
-    "ember@dotknewt-claude-plugins": true,
+    "instruction-management@agency": true,
+    "agentic-eval@agency": true,
+    "agency-development@agency": true,
+    "github-scaffold@agency": true,
+    "ember@agency": true,
     "superpowers@claude-plugins-official": true
   },
   "extraKnownMarketplaces": {
-    "dotknewt-claude-plugins": {
+    "agency": {
       "source": {
         "source": "github",
         "repo": "dotknewt/agency"
