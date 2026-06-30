@@ -83,6 +83,17 @@ Why: establishes patterns that work.
 
 Why: environment-specific knowledge.
 
+### 6. Memory vs. State Split
+
+```markdown
+## Memory vs. State
+
+- **AGENTS.md** — project north star. Stable decisions, architecture, commands, conventions. Update infrequently, only when something durable changes.
+- **STATE.md** — session bookmarks and in-progress work (WIP, ToDo, recent Completed). Update every session or task switch; invoke the `state-keeper` subagent to keep it tidy.
+```
+
+Why: makes the write-frequency boundary explicit so agents don't conflate durable instructions with transient task state.
+
 ## What NOT to Add
 
 ### 1. Obvious Code Info
