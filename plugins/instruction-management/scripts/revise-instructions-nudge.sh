@@ -45,6 +45,6 @@ if [ -f "$sentinel" ]; then
 fi
 
 printf '%s' "$total" > "$sentinel"
-printf '{"decision":"approve","systemMessage":"This session touched ~%s file(s). Consider running /revise-instructions to capture key learnings in AGENTS.md before finishing."}\n' "$total"
+printf '{"decision":"approve","systemMessage":"This session touched ~%s file(s). Consider asking to capture key learnings in AGENTS.md (the revise-instructions skill) before finishing."}\n' "$total"
 
 exit 0

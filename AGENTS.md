@@ -39,10 +39,7 @@ Plugins are directories with a `.claude-plugin/plugin.json` manifest. The local 
 
 Enable plugins per project in `.claude/settings.local.json` (or globally in `~/.claude/settings.json`).
 
-The `instruction-management` plugin provides three tools:
-- `instruction-management` skill — audits AGENTS.md quality against the current codebase
-- `/revise-instructions` command — captures session learnings into AGENTS.md
-- `/restructure-instructions` command — moves content to the right depth in the AGENTS.md hierarchy
+The `instruction-management` plugin provides three skills: `instruction-management` (audits AGENTS.md quality, then orchestrates the other two by default), `revise-instructions` (captures session learnings), and `restructure-instructions` (moves content to the right depth).
 
 Branch lifecycle rules and commit-vs-PR guidance are loaded via the `@`-references below.
 

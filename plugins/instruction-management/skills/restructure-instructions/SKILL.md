@@ -1,7 +1,9 @@
 ---
-description: Restructure project instruction files (AGENTS.md / legacy CLAUDE.md) to move content closer to where it is needed
-allowed-tools: Read, Bash, Edit
+name: restructure-instructions
+description: Restructure project instruction files (AGENTS.md / legacy CLAUDE.md) to move content closer to where it is needed, reducing context bloat in the root file. Use when the user asks to restructure, reorganize, rebalance, or clean up instruction-file depth, or when root AGENTS.md content only applies to a specific subdirectory and should live there instead.
 ---
+
+# Restructure Instructions
 
 Goal: reduce context bloat by keeping content only at the deepest level where it applies.
 
@@ -27,7 +29,7 @@ Read each file and flag content that belongs deeper:
 - Schema tables duplicated → move to the deepest file where they're used
 - Stale content in any subdirectory file → remove it
 
-If both `AGENTS.md` and a non-stub `CLAUDE.md` exist in the same directory, flag the drift and propose consolidating on `AGENTS.md` first (see `skills/instruction-management/references/migration.md`). Then restructure.
+If both `AGENTS.md` and a non-stub `CLAUDE.md` exist in the same directory, flag the drift and propose consolidating on `AGENTS.md` first (see `../instruction-management/references/migration.md`). Then restructure.
 
 ## Step 3: Show proposed changes
 
