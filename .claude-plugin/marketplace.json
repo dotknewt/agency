@@ -16,8 +16,8 @@
 			}
 		},
 		{
-			"name": "doublecheck",
-			"source": "./plugins/doublecheck",
+			"name": "agent-doublecheck",
+			"source": "./agents/agent-doublecheck",
 			"description": "Three-layer verification pipeline for AI output. Extracts claims, finds sources, and flags hallucination risks so humans can verify before acting.",
 			"version": "1.0.0",
 			"author": {
@@ -25,8 +25,8 @@
 			}
 		},
 		{
-			"name": "ember",
-			"source": "./plugins/ember",
+			"name": "agent-ember",
+			"source": "./agents/agent-ember",
 			"description": "An AI partner, not a tool. Ember carries fire from person to person — helping humans discover that AI partnership isn't something you learn, it's something you find.",
 			"version": "1.0.2",
 			"author": {
@@ -34,42 +34,12 @@
 			}
 		},
 		{
-			"name": "eyeball",
-			"source": "./plugins/eyeball",
+			"name": "agent-eyeball",
+			"source": "./agents/agent-eyeball",
 			"description": "Document analysis with inline source screenshots. Generates a Word doc where every factual claim includes a highlighted screenshot from the source material for visual verification.",
 			"version": "1.0.0",
 			"author": {
 				"name": "Awesome Copilot Community"
-			}
-		},
-		{
-			"name": "agent-governance",
-			"source": "./skills/agent-governance",
-			"description": "Patterns and techniques for adding governance, safety, and trust controls to AI agent systems — policy-based access controls, semantic intent classification, trust scoring, and audit trails.",
-			"version": "1.0.0",
-			"author": {
-				"name": "dotKnewt",
-				"email": "dotknewt@keemail.me"
-			}
-		},
-		{
-			"name": "agent-owasp-compliance",
-			"source": "./skills/agent-owasp-compliance",
-			"description": "Check any AI agent codebase against the OWASP Agentic Security Initiative (ASI) Top 10 risks and generate a compliance report.",
-			"version": "1.0.0",
-			"author": {
-				"name": "dotKnewt",
-				"email": "dotknewt@keemail.me"
-			}
-		},
-		{
-			"name": "agent-supply-chain",
-			"source": "./skills/agent-supply-chain",
-			"description": "Verify supply chain integrity for AI agent plugins, tools, and dependencies — SHA-256 manifests, tamper detection, dependency pinning, and provenance chains.",
-			"version": "1.0.0",
-			"author": {
-				"name": "dotKnewt",
-				"email": "dotknewt@keemail.me"
 			}
 		},
 		{
@@ -83,28 +53,8 @@
 			}
 		},
 		{
-			"name": "mcp-security-audit",
-			"source": "./skills/mcp-security-audit",
-			"description": "Audit MCP server configurations for security issues — hardcoded secrets, shell injection, unpinned versions, and unapproved servers.",
-			"version": "1.0.0",
-			"author": {
-				"name": "dotKnewt",
-				"email": "dotknewt@keemail.me"
-			}
-		},
-		{
-			"name": "multi-stage-dockerfile",
-			"source": "./skills/multi-stage-dockerfile",
-			"description": "Create optimized multi-stage Dockerfiles for any language or framework — smaller images, better layer caching, and security best practices.",
-			"version": "1.0.0",
-			"author": {
-				"name": "dotKnewt",
-				"email": "dotknewt@keemail.me"
-			}
-		},
-		{
-			"name": "github-scaffold",
-			"source": "./plugins/github-scaffold",
+			"name": "github-toolkit",
+			"source": "./plugins/github-toolkit",
 			"description": "Scaffold GitHub repo metadata — issue templates and CI workflows. /github-scaffold picks the task; /create-issue-template and /scaffold-ci-workflow run the subtasks.",
 			"version": "1.1.1",
 			"author": {
@@ -113,8 +63,8 @@
 			}
 		},
 		{
-			"name": "agency-development",
-			"source": "./plugins/agency-development",
+			"name": "agency-toolkit",
+			"source": "./plugins/agency-toolkit",
 			"description": "Local fork of Anthropic's plugin-dev toolkit — skills, agents, and commands for building Claude Code plugins.",
 			"version": "1.0.2",
 			"author": {
@@ -133,20 +83,10 @@
 			}
 		},
 		{
-			"name": "naming-toolkit",
-			"source": "./plugins/naming-toolkit",
-			"description": "Conjures memorable, brandable name shortlists for any project by reading its code and folding in optional themes. One agent: name-alchemist.",
-			"version": "0.1.0",
-			"author": {
-				"name": "dotKnewt",
-				"email": "dotknewt@keemail.me"
-			}
-		},
-    {
 			"name": "hooks-toolkit",
 			"source": "./plugins/hooks-toolkit",
 			"description": "Composable safety and hygiene hooks — force-push guard, secret scanner, plugin/skill manifest validators, branch nudges, and dirty-tree stop check.",
-			"version": "0.1.0",
+			"version": "1.0.0",
 			"author": {
 				"name": "dotKnewt",
 				"email": "dotknewt@keemail.me"

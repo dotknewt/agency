@@ -21,9 +21,9 @@
   "enabledPlugins": {
     "instruction-management@agency": true,
     "agentic-eval@agency": true,
-    "agency-development@agency": true,
-    "github-scaffold@agency": true,
-    "ember@agency": true,
+    "agency-toolkit@agency": true,
+    "github-toolkit@agency": true,
+    "agent-ember@agency": true,
     "superpowers@claude-plugins-official": true
   },
   "extraKnownMarketplaces": {

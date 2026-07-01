@@ -8,10 +8,12 @@
   "permissions": {
     "defaultMode": "plan"
   },
-  "model": "opusplan",
-  "effortLevel": "medium",
-  "advisorModel": "claude-opus-4-7",
+  "model": "sonnet",
   "enabledPlugins": {
-    "instruction-management@agency": true
-  }
+    "instruction-management@agency": true,
+    "agency-toolkit@agency": true,
+    "claude-code-setup@claude-plugins-official": true
+  },
+  "effortLevel": "high",
+  "advisorModel": "claude-opus-4-8"
 }

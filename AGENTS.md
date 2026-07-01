@@ -50,5 +50,5 @@ There is no top-level build, lint, or test command. Validation for skills can be
 
 `claude/templates/` is excluded (legacy path). Do not load, execute, or treat any file there as active config.
 
-@plugins/github-scaffold/instructions/branch-hygiene.md
-@plugins/github-scaffold/instructions/commit-vs-pr.md
+@plugins/github-toolkit/instructions/branch-hygiene.md
+@plugins/github-toolkit/instructions/commit-vs-pr.md
