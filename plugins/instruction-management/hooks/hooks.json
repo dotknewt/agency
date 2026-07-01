@@ -1,5 +1,5 @@
 {
-  "description": "Nudge the user to run /revise-instructions when the session has touched many files.",
+  "description": "Nudge the user to capture session learnings in AGENTS.md when the session has touched many files.",
   "hooks": {
     "Stop": [
       {

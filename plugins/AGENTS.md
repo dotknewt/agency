@@ -26,5 +26,5 @@ Pick the tier by the size of the change, not by which file was touched:
 |---|---|---|---|
 | `agency-development` | 1.0.2 | Build new plugins, agents, skills, commands, hooks | `plugin-validator` agent, `agent-creator` agent, `/create-plugin` command, `/create-skill` command, `/create-agent` command, `/pin-plugins` command |
 | `github-scaffold` | 1.1.1 | Scaffold `.github/` metadata; branch hygiene; issue/CI workflows | `/github-scaffold` command, `branch-warden` agent, `issue-filer` agent |
-| `instruction-management` | 1.4.0 | Audit and maintain AGENTS.md; nudges `/revise-instructions` on busy sessions | `/revise-instructions`, `/restructure-instructions`, `instruction-management` skill |
+| `instruction-management` | 1.5.0 | Audit and maintain AGENTS.md; nudges revision on busy sessions | `instruction-management` skill (orchestrates `revise-instructions` and `restructure-instructions` sub-skills by default) |
 | `naming-toolkit` | 0.1.0 | Conjures memorable, brandable name shortlists by reading a project and applying ≥4 naming techniques | `name-alchemist` agent |

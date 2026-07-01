@@ -1,11 +1,13 @@
 ---
-description: Update AGENTS.md (or legacy CLAUDE.md) with learnings from this session
-allowed-tools: Read, Edit, Write, Glob, Bash
+name: revise-instructions
+description: Update AGENTS.md (or legacy CLAUDE.md) with learnings from this session — discovered commands, patterns, gotchas, or configuration quirks worth capturing for future sessions. Use when the user asks to capture, save, remember, or record session learnings into project instructions, or after a session that surfaced non-obvious context a fresh agent would benefit from.
 ---
+
+# Revise Instructions
 
 Review this session for learnings about working with this codebase. Update the instruction file with context that would help future sessions be more effective.
 
-This command writes to `AGENTS.md` by default. If the repo only has `CLAUDE.md`, surface the migration option (see `skills/instruction-management/references/migration.md`) before adding new content there.
+This skill writes to `AGENTS.md` by default. If the repo only has `CLAUDE.md`, surface the migration option (see `../instruction-management/references/migration.md`) before adding new content there.
 
 ## Step 1: Reflect
 
