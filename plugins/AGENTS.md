@@ -28,3 +28,5 @@ Pick the tier by the size of the change, not by which file was touched:
 | `github-scaffold` | 1.1.1 | Scaffold `.github/` metadata; branch hygiene; issue/CI workflows | `/github-scaffold` command, `branch-warden` agent, `issue-filer` agent |
 | `instruction-management` | 1.5.0 | Audit and maintain AGENTS.md; nudges revision on busy sessions | `instruction-management` skill (orchestrates `revise-instructions` and `restructure-instructions` sub-skills by default) |
 | `naming-toolkit` | 0.1.0 | Conjures memorable, brandable name shortlists by reading a project and applying ≥4 naming techniques | `name-alchemist` agent |
+| `hooks-toolkit` | 0.1.0 | Composable safety/hygiene hooks — force-push guard, secret scanner, manifest validators, branch nudges, dirty-tree check | hook scripts under `hooks/` |
+| `ludus-toolkit` | 0.1.0 | Ludus cyber-range toolkit — CLI/range-config/environment/troubleshooting skills, bundled Ludus MCP server | 4 `ludus-*` skills, `mcp/ludus` MCP server |

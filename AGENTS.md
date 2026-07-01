@@ -12,7 +12,6 @@ Top-level content directories:
 
 - `skills/` — standalone skill definitions (each dir has a `SKILL.md` with YAML frontmatter + instructions)
 - `plugins/` — distributable plugin bundles; see `plugins/AGENTS.md` for versioning rules and the plugin catalog
-- `mcp/` — MCP servers and their packaging (e.g. `mcp/ludus`, a Node/TypeScript stdio server with a `Dockerfile` + Docker MCP Gateway catalog; see `mcp/ludus/README.md`)
 - `templates/` — drop-in Claude Code settings variants: `settings.hooked.json`, `settings.unhooked.json`
 
 Plugins bundle their own agents and instructions under `plugins/<name>/agents/` and `plugins/<name>/instructions/` respectively.
