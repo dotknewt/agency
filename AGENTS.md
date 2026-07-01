@@ -11,7 +11,7 @@ Personal LLM configuration repository — skills, plugins, agents, and templates
 Top-level content directories:
 
 - `skills/` — standalone skill definitions (each dir has a `SKILL.md` with YAML frontmatter + instructions)
-- `plugins/` — distributable plugin bundles; the local marketplace (`/.claude-plugin/marketplace.json`) points here
+- `plugins/` — distributable plugin bundles; see `plugins/AGENTS.md` for versioning rules and the plugin catalog
 - `mcp/` — MCP servers and their packaging (e.g. `mcp/ludus`, a Node/TypeScript stdio server with a `Dockerfile` + Docker MCP Gateway catalog; see `mcp/ludus/README.md`)
 - `templates/` — drop-in Claude Code settings variants: `settings.hooked.json`, `settings.unhooked.json`
 
@@ -43,22 +43,6 @@ The `instruction-management` plugin provides three tools:
 - `instruction-management` skill — audits AGENTS.md quality against the current codebase
 - `/revise-instructions` command — captures session learnings into AGENTS.md
 - `/restructure-instructions` command — moves content to the right depth in the AGENTS.md hierarchy
-
-## Plugin versioning
-
-When a change deviates from `origin/main`, bump the version in **both** `plugins/<name>/.claude-plugin/plugin.json` and the matching entry in `.claude-plugin/marketplace.json`:
-
-- **0.0.1** — minor modifications to an existing artifact: adding/removing a slash-command file, tweaking auto-trigger descriptions, small edits to an existing agent or skill.
-- **0.1.0** — adding or removing a whole artifact (or most of one): new agent, new skill, new hook, removing an entire command, etc.
-
-## Key plugins
-
-| Plugin | Version | Purpose | Primary entry points |
-|---|---|---|---|
-| `agency-development` | 1.0.2 | Build new plugins, agents, skills, commands, hooks | `plugin-validator` agent, `agent-creator` agent, `/create-plugin` command, `/create-skill` command, `/create-agent` command, `/pin-plugins` command |
-| `github-scaffold` | 1.1.1 | Scaffold `.github/` metadata; branch hygiene; issue/CI workflows | `/github-scaffold` command, `branch-warden` agent, `issue-filer` agent |
-| `instruction-management` | 1.4.0 | Audit and maintain AGENTS.md; nudges `/revise-instructions` on busy sessions | `/revise-instructions`, `/restructure-instructions`, `instruction-management` skill |
-| `naming-toolkit` | 0.1.0 | Conjures memorable, brandable name shortlists by reading a project and applying ≥4 naming techniques | `name-alchemist` agent |
 
 Branch lifecycle rules and commit-vs-PR guidance are loaded via the `@`-references below.
 
