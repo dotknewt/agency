@@ -26,9 +26,11 @@ launch and broker stdio to.
 
 ## Workflow
 
-1. **Write the Dockerfile.** Use the `multi-stage-dockerfile` skill (bundled in
-   this plugin) for the builder/runtime split, base image pinning, non-root
-   user, and layer caching. MCP-specific requirements on top of that:
+1. **Write the Dockerfile.** Start from `references/dockerfile-templates.md`
+   (Node/TypeScript and Python variants) and adapt it, applying the
+   `multi-stage-dockerfile` skill (bundled in this plugin) for the
+   builder/runtime split, base image pinning, non-root user, and layer
+   caching. MCP-specific requirements on top of that:
    - The runtime stage's entrypoint must speak stdio (JSON-RPC) cleanly — no
      stdout logging from the app; send logs to stderr.
    - Don't bake secrets or connection URLs into the image. They arrive as env
@@ -82,8 +84,9 @@ not yet implemented.
 
 ## References
 
+- `references/dockerfile-templates.md` — ready-to-adapt multi-stage
+  Dockerfile templates (Node/TypeScript, Python) for stdio MCP servers.
 - `references/docker-mcp-gateway.md` — full catalog YAML schema, the
-  secrets-vs-profile-config distinction, gateway/profile CLI commands, and a
-  worked example.
-- Uses the `multi-stage-dockerfile` skill (this plugin) for the Dockerfile
-  itself.
+  secrets-vs-profile-config distinction, and gateway/profile CLI commands.
+- Uses the `multi-stage-dockerfile` skill (this plugin) for general
+  Dockerfile best practices.

@@ -120,10 +120,12 @@ the profile alone decides which servers are enabled. The older
 
 ## Worked example
 
-`plugins/ludus-toolkit/mcp/ludus/` in this repo is a complete, working
-instance of this pattern:
+`plugins/ludus-toolkit/mcp/ludus/` in this repo shows the catalog and gateway
+side of this pattern working end to end:
 
-- `Dockerfile` — multi-stage Node/TypeScript build, non-root runtime user
-- `ludus-catalog.yaml` — the local file catalog
-- `README.md` — the full build → secret → profile → gateway → verify
-  walkthrough
+- `ludus-catalog.yaml` — a local file catalog matching the schema above
+- `README.md` — the full secret → profile → gateway → verify walkthrough
+
+For the Dockerfile itself, start from
+`references/dockerfile-templates.md` in this skill rather than that repo's
+Dockerfile — the template here isn't tied to one server's specific build.
