@@ -1,5 +1,5 @@
 {
-  "name": "doublecheck",
+  "name": "agent-doublecheck",
   "description": "Three-layer verification pipeline for AI output. Extracts claims, finds sources, and flags hallucination risks so humans can verify before acting.",
   "version": "1.0.0",
   "author": {

@@ -1,5 +1,5 @@
 {
-  "name": "eyeball",
+  "name": "agent-eyeball",
   "version": "1.0.0",
   "description": "Document analysis with inline source screenshots. Generates a Word doc where every factual claim includes a highlighted screenshot from the source material for visual verification.",
   "author": {
