@@ -1,5 +1,5 @@
 ---
-name: environment-guide
+name: ludus-environment-guide
 description: Discover, compare, and deploy pre-built Ludus cyber range environments for security training, attack simulation, and detection engineering. Use when users ask to choose a lab, verify prerequisites, or deploy known environments such as GOAD, SCCM, Elastic, or Vulhub.
 ---
 

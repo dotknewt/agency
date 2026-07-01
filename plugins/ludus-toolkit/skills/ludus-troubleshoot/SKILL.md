@@ -1,5 +1,5 @@
 ---
-name: troubleshooting
+name: ludus-troubleshoot
 description: Diagnose and resolve Ludus deployment, networking, template, WireGuard, Proxmox, and Ansible issues. Use when users report failures, errors, unreachable systems, failed joins, or unexpected behavior during build or deploy.
 ---
 
