@@ -12,7 +12,8 @@ Top-level content directories:
 
 - `skills/` — standalone skill definitions (each dir has a `SKILL.md` with YAML frontmatter + instructions)
 - `plugins/` — distributable plugin bundles; see `plugins/AGENTS.md` for versioning rules and the plugin catalog
-- `templates/` — drop-in Claude Code settings variants: `settings.hooked.json`, `settings.unhooked.json`
+- `agents/` — standalone agent-persona plugins (`agent-ember`, `agent-doublecheck`, `agent-eyeball`) that don't fit the `plugins/` catalog's build-tooling theme; same plugin.json layout, separate catalog
+- `templates/` — example settings/hooks configs: `settings.json` (full example with `enabledPlugins`) and `hooks.json` (references `integrations/claude_code_hooks/*.py`, which doesn't exist in this repo — treat as an unfinished template, not working config)
 
 Plugins bundle their own agents and instructions under `plugins/<name>/agents/` and `plugins/<name>/instructions/` respectively.
 
@@ -34,9 +35,9 @@ Skills have no `model` field — model selection is session/project level (via `
 
 ## Plugin format
 
-Plugins are directories with a `.claude-plugin/plugin.json` manifest. The local marketplace at `/.claude-plugin/marketplace.json` registers full plugins under `./plugins/` plus many skills exposed as plugin sources under `./skills/`. Check `marketplace.json` for the current list — it changes as new skills/plugins are added.
+Plugins are directories with a `.claude-plugin/plugin.json` manifest. The local marketplace at `/.claude-plugin/marketplace.json` registers full plugins under `./plugins/` and `./agents/`, plus many skills exposed as plugin sources under `./skills/`. Check `marketplace.json` for the current list — it changes as new skills/plugins are added.
 
-Enable plugins per project in `.claude/settings.local.json` (or globally in `~/.claude/settings.json`).
+Enable plugins repo-wide in `.claude/settings.json` (tracked in git — the file `/pin-plugins` writes to). Use `.claude/settings.local.json` for personal-only overrides (gitignored), or `~/.claude/settings.json` for user-global defaults.
 
 The `instruction-management` plugin provides three skills: `instruction-management` (audits AGENTS.md quality, then orchestrates the other two by default), `revise-instructions` (captures session learnings), and `restructure-instructions` (moves content to the right depth).
 
