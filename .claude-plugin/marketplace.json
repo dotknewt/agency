@@ -101,6 +101,16 @@
 				"name": "dotKnewt",
 				"email": "dotknewt@keemail.me"
 			}
+		},
+		{
+			"name": "docker-toolkit",
+			"source": "./plugins/docker-toolkit",
+			"description": "Build and validate Docker artifacts — multi-stage Dockerfiles, and packaging MCP servers as containers runnable via the Docker MCP Gateway.",
+			"version": "0.1.0",
+			"author": {
+				"name": "dotKnewt",
+				"email": "dotknewt@keemail.me"
+			}
 		}
 	]
 }
