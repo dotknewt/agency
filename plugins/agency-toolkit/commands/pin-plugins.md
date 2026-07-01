@@ -110,7 +110,7 @@ Show a compact diff summary:
 ```
 Pinned to .claude/settings.json:
   + instruction-management@agency
-  + github-scaffold@agency
+  + github-toolkit@agency
   (marketplace agency added to extraKnownMarketplaces)
 
 Removed (--prune):
