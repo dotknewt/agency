@@ -29,4 +29,4 @@ Pick the tier by the size of the change, not by which file was touched:
 | `instruction-management` | 1.5.0 | Audit and maintain AGENTS.md; nudges revision on busy sessions | `instruction-management` skill (orchestrates `revise-instructions` and `restructure-instructions` sub-skills by default) |
 | `hooks-toolkit` | 1.0.0 | Composable safety/hygiene hooks — force-push guard, secret scanner, manifest validators, branch nudges, dirty-tree check | hook scripts under `hooks/` |
 | `ludus-toolkit` | 0.1.0 | Ludus cyber-range toolkit — CLI/range-config/environment/troubleshooting skills, bundled Ludus MCP server | 4 `ludus-*` skills, `mcp/ludus` MCP server |
-| `docker-toolkit` | 0.1.0 | Build and validate Docker artifacts — multi-stage Dockerfiles, dockerizing MCP servers for the Docker MCP Gateway | `multi-stage-dockerfile` skill, `dockerize-mcp-server` skill |
+| `docker-toolkit` | 0.1.0 | Build and validate Docker artifacts — multi-stage Dockerfiles, dockerizing MCP servers for the Docker MCP Gateway | `multi-stage-dockerfile` skill, `dockerize-mcp-server` skill, `dockerize-mcp-server` agent |
