@@ -183,6 +183,7 @@ If the repo hasn't migrated to `AGENTS.md` yet:
 Before finalizing an update, verify:
 
 - [ ] Each addition is project-specific
+- [ ] Content is not more suited in a content-specific subdirectory AGENTS.md
 - [ ] No generic advice or obvious info
 - [ ] Commands are tested and work
 - [ ] File paths are accurate
