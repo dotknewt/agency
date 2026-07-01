@@ -1,6 +1,6 @@
 {
   "name": "agency-toolkit",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Local fork of Anthropic's plugin-dev toolkit — skills, agents, and commands for building Claude Code plugins.",
   "author": {
     "name": "dotKnewt",

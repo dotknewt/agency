@@ -58,13 +58,27 @@ Scaffold a new standalone skill under `skills/` in the current repository.
      }
      ```
 
-8. **Confirm** to the user:
+8. **Update `skills/AGENTS.md`** — this repo's catalog of standalone, root-level skills (parallel to `plugins/AGENTS.md` for plugins and the top-level `agents/AGENTS.md` for standalone agent plugins). This only applies to skills scaffolded directly under this repo's `skills/`, not skills created inside a plugin's own `skills/` subdirectory.
+   - If `skills/AGENTS.md` doesn't exist yet, create it:
+     ```markdown
+     # skills/
+
+     Standalone skills available at repo root (not bundled inside a plugin).
+
+     | Skill | Purpose | Primary triggers |
+     |---|---|---|
+     | `<name>` | <one-line purpose> | <2-3 short trigger phrases> |
+     ```
+   - If it exists, add one row for the new skill (or update the existing row if regenerating one).
+
+9. **Confirm** to the user:
    ```
    Created skills/<name>/
    ├── SKILL.md
    ├── references/
    └── scripts/
    Registered in marketplace.json.
+   Updated skills/AGENTS.md.
    Next: fill in the SKILL.md body, then run the plugin-validator agent to check the structure.
    ```
 

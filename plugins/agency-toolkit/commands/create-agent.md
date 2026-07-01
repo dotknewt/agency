@@ -22,8 +22,9 @@ Scaffold a new agent under a plugin's `agents/` directory.
 
 3. **Resolve the target plugin directory:**
    - If cwd contains `.claude-plugin/plugin.json`, use cwd.
-   - Else search `plugins/*/.claude-plugin/plugin.json` (Glob); if exactly one match, use it; if multiple, use AskUserQuestion to let the user pick.
+   - Else search both `plugins/*/.claude-plugin/plugin.json` and `agents/*/.claude-plugin/plugin.json` (Glob); if exactly one match, use it; if multiple, use AskUserQuestion to let the user pick.
    - If none found, ask the user for an explicit plugin path.
+   - Note whether the resolved path is under top-level `agents/` (standalone agent-persona plugin) or `plugins/` (toolkit-style plugin) — this determines step 7's instruction to `agent-creator`.
 
 4. **Collision check:** If `<plugin>/agents/<name>.md` already exists, stop and report.
 
@@ -41,11 +42,15 @@ Scaffold a new agent under a plugin's `agents/` directory.
    - Target output path: `<plugin>/agents/<name>.md`
    - Purpose and trigger phrases
    - Tool list, model, color
-   - Instruction: write the file at exactly that path and return a short summary.
+   - Whether `<plugin>` is standalone (under top-level `agents/`) or nested (under `plugins/`)
+   - Instruction: write the file at exactly that path, and return a short summary. If and only if standalone, also update the top-level `agents/AGENTS.md` catalog (creating it if it doesn't exist yet). If nested, do not touch any AGENTS.md.
 
 8. **Confirm** to the user:
    ```
    Created <plugin>/agents/<name>.md
+   ```
+   Add `Updated agents/AGENTS.md` only when `<plugin>` was standalone (under top-level `agents/`).
+   ```
    Next: run the plugin-validator agent to check the plugin structure.
    ```
    Do not register in `marketplace.json` — agents live inside plugins, not the marketplace.
