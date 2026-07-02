@@ -26,7 +26,7 @@ Pick the tier by the size of the change, not by which file was touched:
 |---|---|---|---|
 | `agency-toolkit` | 1.0.3 | Build new plugins, agents, skills, commands, hooks | `plugin-validator` agent, `agent-creator` agent, `/create-plugin` command, `/create-skill` command, `/create-agent` command, `/pin-plugins` command, `manifest-lint` skill |
 | `github-toolkit` | 1.1.1 | Scaffold `.github/` metadata; branch hygiene; issue/CI workflows | `/github-scaffold` command, `branch-warden` agent, `issue-filer` agent |
-| `instruction-management` | 1.5.0 | Audit and maintain AGENTS.md; nudges revision on busy sessions | `instruction-management` skill (orchestrates `revise-instructions` and `restructure-instructions` sub-skills by default) |
+| `instruction-management` | 1.5.2 | Audit and maintain AGENTS.md; nudges revision on busy sessions | `instruction-management` skill (orchestrates `revise-instructions` and `restructure-instructions` sub-skills by default) |
 | `hooks-toolkit` | 1.0.0 | Composable safety/hygiene hooks — force-push guard, secret scanner, manifest validators, branch nudges, dirty-tree check | hook scripts under `hooks/` |
 | `ludus-toolkit` | 0.1.0 | Ludus cyber-range toolkit — CLI/range-config/environment/troubleshooting skills, bundled Ludus MCP server | 4 `ludus-*` skills, `mcp/ludus` MCP server |
 | `docker-toolkit` | 0.1.0 | Build and validate Docker artifacts — multi-stage Dockerfiles, dockerizing MCP servers for the Docker MCP Gateway | `multi-stage-dockerfile` skill, `dockerize-mcp-server` skill, `dockerize-mcp-server` agent |

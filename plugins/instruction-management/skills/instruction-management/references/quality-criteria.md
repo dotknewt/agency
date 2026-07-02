@@ -26,6 +26,7 @@ Applies to `AGENTS.md` (canonical) and legacy `CLAUDE.md`. The rubric is filenam
 - Module relationships documented
 - Entry points identified
 - Data flow described where relevant
+- Key files locatable without spawning an Explore subagent or ad-hoc Glob/Grep search
 
 **15 points**: Good structure overview, minor gaps
 

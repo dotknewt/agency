@@ -6,6 +6,8 @@ tools: Read, Glob, Grep, Bash, Edit, Write
 
 # Instruction Management
 
+Goal: keep instruction files complete enough that agents rarely need Explore subagents or ad-hoc Glob/Grep/Read searches to find what's already documented.
+
 Audit, evaluate, and improve project instruction files (`AGENTS.md` by default; legacy `CLAUDE.md` is recognized) so any agent reading the repo has accurate, useful project context.
 
 `AGENTS.md` (the agents.md convention) is portable across agent CLIs — Claude Code, Codex, Cursor, and others. `CLAUDE.md` is Claude Code's legacy filename; this skill keeps it working through migration.
