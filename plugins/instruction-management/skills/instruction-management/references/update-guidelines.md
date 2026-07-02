@@ -187,6 +187,6 @@ Before finalizing an update, verify:
 - [ ] No generic advice or obvious info
 - [ ] Commands are tested and work
 - [ ] File paths are accurate
-- [ ] Would a new agent session find this helpful?
+- [ ] Would a new agent session find this helpful — e.g. spare it an Explore subagent or ad-hoc Glob/Grep search?
 - [ ] Is this the most concise way to express the info?
 - [ ] Editing the correct file (AGENTS.md, not a CLAUDE.md stub)?

@@ -17,6 +17,7 @@ What context was missing that would have helped the agent work more effectively?
 - Testing approaches that worked
 - Environment/configuration quirks
 - Warnings or gotchas encountered
+- Facts that required an Explore subagent or repeated Glob/Grep/Read calls to find
 
 ## Step 2: Find instruction files
 
