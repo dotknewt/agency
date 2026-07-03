@@ -14,13 +14,7 @@
   },
   "model": "sonnet",
   "enabledPlugins": {
-    "agency-toolkit@agency": true,
-    "agentic-eval@agency": false,
-    "superpowers@claude-plugins-official": false,
-    "github-toolkit@agency": false
-  },
-  "skillOverrides": {
-    "monorepo": "off"
+    "instruction-management@dotknewt-toolkits": true
   },
   "effortLevel": "high",
   "advisorModel": "claude-opus-4-7"

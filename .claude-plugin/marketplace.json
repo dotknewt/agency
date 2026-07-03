@@ -96,21 +96,6 @@
 			}
 		},
 		{
-			"name": "agency-toolkit",
-			"source": {
-				"source": "git-subdir",
-				"url": "git@github.com:dotknewt/toolkits.git",
-				"path": "agency-toolkit",
-				"ref": "main"
-			},
-			"description": "Local fork of Anthropic's plugin-dev toolkit — skills, agents, and commands for building Claude Code plugins.",
-			"version": "1.0.3",
-			"author": {
-				"name": "dotKnewt",
-				"email": "dotknewt@keemail.me"
-			}
-		},
-		{
 			"name": "context-engineering",
 			"source": {
 				"source": "git-subdir",
