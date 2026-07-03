@@ -1,7 +1,8 @@
 ---
 name: plugin-structure
 description: This skill should be used when the user asks to "create a plugin", "scaffold a plugin", "understand plugin structure", "organize plugin components", "set up plugin.json", "use ${CLAUDE_PLUGIN_ROOT}", "add commands/agents/skills/hooks", "configure auto-discovery", or needs guidance on plugin directory layout, manifest configuration, component organization, file naming conventions, or Claude Code plugin architecture best practices.
-version: 0.1.0
+metadata:
+  version: "0.1.0"
 ---
 
 # Plugin Structure for Claude Code
@@ -49,9 +50,12 @@ The manifest defines plugin metadata and configuration. Located at `.claude-plug
 
 ### Required Fields
 
+Both `name` and `description` are required on every plugin manifest — the repo's enforced validator (`manifest-lint`, backed by `validate-plugin-json.sh`) rejects manifests missing either field, and every real plugin in this repo includes both.
+
 ```json
 {
-  "name": "plugin-name"
+  "name": "plugin-name",
+  "description": "Brief explanation of plugin purpose"
 }
 ```
 
@@ -61,13 +65,18 @@ The manifest defines plugin metadata and configuration. Located at `.claude-plug
 - No spaces or special characters
 - Example: `code-review-assistant`, `test-runner`, `api-docs`
 
+**Description requirements:**
+- Brief explanation of what the plugin does
+- Recommended 50-200 characters for marketplace display
+- See `references/manifest-reference.md` for detailed guidance
+
 ### Recommended Metadata
 
 ```json
 {
   "name": "plugin-name",
-  "version": "1.0.0",
   "description": "Brief explanation of plugin purpose",
+  "version": "1.0.0",
   "author": {
     "name": "Author Name",
     "email": "author@example.com",
@@ -150,14 +159,22 @@ agents/
 **File format**:
 ```markdown
 ---
-description: Agent role and expertise
-capabilities:
-  - Specific task 1
-  - Specific task 2
+name: agent-identifier
+description: Use this agent when [triggering conditions]. Typical triggers include [scenario 1 in prose], [scenario 2 in prose], and [scenario 3 in prose]. See "When to invoke" in the agent body for worked scenarios.
+model: inherit
+color: blue
+tools: ["Read", "Write", "Grep"]
 ---
 
-Detailed agent instructions and knowledge...
+You are [agent role description]...
+
+## When to invoke
+
+- **[Scenario A].** [Description.]
+- **[Scenario B].** [Description.]
 ```
+
+See the `agent-development` skill for the complete frontmatter reference (`name`, `description`, `model`, `color`, `tools`) and system prompt design guidance.
 
 **Usage**: Users can invoke agents manually, or Claude Code selects them automatically based on task context
 
@@ -409,7 +426,7 @@ Single command with no dependencies:
 ```
 my-plugin/
 ├── .claude-plugin/
-│   └── plugin.json    # Just name field
+│   └── plugin.json    # Just name + description fields
 └── commands/
     └── hello.md       # Single command
 ```
@@ -473,4 +490,10 @@ my-plugin/
 
 ---
 
-For detailed examples and advanced patterns, see files in `references/` and `examples/` directories.
+For detailed examples and advanced patterns, see:
+
+- [references/manifest-reference.md](references/manifest-reference.md) — complete `plugin.json` field reference, path resolution rules, and validation
+- [references/component-patterns.md](references/component-patterns.md) — advanced organization patterns for commands, agents, skills, and hooks
+- [examples/minimal-plugin.md](examples/minimal-plugin.md) — simplest possible plugin (single command)
+- [examples/standard-plugin.md](examples/standard-plugin.md) — well-structured plugin with commands, agents, skills, and hooks
+- [examples/advanced-plugin.md](examples/advanced-plugin.md) — enterprise-grade plugin with MCP integration and multi-level organization

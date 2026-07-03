@@ -18,7 +18,8 @@ hello-world/
 
 ```json
 {
-  "name": "hello-world"
+  "name": "hello-world",
+  "description": "A minimal example plugin with a single greeting command"
 }
 ```
 
@@ -61,7 +62,7 @@ Executed at: 2025-01-15 14:30:22 UTC
 
 ## Key Points
 
-1. **Minimal manifest**: Only the required `name` field
+1. **Minimal manifest**: Only the required `name` and `description` fields
 2. **Single command**: One markdown file in `commands/` directory
 3. **Auto-discovery**: Claude Code finds the command automatically
 4. **No dependencies**: No scripts, hooks, or external resources
@@ -78,6 +79,6 @@ Executed at: 2025-01-15 14:30:22 UTC
 To add more functionality:
 
 1. **Add commands**: Create more `.md` files in `commands/`
-2. **Add metadata**: Update `plugin.json` with version, description, author
+2. **Add metadata**: Update `plugin.json` with version, author, homepage, keywords
 3. **Add agents**: Create `agents/` directory with agent definitions
 4. **Add hooks**: Create `hooks/hooks.json` for event handling

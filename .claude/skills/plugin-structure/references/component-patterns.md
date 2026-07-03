@@ -97,28 +97,18 @@ Nested organization for complex plugins:
 ```
 commands/
 ├── ci/
-│   ├── build.md
-│   ├── test.md
-│   └── lint.md
+│   ├── build.md        # /build (plugin:plugin-name:ci)
+│   ├── test.md         # /test (plugin:plugin-name:ci)
+│   └── lint.md         # /lint (plugin:plugin-name:ci)
 ├── deployment/
-│   ├── staging.md
-│   └── production.md
+│   ├── staging.md      # /staging (plugin:plugin-name:deployment)
+│   └── production.md   # /production (plugin:plugin-name:deployment)
 └── management/
-    ├── config.md
-    └── status.md
+    ├── config.md       # /config (plugin:plugin-name:management)
+    └── status.md       # /status (plugin:plugin-name:management)
 ```
 
-**Note**: Claude Code doesn't support nested command discovery automatically. Use custom paths:
-
-```json
-{
-  "commands": [
-    "./commands/ci",
-    "./commands/deployment",
-    "./commands/management"
-  ]
-}
-```
+**Note**: Subdirectories under `commands/` load automatically — no manifest entry needed. Each subdirectory name becomes a namespace segment, surfaced in `/help` as `(plugin:plugin-name:subdirectory)`. See the `command-development` skill's "Namespaced Structure" / "Namespaced Plugin Commands" sections for the full behavior.
 
 **When to use**:
 - 20+ commands
@@ -129,6 +119,7 @@ commands/
 - Maximum organization
 - Clear boundaries
 - Scalable structure
+- No manifest configuration required
 
 ## Agent Organization Patterns
 
@@ -320,14 +311,11 @@ hooks/
 
 ### Event-Based Organization
 
-Separate files per event type:
+**Note**: `hooks/hooks.json` must be literal, valid JSON — Claude Code does not support `${file:...}` references or any other file-inclusion syntax inside it. All events live in the one file it actually loads:
 
 ```
 hooks/
-├── hooks.json              # Combines all
-├── pre-tool-use.json      # PreToolUse hooks
-├── post-tool-use.json     # PostToolUse hooks
-├── stop.json              # Stop hooks
+├── hooks.json              # All events, valid JSON
 └── scripts/
     ├── validate/
     │   ├── write.sh
@@ -336,16 +324,49 @@ hooks/
         └── load.sh
 ```
 
-**hooks.json** (combines):
+**hooks.json**:
 ```json
 {
-  "PreToolUse": ${file:./pre-tool-use.json},
-  "PostToolUse": ${file:./post-tool-use.json},
-  "Stop": ${file:./stop.json}
+  "PreToolUse": [
+    {
+      "matcher": "Write|Edit",
+      "hooks": [
+        {
+          "type": "command",
+          "command": "bash ${CLAUDE_PLUGIN_ROOT}/hooks/scripts/validate/write.sh",
+          "timeout": 30
+        }
+      ]
+    }
+  ],
+  "PostToolUse": [
+    {
+      "matcher": "Bash",
+      "hooks": [
+        {
+          "type": "command",
+          "command": "bash ${CLAUDE_PLUGIN_ROOT}/hooks/scripts/validate/bash.sh",
+          "timeout": 30
+        }
+      ]
+    }
+  ],
+  "Stop": [
+    {
+      "matcher": ".*",
+      "hooks": [
+        {
+          "type": "command",
+          "command": "bash ${CLAUDE_PLUGIN_ROOT}/hooks/scripts/context/load.sh",
+          "timeout": 15
+        }
+      ]
+    }
+  ]
 }
 ```
 
-**Note**: Use build script to combine files, Claude Code doesn't support file references.
+**If per-event source files are useful for authoring** (e.g. different teams own different events), keep those fragments *outside* `hooks/` — for example `hooks/src/pre-tool-use.json`, `hooks/src/post-tool-use.json` — and add your own build step (a script using `jq -s 'add'` or equivalent) that merges them into the real `hooks/hooks.json` before the plugin ships. Commit the generated `hooks.json`, not just the sources, since Claude Code only ever reads the merged file.
 
 **When to use**:
 - 10+ hooks

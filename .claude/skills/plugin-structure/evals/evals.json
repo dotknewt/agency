@@ -1,0 +1,36 @@
+{
+  "skill_name": "plugin-structure",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Can you scaffold a new plugin called my-tool with a single slash command?",
+      "expected_output": "A plugin directory named my-tool/ containing .claude-plugin/plugin.json with both a \"name\" field (\"my-tool\") and a required \"description\" field describing the plugin's purpose, plus a commands/ directory at the plugin root (not nested inside .claude-plugin/) containing a single command file such as commands/my-tool.md with valid YAML frontmatter (name and description) and clear implementation instructions in the body.",
+      "assertions": [
+        "A .claude-plugin/plugin.json file is created with both \"name\" and \"description\" fields",
+        "The \"name\" field is \"my-tool\" in kebab-case",
+        "The commands/ directory is at the plugin root, not inside .claude-plugin/",
+        "A single command file exists under commands/ (e.g. commands/my-tool.md) with valid frontmatter"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "My plugin's skill isn't loading, why?",
+      "expected_output": "The agent diagnoses the most common cause: the skills/ (or commands/, agents/, hooks/) directory has been nested inside .claude-plugin/ instead of living at the plugin root alongside .claude-plugin/. It explains that only plugin.json belongs inside .claude-plugin/, and that component directories (skills/, commands/, agents/, hooks/) must be siblings of .claude-plugin/ at the plugin root for auto-discovery to find them. It also checks that the skill has a SKILL.md file (not README.md or another name) with valid YAML frontmatter.",
+      "assertions": [
+        "The response identifies component directories nested inside .claude-plugin/ as the likely root cause",
+        "The response explains that skills/, commands/, agents/, and hooks/ must be at plugin root level, not inside .claude-plugin/",
+        "The response mentions verifying the skill directory contains a SKILL.md file with valid frontmatter"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "How do I make my hook script portable across installs so it works no matter where someone installs my plugin?",
+      "expected_output": "The agent explains using the ${CLAUDE_PLUGIN_ROOT} environment variable for all intra-plugin path references (e.g. in the hook's \"command\" field in hooks.json, and inside the script itself if it sources other files), instead of hardcoded absolute paths, relative paths from the working directory, or home-directory shortcuts. It shows an example such as \"command\": \"bash ${CLAUDE_PLUGIN_ROOT}/hooks/scripts/validate.sh\".",
+      "assertions": [
+        "The response recommends ${CLAUDE_PLUGIN_ROOT} for portable path references",
+        "The response shows or describes an example hook command using ${CLAUDE_PLUGIN_ROOT}",
+        "The response warns against hardcoded absolute paths or working-directory-relative paths"
+      ]
+    }
+  ]
+}
