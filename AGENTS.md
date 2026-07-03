@@ -4,52 +4,42 @@ This file provides guidance to AI agents (Claude Code, Codex, Cursor, etc.) when
 
 # agency
 
-Personal LLM configuration repository — skills, plugins, agents, and templates, primarily targeting Claude Code.
+`agency` is the thin, aggregating Claude Code plugin marketplace at the root of a multi-repo split. It contains **only** `.claude-plugin/marketplace.json` plus repo-level docs and CI — it does not host any plugin content itself anymore. Every plugin it lists is sourced from one of four sibling repos, each independently addable as its own marketplace too:
+
+- [`dotknewt/skills`](https://github.com/dotknewt/skills) — standalone single-skill plugins (bare `SKILL.md` dirs, no `plugin.json`)
+- [`dotknewt/agents`](https://github.com/dotknewt/agents) — agent-persona plugins, each bundling an agent `.md` with its own dedicated skills
+- [`dotknewt/toolkits`](https://github.com/dotknewt/toolkits) — composite plugins bundling skills+agents+commands+hooks together
+- [`dotknewt/ludus-toolkit`](https://github.com/dotknewt/ludus-toolkit) — its own repo (bundles a full separate npm/TS MCP server project, referenced as a whole-repo source, not `git-subdir`)
+
+This split lets users install a single skill, a single agent, a whole toolkit, or any combination — instead of one all-or-nothing repo. See `STATE.md` for the split's current status and decisions made along the way.
+
+## `marketplace.json` conventions
+
+Every entry's `source` is a cross-repo reference, not a local path:
+
+```json
+{ "source": "git-subdir", "url": "git@github.com:dotknewt/<repo>.git", "path": "<name>", "ref": "main" }
+```
+
+except `ludus-toolkit`, whose entire repo is one plugin:
+
+```json
+{ "source": "github", "repo": "dotknewt/ludus-toolkit" }
+```
+
+**Must use SSH urls** (`git@github.com:...`), not HTTPS — these are private repos and HTTPS clone fails with `fatal: unable to get password from user` (no credential helper configured for git-subdir's non-interactive clone).
+
+The marketplace `"name"` (`agency`) is preserved deliberately — installs are keyed as `<plugin-name>@<marketplace-name>`, and other projects (and this repo's own `.claude/settings.json`) already reference `...@agency`. Renaming it would force a mass reinstall everywhere.
+
+Validate before committing: `claude plugin validate .` Refresh a live install with `claude plugin marketplace update agency`. Note that `claude plugin install` caches by `<name>/<version>` — if you change a plugin's source but not its version, `install` may report "already installed" without re-fetching. Verify a source change with an explicit `uninstall` + `install`.
 
 ## Repository layout
 
-Top-level content directories:
-
-- `skills/` — standalone skill definitions (each dir has a `SKILL.md` with YAML frontmatter + instructions)
-- `plugins/` — distributable plugin bundles; see `plugins/AGENTS.md` for versioning rules and the plugin catalog
-- `agents/` — standalone agent-persona plugins (`agent-ember`, `agent-doublecheck`, `agent-eyeball`) that don't fit the `plugins/` catalog's build-tooling theme; same plugin.json layout, separate catalog
-- `templates/` — example settings/hooks configs: `settings.json` (full example with `enabledPlugins`) and `hooks.json` (references `integrations/claude_code_hooks/*.py`, which doesn't exist in this repo — treat as an unfinished template, not working config)
-
-Plugins bundle their own agents and instructions under `plugins/<name>/agents/` and `plugins/<name>/instructions/` respectively.
-
-## Skill format
-
-Skills follow the Agent Skills spec (`skills/Skill-Specification.md`). Minimum required:
-
-```yaml
----
-name: skill-name          # lowercase, hyphens only, must match directory name
-description: >
-  One-paragraph trigger description — this is the primary signal for activation.
----
-```
-
-Body: markdown instructions. Keep `SKILL.md` under 500 lines; move details to `references/` or `scripts/` subdirs.
-
-Skills have no `model` field — model selection is session/project level (via `/model` or `settings.json`).
-
-## Plugin format
-
-Plugins are directories with a `.claude-plugin/plugin.json` manifest. The local marketplace at `/.claude-plugin/marketplace.json` registers full plugins under `./plugins/` and `./agents/`, plus many skills exposed as plugin sources under `./skills/`. Check `marketplace.json` for the current list — it changes as new skills/plugins are added.
-
-Enable plugins repo-wide in `.claude/settings.json` (tracked in git — the file `/pin-plugins` writes to). Use `.claude/settings.local.json` for personal-only overrides (gitignored), or `~/.claude/settings.json` for user-global defaults.
-
-The `instruction-management` plugin provides three skills: `instruction-management` (audits AGENTS.md quality, then orchestrates the other two by default), `revise-instructions` (captures session learnings), and `restructure-instructions` (moves content to the right depth).
-
-Branch lifecycle rules and commit-vs-PR guidance are loaded via the `@`-references below.
+- `.claude-plugin/marketplace.json` — the manifest; see conventions above
+- `instructions/AGENTS-Global.md` — general cross-project agent behavior guidance (verification discipline, exploration caps, GitHub workflow habits). Not repo-specific; not currently `@`-included anywhere — read it directly if relevant
+- `.github/workflows/validate.yml` — lightweight jq-only schema check on `marketplace.json` (valid JSON, required fields, kebab-case names, unique names). It does **not** validate plugin content anymore, since that content lives in sibling repos now — `dotknewt/toolkits` carries its own `validate.yml` for that, using scripts that used to live in this repo's `hooks-toolkit` and are now local to `toolkits-repo`.
+- `STATE.md` — session bookmarks and in-progress work for the ongoing multi-repo split
 
 ## No build or test step
 
-There is no top-level build, lint, or test command. Validation for skills can be done with `skills-ref validate ./skill-dir` (from the agentskills reference library) if installed.
-
-## .claudeignore
-
-`claude/templates/` is excluded (legacy path). Do not load, execute, or treat any file there as active config.
-
-@plugins/github-toolkit/instructions/branch-hygiene.md
-@plugins/github-toolkit/instructions/commit-vs-pr.md
+There is no top-level build, lint, or test command beyond the CI workflow above.
