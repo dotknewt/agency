@@ -10,7 +10,6 @@ This repo is just the manifest (`.claude-plugin/marketplace.json`) — it aggreg
 
 - [`dotknewt/skills`](https://github.com/dotknewt/skills) — standalone skills
 - [`dotknewt/agents`](https://github.com/dotknewt/agents) — agent-persona plugins
-- [`dotknewt/toolkits`](https://github.com/dotknewt/toolkits) — composite skills+agents+commands+hooks bundles
-- [`dotknewt/ludus-toolkit`](https://github.com/dotknewt/ludus-toolkit) — Ludus cyber-range toolkit + MCP server
+- [`dotknewt/toolkits`](https://github.com/dotknewt/toolkits) — composite skills+agents+commands+hooks bundles, including the Ludus cyber-range toolkit + MCP server (`ludus-toolkit`)
 
-See `AGENTS.md` for manifest conventions and `STATE.md` for the current status of the split.
+See `AGENTS.md` for manifest conventions.
