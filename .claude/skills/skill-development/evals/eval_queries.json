@@ -1,0 +1,22 @@
+[
+  { "query": "Can you create a new skill for our plugin that handles PDF form filling?", "should_trigger": true },
+  { "query": "I want to add a skill to the toolkits repo for querying our Snowflake warehouse.", "should_trigger": true },
+  { "query": "This skill's description is way too vague and it never triggers -- can you tighten up the trigger phrases?", "should_trigger": true },
+  { "query": "my SKILL.md is over 5000 words and it's all in one file, help me split it into references files", "should_trigger": true },
+  { "query": "How do I structure a skill so Claude only loads the detailed docs when it actually needs them?", "should_trigger": true },
+  { "query": "write me the frontmatter and directory layout for a brand new skill package with references and examples dirs", "should_trigger": true },
+  { "query": "review my skill and tell me if the name and description follow the spec", "should_trigger": true },
+  { "query": "what's the difference between scripts/, references/, and examples/ inside a skill, and when do I use each one", "should_trigger": true },
+  { "query": "improve the description on my csv-analyzer skill so it actually triggers on real prompts", "should_trigger": true },
+  { "query": "scaffold a brand new skill directory for our internal wiki search tool", "should_trigger": true },
+  { "query": "write a slash command that greets the user and shows the current git branch", "should_trigger": false },
+  { "query": "add an MCP server so Claude can talk to our postgres database", "should_trigger": false },
+  { "query": "create a PreToolUse hook that blocks any rm -rf command", "should_trigger": false },
+  { "query": "add an agent that reviews PRs for style issues before merge", "should_trigger": false },
+  { "query": "set up plugin.json for my new plugin so commands and agents auto-discover correctly", "should_trigger": false },
+  { "query": "how do I store user-configurable settings for my plugin using a .local.md file", "should_trigger": false },
+  { "query": "what's the weather like today in Tokyo", "should_trigger": false },
+  { "query": "write a python script that reads a csv and uploads each row to our postgres database", "should_trigger": false },
+  { "query": "validate my plugin.json against the manifest schema before I publish", "should_trigger": false },
+  { "query": "help me write a README for my open source project explaining how to install it", "should_trigger": false }
+]

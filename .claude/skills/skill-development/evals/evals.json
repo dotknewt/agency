@@ -1,0 +1,42 @@
+{
+  "skill_name": "skill-development",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Add a skill to the data-toolkit plugin for querying our internal analytics API. It should handle things like 'how many active users did we have last week' by hitting api.internal.example.com/v1/query with an API key from an env var. We'll probably also want it to know our event schema (event_name, user_id, ts, properties).",
+      "expected_output": "A new skill directory under the plugin's skills/ directory (e.g. plugin-name/skills/analytics-api/) containing a SKILL.md with valid frontmatter (name matching the directory, third-person description with concrete trigger phrases), an imperative-form body describing how to call the API and handle auth, and the event schema moved into references/schema.md rather than inlined in SKILL.md. Directories created follow this repo's convention (references/, examples/, scripts/ as needed) rather than assets/.",
+      "assertions": [
+        "Output SKILL.md's name field is lowercase alphanumeric-and-hyphens and matches its parent directory name exactly",
+        "description field is non-empty, <=1024 characters, third person, and lists specific trigger phrases",
+        "SKILL.md body is under 500 lines, with the event schema and any lengthy API details moved to a references/ file rather than inlined",
+        "The skill directory is created under the target plugin's skills/ directory, not at the repo root",
+        "Bundled resource directories used are references/, examples/, and/or scripts/ (not assets/) unless the skill genuinely needs binary/template output",
+        "Running scripts/validate_skill.py against the generated SKILL.md exits 0"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "The description on my csv-tools skill just says \"Helps with CSVs.\" It basically never triggers. Can you fix the description so it actually works?",
+      "expected_output": "A rewritten description field that keeps the same skill scope but is specific and third-person, listing concrete example phrases a user would say (e.g. \"analyze this csv\", \"clean up messy spreadsheet data\") and covering cases where the user doesn't say \"CSV\" explicitly. The name field and rest of SKILL.md are left untouched unless they also need fixing.",
+      "assertions": [
+        "New description uses third-person phrasing (\"This skill should be used when...\", not \"Use this skill when...\")",
+        "New description lists at least 3 specific, concrete trigger phrases rather than a generic summary",
+        "New description is <=1024 characters",
+        "name field is unchanged and still matches the skill's parent directory",
+        "The rewrite does not silently narrow or broaden the skill's actual scope beyond what the user described"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "My report-builder skill's SKILL.md ballooned to almost 4,000 words -- everything from the basic workflow to obscure edge cases is crammed into one file. Can you split it up properly so it stays lean?",
+      "expected_output": "SKILL.md is reduced to core procedural guidance (purpose, main workflow, pointers to resources) while detailed content -- edge cases, advanced formatting options, migration notes, etc. -- moves into new well-named files under references/ (e.g. references/edge-cases.md, references/advanced-formatting.md). SKILL.md explicitly references each new file by relative path and states when Claude should load it. No content is silently dropped.",
+      "assertions": [
+        "Resulting SKILL.md body is under 500 lines and moves toward the 1,500-2,000 word target",
+        "Detailed content removed from SKILL.md is preserved in new files under references/, not deleted",
+        "SKILL.md explicitly references each new references/ file with a relative path and a note on when to load it",
+        "No information is duplicated between SKILL.md and the references/ files it now points to",
+        "Running scripts/validate_skill.py against the new SKILL.md passes the body_length and file_references checks"
+      ]
+    }
+  ]
+}
