@@ -2,6 +2,8 @@
 
 Comprehensive strategies for testing slash commands before deployment and distribution.
 
+The structural and frontmatter checks described in Levels 1-2 below are implemented as real, runnable scripts in `scripts/` — see `scripts/README.md` for usage. Run them instead of writing your own one-off validation each time.
+
 ## Overview
 
 Testing commands ensures they work correctly, handle edge cases, and provide good user experience. A systematic testing approach catches issues early and builds confidence in command reliability.
@@ -33,41 +35,11 @@ test -f .claude/commands/my-command.md && echo "Found" || echo "Missing"
 
 **Automated validation script:**
 
+Use the bundled `scripts/validate-command.sh` rather than writing this by hand — it checks file existence, `.md` extension, emptiness, and balanced frontmatter markers, and reports results on stdout with distinct exit codes:
+
 ```bash
-#!/bin/bash
-# validate-command.sh
-
-COMMAND_FILE="$1"
-
-if [ ! -f "$COMMAND_FILE" ]; then
-  echo "ERROR: File not found: $COMMAND_FILE"
-  exit 1
-fi
-
-# Check .md extension
-if [[ ! "$COMMAND_FILE" =~ \.md$ ]]; then
-  echo "ERROR: File must have .md extension"
-  exit 1
-fi
-
-# Validate YAML frontmatter if present
-if head -n 1 "$COMMAND_FILE" | grep -q "^---"; then
-  # Count frontmatter markers
-  MARKERS=$(head -n 50 "$COMMAND_FILE" | grep -c "^---")
-  if [ "$MARKERS" -ne 2 ]; then
-    echo "ERROR: Invalid YAML frontmatter (need exactly 2 '---' markers)"
-    exit 1
-  fi
-  echo "✓ YAML frontmatter syntax valid"
-fi
-
-# Check for empty file
-if [ ! -s "$COMMAND_FILE" ]; then
-  echo "ERROR: File is empty"
-  exit 1
-fi
-
-echo "✓ Command file structure valid"
+scripts/validate-command.sh .claude/commands/my-command.md
+scripts/validate-command.sh --help   # full usage and exit-code reference
 ```
 
 ### Level 2: Frontmatter Field Validation
@@ -79,48 +51,11 @@ echo "✓ Command file structure valid"
 
 **Validation script:**
 
+Use the bundled `scripts/validate-frontmatter.sh` — it checks `model`, `description` length, `allowed-tools` presence, and `disable-model-invocation`, printing `OK`/`WARN`/`FAIL` results on stdout:
+
 ```bash
-#!/bin/bash
-# validate-frontmatter.sh
-
-COMMAND_FILE="$1"
-
-# Extract YAML frontmatter
-FRONTMATTER=$(sed -n '/^---$/,/^---$/p' "$COMMAND_FILE" | sed '1d;$d')
-
-if [ -z "$FRONTMATTER" ]; then
-  echo "No frontmatter to validate"
-  exit 0
-fi
-
-# Check 'model' field if present
-if echo "$FRONTMATTER" | grep -q "^model:"; then
-  MODEL=$(echo "$FRONTMATTER" | grep "^model:" | cut -d: -f2 | tr -d ' ')
-  if ! echo "sonnet opus haiku" | grep -qw "$MODEL"; then
-    echo "ERROR: Invalid model '$MODEL' (must be sonnet, opus, or haiku)"
-    exit 1
-  fi
-  echo "✓ Model field valid: $MODEL"
-fi
-
-# Check 'allowed-tools' field format
-if echo "$FRONTMATTER" | grep -q "^allowed-tools:"; then
-  echo "✓ allowed-tools field present"
-  # Could add more sophisticated validation here
-fi
-
-# Check 'description' length
-if echo "$FRONTMATTER" | grep -q "^description:"; then
-  DESC=$(echo "$FRONTMATTER" | grep "^description:" | cut -d: -f2-)
-  LENGTH=${#DESC}
-  if [ "$LENGTH" -gt 80 ]; then
-    echo "WARNING: Description length $LENGTH (recommend < 60 chars)"
-  else
-    echo "✓ Description length acceptable: $LENGTH chars"
-  fi
-fi
-
-echo "✓ Frontmatter fields valid"
+scripts/validate-frontmatter.sh .claude/commands/my-command.md
+scripts/validate-frontmatter.sh --help   # full usage and exit-code reference
 ```
 
 ### Level 3: Manual Command Invocation
@@ -342,81 +277,38 @@ EOF
 
 ### Command Test Suite
 
-Create a test suite script:
+Use the bundled `scripts/test-commands.sh` instead of writing a test-suite script from scratch — it already runs both validators against every command in a directory and prints a pass/fail summary:
 
 ```bash
-#!/bin/bash
-# test-commands.sh - Command test suite
-
-TEST_DIR=".claude/commands"
-FAILED_TESTS=0
-
-echo "Command Test Suite"
-echo "=================="
-echo
-
-for cmd_file in "$TEST_DIR"/*.md; do
-  cmd_name=$(basename "$cmd_file" .md)
-  echo "Testing: $cmd_name"
-
-  # Validate structure
-  if ./validate-command.sh "$cmd_file"; then
-    echo "  ✓ Structure valid"
-  else
-    echo "  ✗ Structure invalid"
-    ((FAILED_TESTS++))
-  fi
-
-  # Validate frontmatter
-  if ./validate-frontmatter.sh "$cmd_file"; then
-    echo "  ✓ Frontmatter valid"
-  else
-    echo "  ✗ Frontmatter invalid"
-    ((FAILED_TESTS++))
-  fi
-
-  echo
-done
-
-echo "=================="
-echo "Tests complete"
-echo "Failed: $FAILED_TESTS"
-
-exit $FAILED_TESTS
+scripts/test-commands.sh .claude/commands
 ```
+
+If you're bundling this skill's scripts inside your own plugin or project, copy `scripts/validate-command.sh`, `scripts/validate-frontmatter.sh`, and `scripts/test-commands.sh` into your project's own `scripts/` directory (or reference them via `${CLAUDE_PLUGIN_ROOT}/scripts/...` if this skill ships as part of your plugin).
 
 ### Pre-Commit Hook
 
-Validate commands before committing:
+Validate only the commands that changed before allowing a commit:
 
 ```bash
 #!/bin/bash
 # .git/hooks/pre-commit
 
-echo "Validating commands..."
-
 COMMANDS_CHANGED=$(git diff --cached --name-only | grep "\.claude/commands/.*\.md")
 
 if [ -z "$COMMANDS_CHANGED" ]; then
-  echo "No commands changed"
   exit 0
 fi
 
 for cmd in $COMMANDS_CHANGED; do
-  echo "Checking: $cmd"
-
-  if ! ./scripts/validate-command.sh "$cmd"; then
-    echo "ERROR: Command validation failed: $cmd"
-    exit 1
-  fi
+  ./scripts/validate-command.sh "$cmd" && ./scripts/validate-frontmatter.sh "$cmd"
 done
-
-echo "✓ All commands valid"
 ```
+
+`validate-command.sh` and `validate-frontmatter.sh` already exit non-zero on failure, so this hook blocks the commit automatically — no separate `ERROR:`/`exit 1` wrapper needed.
 
 ### Continuous Testing
 
-Test commands in CI/CD:
+Test commands in CI/CD using the same scripts:
 
 ```yaml
 # .github/workflows/test-commands.yml
@@ -430,18 +322,8 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Validate command structure
-        run: |
-          for cmd in .claude/commands/*.md; do
-            echo "Testing: $cmd"
-            ./scripts/validate-command.sh "$cmd"
-          done
-
-      - name: Validate frontmatter
-        run: |
-          for cmd in .claude/commands/*.md; do
-            ./scripts/validate-frontmatter.sh "$cmd"
-          done
+      - name: Validate all commands
+        run: ./scripts/test-commands.sh .claude/commands
 
       - name: Check for TODOs
         run: |

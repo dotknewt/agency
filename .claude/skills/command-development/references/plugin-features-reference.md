@@ -448,16 +448,17 @@ description: Deploy to environment with validation
 argument-hint: [environment]
 ---
 
-Validate environment: !`echo "$1" | grep -E "^(dev|staging|prod)$" || echo "INVALID"`
+Validate environment: !`echo "$1" | grep -qE "^(dev|staging|prod)$" && echo "VALID" || echo "INVALID"`
 
-$IF($1 in [dev, staging, prod],
-  Deploy to $1 environment using validated configuration,
+If the check above reports VALID:
+  Deploy to $1 environment using validated configuration
+
+If it reports INVALID:
   ERROR: Invalid environment '$1'. Must be one of: dev, staging, prod
-)
 ```
 
 **Validation approaches:**
-1. Bash validation using grep/test
+1. Bash validation using grep/test, with the result branched on in prose ("If the check above reports X... If it reports Y...") — there is no `$IF(...)` macro in Claude Code; arguments are substituted as plain text before Claude sees the prompt
 2. Inline validation in prompt
 3. Script-based validation
 
@@ -493,10 +494,11 @@ argument-hint: [environment] [version]
 
 Validate inputs: !`test -n "$1" -a -n "$2" && echo "OK" || echo "MISSING"`
 
-$IF($1 AND $2,
-  Deploy version $2 to $1 environment,
+If the check above reports OK:
+  Deploy version $2 to $1 environment
+
+If it reports MISSING:
   ERROR: Both environment and version required. Usage: /deploy [env] [version]
-)
 ```
 
 ### Plugin Resource Validation
