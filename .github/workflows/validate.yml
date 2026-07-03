@@ -4,14 +4,10 @@ on:
   push:
     branches: [main]
     paths:
-      - "skills/**"
-      - "plugins/**"
       - ".claude-plugin/**"
       - ".github/workflows/validate.yml"
   pull_request:
     paths:
-      - "skills/**"
-      - "plugins/**"
       - ".claude-plugin/**"
       - ".github/workflows/validate.yml"
   workflow_dispatch:
@@ -29,28 +25,45 @@ jobs:
       - name: Install jq
         run: sudo apt-get install -y jq
 
-      - name: Validate plugin.json and marketplace.json
+      - name: Validate marketplace.json shape
         run: |
+          set -euo pipefail
+          manifest=.claude-plugin/marketplace.json
+
+          jq empty "$manifest"
+
+          jq -e '.name and (.name | type == "string")' "$manifest" > /dev/null \
+            || { echo "::error::marketplace.json missing string 'name'"; exit 1; }
+
+          jq -e '.plugins and (.plugins | type == "array") and (.plugins | length > 0)' "$manifest" > /dev/null \
+            || { echo "::error::marketplace.json missing non-empty 'plugins' array"; exit 1; }
+
           failed=0
-          while IFS= read -r -d '' file; do
-            if ! bash plugins/hooks-toolkit/scripts/validate-plugin-json.sh "$file"; then
+          count=$(jq '.plugins | length' "$manifest")
+          for i in $(seq 0 $((count - 1))); do
+            entry=$(jq -c ".plugins[$i]" "$manifest")
+            name=$(echo "$entry" | jq -r '.name // empty')
+            source=$(echo "$entry" | jq -r '.source // empty')
+
+            if [ -z "$name" ]; then
+              echo "::error::plugins[$i] missing 'name'"
+              failed=$((failed + 1))
+            elif ! echo "$name" | grep -qE '^[a-z][a-z0-9]*(-[a-z0-9]+)*$'; then
+              echo "::error::plugins[$i] name '$name' is not kebab-case"
               failed=$((failed + 1))
             fi
-          done < <(find plugins -name "plugin.json" -print0)
 
-          # Also validate marketplace.json
-          if ! bash plugins/hooks-toolkit/scripts/validate-plugin-json.sh .claude-plugin/marketplace.json; then
+            if [ -z "$source" ]; then
+              echo "::error::plugins[$i] ($name) missing 'source'"
+              failed=$((failed + 1))
+            fi
+          done
+
+          # Every plugin name must be unique.
+          dupes=$(jq -r '.plugins | map(.name) | group_by(.) | map(select(length > 1)) | flatten | unique | .[]' "$manifest" || true)
+          if [ -n "$dupes" ]; then
+            echo "::error::duplicate plugin name(s): $dupes"
             failed=$((failed + 1))
           fi
 
-          exit $failed
-
-      - name: Validate SKILL.md frontmatter
-        run: |
-          failed=0
-          while IFS= read -r -d '' file; do
-            if ! bash plugins/hooks-toolkit/scripts/validate-skill-frontmatter.sh "$file"; then
-              failed=$((failed + 1))
-            fi
-          done < <(find skills plugins -name "SKILL.md" -print0)
           exit $failed

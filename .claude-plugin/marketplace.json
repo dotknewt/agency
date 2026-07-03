@@ -7,7 +7,12 @@
 	"plugins": [
 		{
 			"name": "instruction-management",
-			"source": "./plugins/instruction-management",
+			"source": {
+				"source": "git-subdir",
+				"url": "git@github.com:dotknewt/toolkits.git",
+				"path": "instruction-management",
+				"ref": "main"
+			},
 			"description": "Tools to maintain and improve project instruction files (AGENTS.md and legacy CLAUDE.md) — audit quality, capture session learnings, and keep project instructions current.",
 			"version": "1.5.2",
 			"author": {
@@ -76,7 +81,12 @@
 		},
 		{
 			"name": "github-toolkit",
-			"source": "./plugins/github-toolkit",
+			"source": {
+				"source": "git-subdir",
+				"url": "git@github.com:dotknewt/toolkits.git",
+				"path": "github-toolkit",
+				"ref": "main"
+			},
 			"description": "Scaffold GitHub repo metadata — issue templates and CI workflows. /github-scaffold picks the task; /create-issue-template and /scaffold-ci-workflow run the subtasks.",
 			"version": "1.1.2",
 			"author": {
@@ -86,7 +96,12 @@
 		},
 		{
 			"name": "agency-toolkit",
-			"source": "./plugins/agency-toolkit",
+			"source": {
+				"source": "git-subdir",
+				"url": "git@github.com:dotknewt/toolkits.git",
+				"path": "agency-toolkit",
+				"ref": "main"
+			},
 			"description": "Local fork of Anthropic's plugin-dev toolkit — skills, agents, and commands for building Claude Code plugins.",
 			"version": "1.0.3",
 			"author": {
@@ -111,7 +126,12 @@
 		},
 		{
 			"name": "hooks-toolkit",
-			"source": "./plugins/hooks-toolkit",
+			"source": {
+				"source": "git-subdir",
+				"url": "git@github.com:dotknewt/toolkits.git",
+				"path": "hooks-toolkit",
+				"ref": "main"
+			},
 			"description": "Composable safety and hygiene hooks — force-push guard, secret scanner, plugin/skill manifest validators, branch nudges, and dirty-tree stop check.",
 			"version": "1.0.0",
 			"author": {
@@ -131,7 +151,12 @@
 		},
 		{
 			"name": "docker-toolkit",
-			"source": "./plugins/docker-toolkit",
+			"source": {
+				"source": "git-subdir",
+				"url": "git@github.com:dotknewt/toolkits.git",
+				"path": "docker-toolkit",
+				"ref": "main"
+			},
 			"description": "Build and validate Docker artifacts — multi-stage Dockerfiles, and packaging MCP servers as containers runnable via the Docker MCP Gateway.",
 			"version": "0.1.1",
 			"author": {
