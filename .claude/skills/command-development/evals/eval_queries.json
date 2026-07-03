@@ -1,0 +1,22 @@
+[
+  { "query": "How do I add YAML frontmatter to a command file in .claude/commands/?", "should_trigger": true },
+  { "query": "add a slash command that fixes a github issue by number, like /fix-issue 482", "should_trigger": true },
+  { "query": "whats the diff between $ARGUMENTS and $1 in a command prompt", "should_trigger": true },
+  { "query": "I need to namespace my 25 commands into ci/, git/, and docs/ subfolders so /help isn't a wall of text", "should_trigger": true },
+  { "query": "can you make an interactive /setup command that walks the user through picking a deployment target with AskUserQuestion", "should_trigger": true },
+  { "query": "my plugin-name/commands/deploy.md needs to read a config file with ${CLAUDE_PLUGIN_ROOT}, how do i wire that up", "should_trigger": true },
+  { "query": "write a command called /security-review that only has Read and Grep tool access", "should_trigger": true },
+  { "query": "quick, whats argument-hint for and does it actually validate anything", "should_trigger": true },
+  { "query": "we're building a plugin and want a /release command that chains build.sh, test.sh, and package.sh from our scripts folder", "should_trigger": true },
+  { "query": "how do i make a command that only shows up when a user manually types it, not something claude can call on its own", "should_trigger": true },
+  { "query": "write a bash script that deploys our app to staging with zero downtime", "should_trigger": false },
+  { "query": "create a GitHub Actions workflow file that runs our test suite on every push", "should_trigger": false },
+  { "query": "help me write a new skill for summarizing weekly incident reports, it should live in .claude/skills/", "should_trigger": false },
+  { "query": "what's the preferred SKILL.md structure for a brand-new plugin capability we're building", "should_trigger": false },
+  { "query": "add a PreToolUse hook that blocks rm -rf commands before they run", "should_trigger": false },
+  { "query": "how do I register an MCP server in my plugin's .mcp.json file", "should_trigger": false },
+  { "query": "write a python script that validates our JSON config schema", "should_trigger": false },
+  { "query": "create an agent that autonomously reviews pull requests for security bugs", "should_trigger": false },
+  { "query": "draft the README for my open-source CLI tool", "should_trigger": false },
+  { "query": "we're deciding between putting new functionality in .claude/skills vs writing a one-off prompt, which should we use going forward", "should_trigger": false }
+]

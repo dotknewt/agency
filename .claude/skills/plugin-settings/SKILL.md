@@ -1,10 +1,11 @@
 ---
 name: plugin-settings
-description: This skill should be used when the user asks about "plugin settings", "store plugin configuration", "user-configurable plugin", ".local.md files", "plugin state files", "read YAML frontmatter", "per-project plugin settings", or wants to make plugin behavior configurable. Documents the .claude/plugin-name.local.md pattern for storing plugin-specific configuration with YAML frontmatter and markdown content.
-version: 0.1.0
+description: Use this skill when the user wants to store or read plugin-specific configuration or state on a per-project basis — e.g. "plugin settings", "store plugin configuration", "user-configurable plugin", ".local.md files", "plugin state files", "per-project plugin settings", or parsing the YAML frontmatter of a `.claude/plugin-name.local.md` file. Push further and use it even if they don't say .local.md, such as when asking to make a hook or command remember state per project, persist config between sessions, or toggle plugin behavior without editing hooks.json. Documents the .claude/plugin-name.local.md pattern — YAML frontmatter plus a markdown body — including how to read, create, and validate these files from hooks, commands, and agents.
+metadata:
+  version: "0.1.0"
 ---
 
-# Plugin Settings Pattern for Claude Code Plugins
+# Settings Pattern for Claude Code Plugins
 
 ## Overview
 
@@ -16,6 +17,18 @@ Plugins can store user-configurable settings and state in `.claude/plugin-name.l
 - Purpose: Per-project plugin configuration and state
 - Usage: Read from hooks, commands, and agents
 - Lifecycle: User-managed (not in git, should be in `.gitignore`)
+
+**See also:** `.claude/skills/hook-development` for general hook file I/O patterns, and `.claude/skills/plugin-structure` for overall plugin file/directory conventions — both have light overlap with this skill but distinct scope.
+
+## Gotchas
+
+- Quoted and unquoted scalar values are both valid YAML (`field: value` and `field: "value"`); strip both single and double quotes when parsing, or values will include the literal quote characters.
+- If the markdown body itself contains a `---` line (e.g. a horizontal rule), frontmatter extraction still works — `sed -n '/^---$/,/^---$/{ /^---$/d; p; }'` and `awk '/^---$/{i++; next} i>=2'` only count the first two `---` markers.
+- A malformed file with only one `---` marker does not error on its own — sed's range extraction silently treats everything after that single marker as "frontmatter" (or as the body), producing garbage rather than a clear failure. Run `scripts/validate-settings.sh` before parsing to catch this.
+- Settings changes never hot-reload. Hooks and their configuration are only re-read on Claude Code restart — always tell the user to restart after creating or editing a `.local.md` file.
+- List fields (`list_field: ["a", "b"]`) are not reliably parseable with grep/sed; use `yq -o json` for real list handling, or treat the field as an opaque string for simple substring checks.
+- Never edit a settings file in place with `sed -i`; write to a temp file and `mv` it atomically, or a crash mid-write can corrupt the file the next hook invocation reads.
+- With `set -euo pipefail`, a `grep` that finds no match (an unset/optional field) exits non-zero and — unguarded — aborts the whole script instead of falling through to a default. Append `|| true` to field-extraction pipelines that read optional fields.
 
 ## File Structure
 
@@ -94,7 +107,7 @@ if [[ "$STRICT_MODE" == "true" ]]; then
 fi
 ```
 
-See `examples/read-settings-hook.sh` for complete working example.
+See `examples/read-settings-hook.sh` for a complete working example, including the correct deny/allow decision output pattern.
 
 ### From Commands
 
@@ -133,141 +146,15 @@ If present, parse YAML frontmatter and adapt behavior according to:
 - Additional configuration fields
 ```
 
-## Parsing Techniques
+## Parsing and Usage Patterns
 
-### Extract Frontmatter
+Frontmatter is extracted with `sed -n '/^---$/,/^---$/{ /^---$/d; p; }' "$FILE"`, then individual fields are pulled out with `grep '^field:' | sed 's/field: *//'` and quote-stripped as needed (see Gotchas above for the traps in this approach). Once fields are parsed, three usage patterns cover most cases:
 
-```bash
-# Extract everything between --- markers
-FRONTMATTER=$(sed -n '/^---$/,/^---$/{ /^---$/d; p; }' "$FILE")
-```
+- **Toggle a hook on/off** — gate a hook's whole body behind `enabled: true` in the settings file, so it can be activated/deactivated without editing `hooks.json` (which requires a restart anyway).
+- **Coordinate state across agents/sessions** — store IDs, session names, or task metadata in frontmatter and read it from a Stop/notification hook.
+- **Switch behavior on a mode field** — `case` over a `mode`/`validation_level` field to change strictness.
 
-### Read Individual Fields
-
-**String fields:**
-```bash
-VALUE=$(echo "$FRONTMATTER" | grep '^field_name:' | sed 's/field_name: *//' | sed 's/^"\(.*\)"$/\1/')
-```
-
-**Boolean fields:**
-```bash
-ENABLED=$(echo "$FRONTMATTER" | grep '^enabled:' | sed 's/enabled: *//')
-# Compare: if [[ "$ENABLED" == "true" ]]; then
-```
-
-**Numeric fields:**
-```bash
-MAX=$(echo "$FRONTMATTER" | grep '^max_value:' | sed 's/max_value: *//')
-# Use: if [[ $MAX -gt 100 ]]; then
-```
-
-### Read Markdown Body
-
-Extract content after second `---`:
-
-```bash
-# Get everything after closing ---
-BODY=$(awk '/^---$/{i++; next} i>=2' "$FILE")
-```
-
-## Common Patterns
-
-### Pattern 1: Temporarily Active Hooks
-
-Use settings file to control hook activation:
-
-```bash
-#!/bin/bash
-STATE_FILE=".claude/security-scan.local.md"
-
-# Quick exit if not configured
-if [[ ! -f "$STATE_FILE" ]]; then
-  exit 0
-fi
-
-# Read enabled flag
-FRONTMATTER=$(sed -n '/^---$/,/^---$/{ /^---$/d; p; }' "$STATE_FILE")
-ENABLED=$(echo "$FRONTMATTER" | grep '^enabled:' | sed 's/enabled: *//')
-
-if [[ "$ENABLED" != "true" ]]; then
-  exit 0  # Disabled
-fi
-
-# Run hook logic
-# ...
-```
-
-**Use case:** Enable/disable hooks without editing hooks.json (requires restart).
-
-### Pattern 2: Agent State Management
-
-Store agent-specific state and configuration:
-
-**.claude/multi-agent-swarm.local.md:**
-```markdown
----
-agent_name: auth-agent
-task_number: 3.5
-pr_number: 1234
-coordinator_session: team-leader
-enabled: true
-dependencies: ["Task 3.4"]
----
-
-# Task Assignment
-
-Implement JWT authentication for the API.
-
-**Success Criteria:**
-- Authentication endpoints created
-- Tests passing
-- PR created and CI green
-```
-
-Read from hooks to coordinate agents:
-
-```bash
-AGENT_NAME=$(echo "$FRONTMATTER" | grep '^agent_name:' | sed 's/agent_name: *//')
-COORDINATOR=$(echo "$FRONTMATTER" | grep '^coordinator_session:' | sed 's/coordinator_session: *//')
-
-# Send notification to coordinator
-tmux send-keys -t "$COORDINATOR" "Agent $AGENT_NAME completed task" Enter
-```
-
-### Pattern 3: Configuration-Driven Behavior
-
-**.claude/my-plugin.local.md:**
-```markdown
----
-validation_level: strict
-max_file_size: 1000000
-allowed_extensions: [".js", ".ts", ".tsx"]
-enable_logging: true
----
-
-# Validation Configuration
-
-Strict mode enabled for this project.
-All writes validated against security policies.
-```
-
-Use in hooks or commands:
-
-```bash
-LEVEL=$(echo "$FRONTMATTER" | grep '^validation_level:' | sed 's/validation_level: *//')
-
-case "$LEVEL" in
-  strict)
-    # Apply strict validation
-    ;;
-  standard)
-    # Apply standard validation
-    ;;
-  lenient)
-    # Apply lenient validation
-    ;;
-esac
-```
+For the complete parsing reference — string/boolean/numeric/list field parsing, extracting the markdown body, atomic updates, validation, debugging, and the full edge-case list — see `references/parsing-techniques.md`.
 
 ## Creating Settings Files
 
@@ -421,54 +308,9 @@ Settings files should be:
 - Not committed to git
 - Not shared between users
 
-## Real-World Examples
+## Illustrative Examples
 
-### multi-agent-swarm Plugin
-
-**.claude/multi-agent-swarm.local.md:**
-```markdown
----
-agent_name: auth-implementation
-task_number: 3.5
-pr_number: 1234
-coordinator_session: team-leader
-enabled: true
-dependencies: ["Task 3.4"]
-additional_instructions: Use JWT tokens, not sessions
----
-
-# Task: Implement Authentication
-
-Build JWT-based authentication for the REST API.
-Coordinate with auth-agent on shared types.
-```
-
-**Hook usage (agent-stop-notification.sh):**
-- Checks if file exists (line 15-18: quick exit if not)
-- Parses frontmatter to get coordinator_session, agent_name, enabled
-- Sends notifications to coordinator if enabled
-- Allows quick activation/deactivation via `enabled: true/false`
-
-### ralph-loop Plugin
-
-**.claude/ralph-loop.local.md:**
-```markdown
----
-iteration: 1
-max_iterations: 10
-completion_promise: "All tests passing and build successful"
----
-
-Fix all the linting errors in the project.
-Make sure tests pass after each fix.
-```
-
-**Hook usage (stop-hook.sh):**
-- Checks if file exists (line 15-18: quick exit if not active)
-- Reads iteration count and max_iterations
-- Extracts completion_promise for loop termination
-- Reads body as the prompt to feed back
-- Updates iteration count on each loop
+`references/real-world-examples.md` walks through two illustrative example plugins — `multi-agent-swarm` (agent-coordination state) and `ralph-loop` (loop-iteration state). Both names were invented to demonstrate the pattern end-to-end; they are not real, production plugins shipped in this marketplace. Each walkthrough includes a full settings file, the hook that reads it, and the command that creates it — use it as a template when designing a new plugin's settings schema.
 
 ## Quick Reference
 
@@ -512,7 +354,7 @@ fi
 For detailed implementation patterns:
 
 - **`references/parsing-techniques.md`** - Complete guide to parsing YAML frontmatter and markdown bodies
-- **`references/real-world-examples.md`** - Deep dive into multi-agent-swarm and ralph-loop implementations
+- **`references/real-world-examples.md`** - Illustrative multi-agent-swarm and ralph-loop walkthroughs (not real, production plugins)
 
 ### Example Files
 

@@ -19,6 +19,11 @@ show_usage() {
   echo ""
   echo "Creates sample test input with:"
   echo "  $0 --create-sample <event-type>"
+  echo ""
+  echo "Output:"
+  echo "  Progress/diagnostic messages (banners, verbose input/environment dumps)"
+  echo "  are printed to stderr. Test results (exit code, duration, hook output,"
+  echo "  environment file contents, pass/fail) are printed to stdout."
   exit 0
 }
 
@@ -157,14 +162,14 @@ if ! jq empty "$TEST_INPUT" 2>/dev/null; then
   exit 1
 fi
 
-echo "🧪 Testing hook: $HOOK_SCRIPT"
-echo "📥 Input: $TEST_INPUT"
-echo ""
+echo "🧪 Testing hook: $HOOK_SCRIPT" >&2
+echo "📥 Input: $TEST_INPUT" >&2
+echo "" >&2
 
 if [ "$VERBOSE" = true ]; then
-  echo "Input JSON:"
-  jq . "$TEST_INPUT"
-  echo ""
+  echo "Input JSON:" >&2
+  jq . "$TEST_INPUT" >&2
+  echo "" >&2
 fi
 
 # Set up environment
@@ -173,16 +178,16 @@ export CLAUDE_PLUGIN_ROOT="${CLAUDE_PLUGIN_ROOT:-$(pwd)}"
 export CLAUDE_ENV_FILE="${CLAUDE_ENV_FILE:-/tmp/test-env-$$}"
 
 if [ "$VERBOSE" = true ]; then
-  echo "Environment:"
-  echo "  CLAUDE_PROJECT_DIR=$CLAUDE_PROJECT_DIR"
-  echo "  CLAUDE_PLUGIN_ROOT=$CLAUDE_PLUGIN_ROOT"
-  echo "  CLAUDE_ENV_FILE=$CLAUDE_ENV_FILE"
-  echo ""
+  echo "Environment:" >&2
+  echo "  CLAUDE_PROJECT_DIR=$CLAUDE_PROJECT_DIR" >&2
+  echo "  CLAUDE_PLUGIN_ROOT=$CLAUDE_PLUGIN_ROOT" >&2
+  echo "  CLAUDE_ENV_FILE=$CLAUDE_ENV_FILE" >&2
+  echo "" >&2
 fi
 
 # Run the hook
-echo "▶️  Running hook (timeout: ${TIMEOUT}s)..."
-echo ""
+echo "▶️  Running hook (timeout: ${TIMEOUT}s)..." >&2
+echo "" >&2
 
 start_time=$(date +%s)
 

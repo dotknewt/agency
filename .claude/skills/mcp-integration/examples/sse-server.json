@@ -1,12 +1,8 @@
 {
-  "_comment": "Example SSE MCP server configuration for hosted cloud services",
+  "_comment": "DEPRECATED TRANSPORT: SSE (Server-Sent Events) is deprecated in favor of the HTTP transport (type: \"http\"). Only use SSE for existing hosted servers that haven't migrated off it yet -- see examples/http-server.json for the recommended HTTP equivalents, including GitHub's official hosted MCP server.",
   "asana": {
     "type": "sse",
     "url": "https://mcp.asana.com/sse"
-  },
-  "github": {
-    "type": "sse",
-    "url": "https://mcp.github.com/sse"
   },
   "custom-service": {
     "type": "sse",

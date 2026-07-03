@@ -131,18 +131,22 @@ After test completion, offer to:
 
 ```markdown
 ---
-description: Expert code reviewer specializing in identifying bugs, security issues, and improvement opportunities
-capabilities:
-  - Analyze code for potential bugs and logic errors
-  - Identify security vulnerabilities
-  - Suggest performance improvements
-  - Ensure code follows project standards
-  - Review test coverage adequacy
+name: code-reviewer
+description: Use this agent when reviewing code changes for bugs, security issues, or improvement opportunities. Typical triggers include "review this PR", "check this code for security issues", and "does this follow our coding standards". See "When to invoke" in the agent body for worked scenarios.
+model: inherit
+color: blue
+tools: ["Read", "Grep", "Glob"]
 ---
 
 # Code Reviewer Agent
 
 Specialized agent for comprehensive code review.
+
+## When to invoke
+
+- **Pull request or diff review.** The user asks to review recently changed code, a PR, or a diff for bugs and quality issues.
+- **Security-focused review.** The user asks specifically about vulnerabilities, injection risks, or authentication issues in code.
+- **Standards compliance check.** The user asks whether code follows project conventions, naming, or style guidelines.
 
 ## Expertise
 
@@ -178,18 +182,22 @@ For each file reviewed:
 
 ```markdown
 ---
-description: Generates comprehensive test suites from code analysis
-capabilities:
-  - Analyze code structure and logic flow
-  - Generate unit tests for functions and methods
-  - Create integration tests for modules
-  - Design edge case and error condition tests
-  - Suggest test fixtures and mocks
+name: test-generator
+description: Use this agent when generating test suites from code analysis, including unit tests, integration tests, or edge case coverage. Typical triggers include "write tests for this function", "generate a test suite for this module", and "what edge cases am I missing". See "When to invoke" in the agent body for worked scenarios.
+model: inherit
+color: green
+tools: ["Read", "Write", "Grep"]
 ---
 
 # Test Generator Agent
 
 Specialized agent for generating comprehensive test suites.
+
+## When to invoke
+
+- **New or changed code lacks tests.** The user asks for tests to be written for a function, class, or module.
+- **Coverage gaps.** The user asks what edge cases or scenarios are missing from existing tests.
+- **Test suite scaffolding.** The user wants a full test suite generated for a new module.
 
 ## Expertise
 

@@ -165,7 +165,7 @@ file_path=$(echo "$input" | jq -r '.tool_input.file_path')
 size=$(stat -f%z "$file_path" 2>/dev/null || stat -c%s "$file_path" 2>/dev/null)
 
 if [ "$size" -gt 10000000 ]; then
-  echo '{"decision": "deny", "reason": "File too large"}' >&2
+  echo "File too large: ${size} bytes exceeds 10MB limit" >&2
   exit 2
 fi
 ```

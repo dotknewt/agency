@@ -1,6 +1,6 @@
-# Real-World Plugin Settings Examples
+# Illustrative Plugin Settings Examples
 
-Detailed analysis of how production plugins use the `.claude/plugin-name.local.md` pattern.
+Illustrative, worked walkthroughs of how a plugin might use the `.claude/plugin-name.local.md` pattern. `multi-agent-swarm` and `ralph-loop` are illustrative plugin names invented to demonstrate the pattern end-to-end — they are not real, production plugins shipped in this marketplace.
 
 ## multi-agent-swarm Plugin
 
@@ -263,7 +263,7 @@ echo "Ralph loop initialized: .claude/ralph-loop.local.md"
 | **Deletion** | Manual or on completion | On loop exit |
 | **Hook** | Stop (notifications) | Stop (loop control) |
 
-## Best Practices from Real Plugins
+## Best Practices from These Examples
 
 ### 1. Quick Exit Pattern
 

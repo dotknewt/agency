@@ -1,0 +1,22 @@
+[
+  { "query": "How do I store plugin settings that persist between Claude Code sessions for a specific project?", "should_trigger": true },
+  { "query": "I want my hook to remember state between runs, like whether it's currently enabled — what's the pattern for that in a Claude Code plugin?", "should_trigger": true },
+  { "query": "Can you show me how to make a Claude Code command that lets the user configure my plugin per-project, and saves it somewhere?", "should_trigger": true },
+  { "query": "what's the .local.md pattern for plugin config", "should_trigger": true },
+  { "query": "My ralph-loop-style plugin needs to track an iteration counter across Stop hook invocations — how do I persist that in the project?", "should_trigger": true },
+  { "query": "How do I read the YAML frontmatter out of a .claude/my-plugin.local.md file in a bash hook?", "should_trigger": true },
+  { "query": "I want users to be able to flip a strict_mode flag on/off for my plugin without editing hooks.json — what's a good way to do that?", "should_trigger": true },
+  { "query": "Can you write a setup command that creates a per-project settings file for my plugin, with default values the user can override?", "should_trigger": true },
+  { "query": "what file should i gitignore for user-local plugin configuration in a project", "should_trigger": true },
+  { "query": "how do i make a stop hook that keeps looping until some completion condition saved in a state file", "should_trigger": true },
+  { "query": "What's the difference between .claude/settings.json and .claude/settings.local.json?", "should_trigger": false },
+  { "query": "How do I add a permission rule to my project's settings.json so npm commands don't prompt every time?", "should_trigger": false },
+  { "query": "Can you explain what YAML frontmatter is and how it's used in Jekyll blog posts?", "should_trigger": false },
+  { "query": "I need to parse the YAML frontmatter out of my static site generator's markdown files — each post has title/date/tags at the top.", "should_trigger": false },
+  { "query": "How do I add environment variables to my plugin's hooks.json configuration?", "should_trigger": false },
+  { "query": "What's the JSON schema for hooks.json in a Claude Code plugin?", "should_trigger": false },
+  { "query": "Can you help me write a GitHub Actions workflow YAML file for running tests on push?", "should_trigger": false },
+  { "query": "How do I validate a package.json file against its schema?", "should_trigger": false },
+  { "query": "I want to add a new field to my plugin's plugin.json manifest — what fields are supported?", "should_trigger": false },
+  { "query": "How do I get Claude Code to remember my coding style preferences globally, across all of my projects?", "should_trigger": false }
+]

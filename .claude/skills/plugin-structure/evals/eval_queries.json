@@ -1,0 +1,22 @@
+[
+  { "query": "How do I scaffold a brand new Claude Code plugin from scratch?", "should_trigger": true },
+  { "query": "quick q -- where does plugin.json actually need to live in the folder, inside .claude-plugin or at the root?", "should_trigger": true },
+  { "query": "I'm building a plugin that needs commands, a couple of agents, and an MCP server -- what's the standard directory layout?", "should_trigger": true },
+  { "query": "My plugin's commands aren't showing up in /help, is there a naming convention I'm missing for the commands folder?", "should_trigger": true },
+  { "query": "what's the difference between a minimal plugin.json and one with all the recommended metadata fields like author and keywords?", "should_trigger": true },
+  { "query": "trying to reference a script from inside my plugin so the path still works after someone installs it via the marketplace -- what should I use instead of a hardcoded path?", "should_trigger": true },
+  { "query": "can plugin.json point at custom directories instead of just the default commands/ and agents/ folders?", "should_trigger": true },
+  { "query": "I've got skills, hooks, and commands all in one plugin -- how should I organize the whole thing?", "should_trigger": true },
+  { "query": "someone forked my plugin and now nothing auto-discovers, what's the required top-level structure supposed to look like?", "should_trigger": true },
+  { "query": "what fields does a Claude Code plugin manifest actually require before I publish it?", "should_trigger": true },
+  { "query": "Write me a slash command that runs our test suite and prints a coverage summary.", "should_trigger": false },
+  { "query": "Create a subagent that reviews pull requests for security vulnerabilities.", "should_trigger": false },
+  { "query": "Add a PreToolUse hook that blocks Claude from writing to our production config files.", "should_trigger": false },
+  { "query": "I'm tweaking the description in my SKILL.md frontmatter so the skill triggers more reliably on trigger phrases -- any advice?", "should_trigger": false },
+  { "query": "How do I wire up an MCP server so Claude can hit our internal ticketing API?", "should_trigger": false },
+  { "query": "how do I store a per-project config value for my plugin in a .local.md file?", "should_trigger": false },
+  { "query": "What's a good regex for validating email addresses in JavaScript?", "should_trigger": false },
+  { "query": "Can you review this Python function for off-by-one errors?", "should_trigger": false },
+  { "query": "what's the weather forecast for tomorrow?", "should_trigger": false },
+  { "query": "I need argument-hint and allowed-tools examples for a slash command's frontmatter.", "should_trigger": false }
+]

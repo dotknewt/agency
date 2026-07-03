@@ -27,16 +27,17 @@ The unique identifier for the plugin. Used for:
 - Must be unique across all installed plugins
 - Use only lowercase letters, numbers, and hyphens
 - No spaces or special characters
-- Start with a letter
-- End with a letter or number
+- Start with a lowercase letter or number
+- End with a lowercase letter or number
+- Single-character names are allowed
 
 **Validation**:
 ```javascript
-/^[a-z][a-z0-9]*(-[a-z0-9]+)*$/
+/^[a-z0-9][a-z0-9-]*[a-z0-9]$|^[a-z0-9]$/
 ```
 
 **Examples**:
-- ✅ Good: `api-tester`, `code-review`, `git-workflow-automation`
+- ✅ Good: `api-tester`, `code-review`, `git-workflow-automation`, `3d-viewer`
 - ❌ Bad: `API Tester`, `code_review`, `-git-workflow`, `test-`
 
 #### version
@@ -62,13 +63,13 @@ Semantic versioning guidelines:
 - `"1.2.3"` - Patch update to 1.2
 - `"2.0.0"` - Major version with breaking changes
 
-#### description
+#### description (required)
 
 **Type**: String
 **Length**: 50-200 characters recommended
 **Example**: `"Automates code review workflows with style checks and automated feedback"`
 
-Brief explanation of plugin purpose and functionality.
+Brief explanation of plugin purpose and functionality. Required alongside `name` — the repo's enforced validator (manifest-lint / `validate-plugin-json.sh`) rejects any `plugin.json` missing a `description`, and every real plugin manifest in this repo includes one.
 
 **Best practices**:
 - Focus on what the plugin does, not how
@@ -372,6 +373,8 @@ When Claude Code loads components:
 
 ## Validation
 
+> **This repo's enforced rules live in `manifest-lint`.** The checks below describe general manifest-level expectations; for what actually gets validated by the `PostToolUse` hook and CI in this repo (required fields, kebab-case `name`, name-to-directory matching, `plugin.json` ↔ `marketplace.json` version consistency, and more), see [`.claude/skills/manifest-lint/references/checks.md`](../../manifest-lint/references/checks.md). That document and the underlying `validate-plugin-json.sh` script are the source of truth if this reference and manifest-lint ever disagree.
+
 ### Manifest Validation
 
 Claude Code validates the manifest on plugin load:
@@ -383,6 +386,7 @@ Claude Code validates the manifest on plugin load:
 
 **Field validation**:
 - `name` field present and valid format
+- `description` field present
 - `version` follows semantic versioning (if present)
 - Paths are relative with `./` prefix
 - URLs are valid (if present)
@@ -393,6 +397,20 @@ Claude Code validates the manifest on plugin load:
 - No circular dependencies
 
 ### Common Validation Errors
+
+**Missing description**:
+```json
+{
+  "name": "my-plugin"  // ❌ Missing required description field
+}
+```
+Fix: Add a description
+```json
+{
+  "name": "my-plugin",
+  "description": "Brief explanation of plugin purpose"  // ✅
+}
+```
 
 **Invalid name format**:
 ```json
@@ -450,11 +468,12 @@ Fix: Use MAJOR.MINOR.PATCH
 
 ### Minimal Plugin
 
-Bare minimum for a working plugin:
+Bare minimum for a working plugin — both `name` and `description` are required:
 
 ```json
 {
-  "name": "hello-world"
+  "name": "hello-world",
+  "description": "A minimal example plugin with a single greeting command"
 }
 ```
 

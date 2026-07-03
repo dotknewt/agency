@@ -1,0 +1,22 @@
+[
+  { "query": "Add a PreToolUse hook to my plugin that blocks writes to .env files, using ${CLAUDE_PLUGIN_ROOT}.", "should_trigger": true },
+  { "query": "how do i make claude ask for confirmation before it runs sudo commands", "should_trigger": true },
+  { "query": "set up a SessionStart hook so claude loads my project's build info every time a session starts", "should_trigger": true },
+  { "query": "I want claude to refuse deleting files without asking me first -- what's the Claude Code way to do this?", "should_trigger": true },
+  { "query": "whats the difference between prompt-based hooks and command hooks in claude code plugins", "should_trigger": true },
+  { "query": "my plugin's hooks/hooks.json throws a jq error when claude code loads it and hooks silently don't run, can you help debug it", "should_trigger": true },
+  { "query": "add a Stop hook that checks tests were run before claude finishes a task", "should_trigger": true },
+  { "query": "how do I reference $CLAUDE_PLUGIN_ROOT correctly inside a hook script's command field", "should_trigger": true },
+  { "query": "I need something that automatically runs a linter every time claude edits a file in my repo -- is there a claude code feature for that?", "should_trigger": true },
+  { "query": "block claude from running rm -rf commands without asking me first", "should_trigger": true },
+  { "query": "write a bash script to back up my database nightly", "should_trigger": false },
+  { "query": "explain what a git pre-commit hook does", "should_trigger": false },
+  { "query": "can you review this bash script for shellcheck and quoting issues", "should_trigger": false },
+  { "query": "how do I set a persistent environment variable in my .bashrc", "should_trigger": false },
+  { "query": "write a custom React hook that debounces an input value", "should_trigger": false },
+  { "query": "how do I add a new slash command to my claude code plugin", "should_trigger": false },
+  { "query": "add an MCP server to my plugin that connects to our internal ticketing API", "should_trigger": false },
+  { "query": "what does exit code 2 typically mean for a unix command line tool", "should_trigger": false },
+  { "query": "create a GitHub Actions workflow that runs our test suite on every push", "should_trigger": false },
+  { "query": "how do I validate that a JSON file matches a schema before I load it into a python app", "should_trigger": false }
+]

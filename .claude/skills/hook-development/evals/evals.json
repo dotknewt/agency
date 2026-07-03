@@ -1,0 +1,39 @@
+{
+  "skill_name": "hook-development",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Add a PreToolUse hook to my plugin that blocks Claude from writing to .env files.",
+      "expected_output": "A hooks/hooks.json entry with a PreToolUse hook that matches Write/Edit tool calls and denies (or asks about) writes to .env files. Any script path in the hook configuration uses ${CLAUDE_PLUGIN_ROOT} instead of a hardcoded absolute path. If a hookSpecificOutput-style structured decision is used, it is emitted on stdout with exit 0; if a plain block is used instead, it's a plain-text reason on stderr with exit 2.",
+      "assertions": [
+        "Any command hook script path in the produced hooks.json uses ${CLAUDE_PLUGIN_ROOT}, not a hardcoded absolute path",
+        "The PreToolUse hook's matcher targets Write and/or Edit (e.g. \"Write|Edit\", not just \"Write\" alone or a wildcard)",
+        "When the hook returns a structured decision, it uses hookSpecificOutput.permissionDecision (allow/deny/ask) on stdout with exit 0 — not a bare {\"decision\": ...} JSON payload written to stderr with exit 2",
+        "The hook actually recognizes .env files (e.g. checks tool_input.file_path against '.env' or a suffix/basename match), not just an unrelated generic path check"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Add a SessionStart hook that detects what language or framework this project uses and persists that info so later hooks in the session can use it.",
+      "expected_output": "A SessionStart hook script that detects the project's language/framework by checking for indicator files (package.json, Cargo.toml, go.mod, pyproject.toml, etc.) and persists the detected value by writing to $CLAUDE_ENV_FILE, plus a hooks.json entry registering it under SessionStart.",
+      "assertions": [
+        "The hook persists the detected language by writing to $CLAUDE_ENV_FILE (e.g. echo \"export PROJECT_TYPE=nodejs\" >> \"$CLAUDE_ENV_FILE\"), not to a plain shell variable, a random temp file, or stdout alone",
+        "hooks.json registers the script under the SessionStart event as a command hook using ${CLAUDE_PLUGIN_ROOT} for the script path",
+        "The detection logic checks for at least two distinct project-type indicator files (e.g. package.json, Cargo.toml, go.mod, pyproject.toml/setup.py)",
+        "The exported variable name and value are usable by a later hook reading the same $CLAUDE_ENV_FILE-sourced environment (i.e. it's a valid `export NAME=value` line, not malformed shell)"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "I have this command-hook bash script that blocks 'rm -rf' commands (evals/files/check-rm-rf.sh). Migrate it to a prompt-based hook instead so it catches more variations.",
+      "files": ["evals/files/check-rm-rf.sh"],
+      "expected_output": "A prompt-based PreToolUse hook configuration (type: prompt) that replaces the bash script, using natural-language criteria to catch destructive command variations (rm -rf, rm -fr, rm -r -f, dd, mkfs, etc.) that the original script's literal string match missed.",
+      "assertions": [
+        "The resulting hook definition has \"type\": \"prompt\" (not \"type\": \"command\") and no longer shells out to the original bash script",
+        "The hook is registered under PreToolUse with a matcher appropriate for bash commands (e.g. \"Bash\")",
+        "The prompt text explicitly covers variations beyond the literal 'rm -rf' string (e.g. mentions rm -fr, rm -r -f, or other destructive operations like dd/mkfs), addressing the gap called out in references/migration.md",
+        "The response does not simply keep the old command hook script unchanged or rename it without changing its type/logic"
+      ]
+    }
+  ]
+}

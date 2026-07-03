@@ -1,7 +1,8 @@
 ---
 name: command-development
-description: This skill should be used when the user asks to "create a slash command", "add a command", "write a custom command", "define command arguments", "use command frontmatter", "organize commands", "create command with file references", "interactive command", "use AskUserQuestion in command", or needs guidance on slash command structure, YAML frontmatter fields, dynamic arguments, bash execution in commands, user interaction patterns, or command development best practices for Claude Code.
-version: 0.2.0
+description: Use this skill for the legacy `.claude/commands/` file-based slash command format specifically — when the user asks to "create a slash command", "add a command", "write a custom command", "define command arguments", "use command frontmatter", "organize commands", "create command with file references", "interactive command", "use AskUserQuestion in command", or needs guidance on slash command structure, YAML frontmatter fields, dynamic arguments, bash execution in commands, user interaction patterns, or command development best practices for Claude Code. For the modern `.claude/skills/<name>/SKILL.md` format, use the skill-development skill instead.
+metadata:
+  version: "0.2.0"
 ---
 
 # Command Development for Claude Code
@@ -351,6 +352,32 @@ Commands can execute bash commands inline to dynamically gather context before C
 **Implementation details:**
 For complete syntax, examples, and best practices, see `references/plugin-features-reference.md` section on bash execution. The reference includes the exact syntax and multiple working examples to avoid execution issues
 
+## Interactive Commands (AskUserQuestion)
+
+Some commands need a user decision that doesn't map cleanly to a positional argument — picking between options with trade-offs, multi-selecting features, or running an adaptive setup wizard. For these, have the command call the **AskUserQuestion** tool instead of parsing free-form arguments.
+
+**Use AskUserQuestion when:** the choice needs explanation, there are multiple options to weigh, or the user should be able to select more than one item (`multiSelect: true`).
+
+**Prefer arguments instead when:** the value is simple and already known (a file path, a number, a name), or the command needs to stay scriptable/fast.
+
+```markdown
+---
+description: Interactive plugin setup
+allowed-tools: AskUserQuestion, Write
+---
+
+Use the AskUserQuestion tool to ask:
+- question: "Which deployment platform will you use?"
+  header: "Deploy to"
+  options: AWS, GCP, Azure, Local
+
+Based on the answer, generate the matching configuration file.
+```
+
+Include `AskUserQuestion` in `allowed-tools` so the command is permitted to call it. Keep questions to 2-4 options with a short (max 12 char) header, and ask 1-4 questions per call.
+
+For question-design guidelines, multi-stage and conditional question flows, and a full worked example, see `references/interactive-commands.md`.
+
 ## Command Organization
 
 ### Flat Structure
@@ -416,11 +443,16 @@ Organize commands in subdirectories:
 argument-hint: [pr-number]
 ---
 
-$IF($1,
-Review PR #$1,
-Please provide a PR number. Usage: /review-pr [number]
-)
+Check argument: !`test -n "$1" && echo "PROVIDED" || echo "MISSING"`
+
+If the check above reports MISSING, reply only with:
+"Please provide a PR number. Usage: /review-pr [number]"
+and stop.
+
+Otherwise, review PR #$1.
 ```
+
+Note: there is no `$IF(...)` macro in Claude Code — arguments are substituted as plain text before Claude ever sees the prompt. Express conditionals as a bash check inside a `!` block followed by plain-language branching instructions, as shown above.
 
 ### File References
 
@@ -458,75 +490,11 @@ Example: /deploy staging v1.2.3
 Deploy application to $1 environment using version $2...
 ```
 
+For self-documenting command templates, help-text patterns, and changelog conventions, see `references/documentation-patterns.md`.
+
 ## Common Patterns
 
-### Review Pattern
-
-```markdown
----
-description: Review code changes
-allowed-tools: Read, Bash(git:*)
----
-
-Files changed: !`git diff --name-only`
-
-Review each file for:
-
-1. Code quality and style
-2. Potential bugs or issues
-3. Test coverage
-4. Documentation needs
-
-Provide specific feedback for each file.
-```
-
-### Testing Pattern
-
-```markdown
----
-description: Run tests for specific file
-argument-hint: [test-file]
-allowed-tools: Bash(npm:*)
----
-
-Run tests: !`npm test $1`
-
-Analyze results and suggest fixes for failures.
-```
-
-### Documentation Pattern
-
-```markdown
----
-description: Generate documentation for file
-argument-hint: [source-file]
----
-
-Generate comprehensive documentation for @$1 including:
-
-- Function/class descriptions
-- Parameter documentation
-- Return value descriptions
-- Usage examples
-- Edge cases and errors
-```
-
-### Workflow Pattern
-
-```markdown
----
-description: Complete PR workflow
-argument-hint: [pr-number]
-allowed-tools: Bash(gh:*), Read
----
-
-PR #$1 Workflow:
-
-1. Fetch PR: !`gh pr view $1`
-2. Review changes
-3. Run checks
-4. Approve or request changes
-```
+Complete, ready-to-copy pattern examples (review, testing, documentation generation, git status, deployment) live in `examples/simple-commands.md` and `examples/plugin-commands.md` rather than being duplicated here. For multi-step workflows — sequential steps, state-carrying commands across invocations, conditional branching — see `references/advanced-workflows.md`.
 
 ## Troubleshooting
 
@@ -557,20 +525,13 @@ PR #$1 Workflow:
 - Ensure Read tool allowed
 - Use absolute or project-relative paths
 
+Before releasing a command, run the validators in `scripts/` (`scripts/validate-command.sh` and `scripts/validate-frontmatter.sh`) — see `references/testing-strategies.md` for the full testing checklist and levels.
+
 ## Plugin-Specific Features
 
 ### CLAUDE_PLUGIN_ROOT Variable
 
-Plugin commands have access to `${CLAUDE_PLUGIN_ROOT}`, an environment variable that resolves to the plugin's absolute path.
-
-**Purpose:**
-
-- Reference plugin files portably
-- Execute plugin scripts
-- Load plugin configuration
-- Access plugin templates
-
-**Basic usage:**
+Plugin commands have access to `${CLAUDE_PLUGIN_ROOT}`, an environment variable that resolves to the plugin's absolute path. Use it for every plugin-internal path — scripts, templates, configuration — instead of a relative or hardcoded path, since it's the only form that works across installations.
 
 ```markdown
 ---
@@ -579,306 +540,44 @@ allowed-tools: Bash(node:*)
 ---
 
 Run analysis: !`node ${CLAUDE_PLUGIN_ROOT}/scripts/analyze.js $1`
-
-Review results and report findings.
+Load template: @${CLAUDE_PLUGIN_ROOT}/templates/report.md
 ```
-
-**Common patterns:**
-
-```markdown
-# Execute plugin script
-
-!`bash ${CLAUDE_PLUGIN_ROOT}/scripts/script.sh`
-
-# Load plugin configuration
-
-@${CLAUDE_PLUGIN_ROOT}/config/settings.json
-
-# Use plugin template
-
-@${CLAUDE_PLUGIN_ROOT}/templates/report.md
-
-# Access plugin resources
-
-@${CLAUDE_PLUGIN_ROOT}/docs/reference.md
-```
-
-**Why use it:**
-
-- Works across all installations
-- Portable between systems
-- No hardcoded paths needed
-- Essential for multi-file plugins
 
 ### Plugin Command Organization
 
-Plugin commands discovered automatically from `commands/` directory:
+Commands are auto-discovered from a plugin's `commands/` directory; subdirectories create `/help` namespaces (e.g. `plugin-name/commands/utils/helper.md` shows as `/helper` "(plugin:plugin-name:utils)"). Use descriptive action names and avoid generic ones (`test`, `run`) that collide with other plugins' commands.
 
-```
-plugin-name/
-├── commands/
-│   ├── foo.md              # /foo (plugin:plugin-name)
-│   ├── bar.md              # /bar (plugin:plugin-name)
-│   └── utils/
-│       └── helper.md       # /helper (plugin:plugin-name:utils)
-└── plugin.json
-```
+Planning to distribute the plugin through a marketplace? See `references/marketplace-considerations.md` for naming, versioning, and configurability guidance specific to commands used by unfamiliar users.
 
-**Namespace benefits:**
-
-- Logical command grouping
-- Shown in `/help` output
-- Avoid name conflicts
-- Organize related commands
-
-**Naming conventions:**
-
-- Use descriptive action names
-- Avoid generic names (test, run)
-- Consider plugin-specific prefix
-- Use hyphens for multi-word names
-
-### Plugin Command Patterns
-
-**Configuration-based pattern:**
-
-```markdown
----
-description: Deploy using plugin configuration
-argument-hint: [environment]
-allowed-tools: Read, Bash(*)
----
-
-Load configuration: @${CLAUDE_PLUGIN_ROOT}/config/$1-deploy.json
-
-Deploy to $1 using configuration settings.
-Monitor deployment and report status.
-```
-
-**Template-based pattern:**
-
-```markdown
----
-description: Generate docs from template
-argument-hint: [component]
----
-
-Template: @${CLAUDE_PLUGIN_ROOT}/templates/docs.md
-
-Generate documentation for $1 following template structure.
-```
-
-**Multi-script pattern:**
-
-```markdown
----
-description: Complete build workflow
-allowed-tools: Bash(*)
----
-
-Build: !`bash ${CLAUDE_PLUGIN_ROOT}/scripts/build.sh`
-Test: !`bash ${CLAUDE_PLUGIN_ROOT}/scripts/test.sh`
-Package: !`bash ${CLAUDE_PLUGIN_ROOT}/scripts/package.sh`
-
-Review outputs and report workflow status.
-```
-
-**See `references/plugin-features-reference.md` for detailed patterns.**
+For configuration-based, template-based, and multi-script plugin command patterns with full worked examples, see `references/plugin-features-reference.md` and `examples/plugin-commands.md`.
 
 ## Integration with Plugin Components
 
-Commands can integrate with other plugin components for powerful workflows.
+Commands can integrate with other plugin components:
 
-### Agent Integration
+- **Agents:** mention the agent by name and describe the task; Claude uses the Task tool to launch it. The agent must exist in `plugin/agents/`.
+- **Skills:** mention the skill by name to hint that Claude should invoke it for specialized knowledge. The skill must exist in `plugin/skills/`.
+- **Hooks:** commands can prepare state that hooks read, or document how to interpret hook output — hooks fire automatically on their configured event, commands cannot invoke them directly.
 
-Launch plugin agents for complex tasks:
-
-```markdown
----
-description: Deep code review
-argument-hint: [file-path]
----
-
-Initiate comprehensive review of @$1 using the code-reviewer agent.
-
-The agent will analyze:
-
-- Code structure
-- Security issues
-- Performance
-- Best practices
-
-Agent uses plugin resources:
-
-- ${CLAUDE_PLUGIN_ROOT}/config/rules.json
-- ${CLAUDE_PLUGIN_ROOT}/checklists/review.md
-```
-
-**Key points:**
-
-- Agent must exist in `plugin/agents/` directory
-- Claude uses Task tool to launch agent
-- Document agent capabilities
-- Reference plugin resources agent uses
-
-### Skill Integration
-
-Leverage plugin skills for specialized knowledge:
-
-```markdown
----
-description: Document API with standards
-argument-hint: [api-file]
----
-
-Document API in @$1 following plugin standards.
-
-Use the api-docs-standards skill to ensure:
-
-- Complete endpoint documentation
-- Consistent formatting
-- Example quality
-- Error documentation
-
-Generate production-ready API docs.
-```
-
-**Key points:**
-
-- Skill must exist in `plugin/skills/` directory
-- Mention skill name to trigger invocation
-- Document skill purpose
-- Explain what skill provides
-
-### Hook Coordination
-
-Design commands that work with plugin hooks:
-
-- Commands can prepare state for hooks to process
-- Hooks execute automatically on tool events
-- Commands should document expected hook behavior
-- Guide Claude on interpreting hook output
-
-See `references/plugin-features-reference.md` for examples of commands that coordinate with hooks
-
-### Multi-Component Workflows
-
-Combine agents, skills, and scripts:
-
-```markdown
----
-description: Comprehensive review workflow
-argument-hint: [file]
-allowed-tools: Bash(node:*), Read
----
-
-Target: @$1
-
-Phase 1 - Static Analysis:
-!`node ${CLAUDE_PLUGIN_ROOT}/scripts/lint.js $1`
-
-Phase 2 - Deep Review:
-Launch code-reviewer agent for detailed analysis.
-
-Phase 3 - Standards Check:
-Use coding-standards skill for validation.
-
-Phase 4 - Report:
-Template: @${CLAUDE_PLUGIN_ROOT}/templates/review.md
-
-Compile findings into report following template.
-```
-
-**When to use:**
-
-- Complex multi-step workflows
-- Leverage multiple plugin capabilities
-- Require specialized analysis
-- Need structured outputs
+For worked examples of each integration type, plus multi-component workflows that combine scripts, agents, skills, and templates, see `references/plugin-features-reference.md#integration-with-plugin-components`.
 
 ## Validation Patterns
 
-Commands should validate inputs and resources before processing.
+Commands should validate inputs and resources before processing — check arguments with a bash test inside a `!` block, then branch in prose ("If the check reports X... Otherwise..."), the same pattern shown under [Argument Handling](#argument-handling) above. Never use `$IF(...)` or any other macro syntax; it does not exist in Claude Code.
 
-### Argument Validation
-
-```markdown
----
-description: Deploy with validation
-argument-hint: [environment]
----
-
-Validate environment: !`echo "$1" | grep -E "^(dev|staging|prod)$" || echo "INVALID"`
-
-If $1 is valid environment:
-Deploy to $1
-Otherwise:
-Explain valid environments: dev, staging, prod
-Show usage: /deploy [environment]
-```
-
-### File Existence Checks
-
-```markdown
----
-description: Process configuration
-argument-hint: [config-file]
----
-
-Check file exists: !`test -f $1 && echo "EXISTS" || echo "MISSING"`
-
-If file exists:
-Process configuration: @$1
-Otherwise:
-Explain where to place config file
-Show expected format
-Provide example configuration
-```
-
-### Plugin Resource Validation
-
-```markdown
----
-description: Run plugin analyzer
-allowed-tools: Bash(test:*)
----
-
-Validate plugin setup:
-
-- Script: !`test -x ${CLAUDE_PLUGIN_ROOT}/bin/analyze && echo "✓" || echo "✗"`
-- Config: !`test -f ${CLAUDE_PLUGIN_ROOT}/config.json && echo "✓" || echo "✗"`
-
-If all checks pass, run analysis.
-Otherwise, report missing components.
-```
-
-### Error Handling
-
-```markdown
----
-description: Build with error handling
-allowed-tools: Bash(*)
----
-
-Execute build: !`bash ${CLAUDE_PLUGIN_ROOT}/scripts/build.sh 2>&1 || echo "BUILD_FAILED"`
-
-If build succeeded:
-Report success and output location
-If build failed:
-Analyze error output
-Suggest likely causes
-Provide troubleshooting steps
-```
-
-**Best practices:**
-
-- Validate early in command
-- Provide helpful error messages
-- Suggest corrective actions
-- Handle edge cases gracefully
+The full set of validation patterns (argument validation, file existence checks, plugin resource validation, output validation, graceful error handling) is documented once, in `references/plugin-features-reference.md#validation-patterns`, rather than duplicated here.
 
 ---
 
-For detailed frontmatter field specifications, see `references/frontmatter-reference.md`.
-For plugin-specific features and patterns, see `references/plugin-features-reference.md`.
-For command pattern examples, see `examples/` directory.
+## Reference Files
+
+This skill uses progressive disclosure: the sections above cover the fundamentals every command author needs. The following files go deeper on specific topics — load them when the task calls for it.
+
+- `references/frontmatter-reference.md` — complete YAML frontmatter field specifications, validation rules, and common errors.
+- `references/plugin-features-reference.md` — `${CLAUDE_PLUGIN_ROOT}`, plugin command patterns, and the full validation-patterns reference.
+- `references/interactive-commands.md` — AskUserQuestion design guidance, multi-stage and conditional question flows, worked examples.
+- `references/advanced-workflows.md` — multi-step command sequences, state-carrying workflows, command composition and chaining.
+- `references/testing-strategies.md` — the seven testing levels, edge cases, and how to use the validators in `scripts/`.
+- `references/documentation-patterns.md` — self-documenting command templates, help text, and changelog conventions.
+- `references/marketplace-considerations.md` — naming, versioning, and configurability guidance for commands distributed to other users.
+- `examples/simple-commands.md` and `examples/plugin-commands.md` — complete, ready-to-copy command examples.

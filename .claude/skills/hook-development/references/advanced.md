@@ -84,17 +84,26 @@ input=$(cat)
 
 ## Hook Chaining via State
 
-Share state between hooks using temporary files:
+Share state between hooks using temporary files keyed off the session ID:
+
+**Important:** Do NOT key state files off `$$` (the shell's PID), e.g.
+`/tmp/hook-state-$$`. Each hook event fires as its own separate bash
+process, so `$$` is different every single time a hook runs — even two
+hooks in the same session never see the same PID. A later hook can never
+find the file an earlier hook wrote. Instead, key state files off
+`session_id`, which is included in every hook's stdin JSON payload and
+stays stable for the entire Claude Code session:
 
 ```bash
 # Hook 1: Analyze and save state
 #!/bin/bash
 input=$(cat)
+session_id=$(echo "$input" | jq -r '.session_id')
 command=$(echo "$input" | jq -r '.tool_input.command')
 
 # Analyze command
 risk_level=$(calculate_risk "$command")
-echo "$risk_level" > /tmp/hook-state-$$
+echo "$risk_level" > "/tmp/hook-state-${session_id}"
 
 exit 0
 ```
@@ -102,7 +111,9 @@ exit 0
 ```bash
 # Hook 2: Use saved state
 #!/bin/bash
-risk_level=$(cat /tmp/hook-state-$$ 2>/dev/null || echo "unknown")
+input=$(cat)
+session_id=$(echo "$input" | jq -r '.session_id')
+risk_level=$(cat "/tmp/hook-state-${session_id}" 2>/dev/null || echo "unknown")
 
 if [ "$risk_level" = "high" ]; then
   echo "High risk operation detected" >&2
@@ -110,7 +121,7 @@ if [ "$risk_level" = "high" ]; then
 fi
 ```
 
-**Important:** This only works for sequential hook events (e.g., PreToolUse then PostToolUse), not parallel hooks.
+**Important:** This only works for sequential hook events (e.g., PreToolUse then PostToolUse), not parallel hooks. Also remember to clean up state files in a `SessionEnd` hook, since nothing else removes them.
 
 ## Dynamic Hook Configuration
 
@@ -228,27 +239,33 @@ All three hooks run simultaneously, reducing total latency.
 
 ## Cross-Event Workflows
 
-Coordinate hooks across different events:
+Coordinate hooks across different events. As with the state-chaining pattern
+above, key any shared tracking files off `session_id` from the stdin JSON
+payload — never off `$$`, since each event is a distinct process:
 
 **SessionStart - Set up tracking:**
 ```bash
 #!/bin/bash
+input=$(cat)
+session_id=$(echo "$input" | jq -r '.session_id')
+
 # Initialize session tracking
-echo "0" > /tmp/test-count-$$
-echo "0" > /tmp/build-count-$$
+echo "0" > "/tmp/test-count-${session_id}"
+echo "0" > "/tmp/build-count-${session_id}"
 ```
 
 **PostToolUse - Track events:**
 ```bash
 #!/bin/bash
 input=$(cat)
+session_id=$(echo "$input" | jq -r '.session_id')
 tool_name=$(echo "$input" | jq -r '.tool_name')
 
 if [ "$tool_name" = "Bash" ]; then
   command=$(echo "$input" | jq -r '.tool_result')
   if [[ "$command" == *"test"* ]]; then
-    count=$(cat /tmp/test-count-$$ 2>/dev/null || echo "0")
-    echo $((count + 1)) > /tmp/test-count-$$
+    count=$(cat "/tmp/test-count-${session_id}" 2>/dev/null || echo "0")
+    echo $((count + 1)) > "/tmp/test-count-${session_id}"
   fi
 fi
 ```
@@ -256,10 +273,12 @@ fi
 **Stop - Verify based on tracking:**
 ```bash
 #!/bin/bash
-test_count=$(cat /tmp/test-count-$$ 2>/dev/null || echo "0")
+input=$(cat)
+session_id=$(echo "$input" | jq -r '.session_id')
+test_count=$(cat "/tmp/test-count-${session_id}" 2>/dev/null || echo "0")
 
 if [ "$test_count" -eq 0 ]; then
-  echo '{"decision": "block", "reason": "No tests were run"}' >&2
+  echo "No tests were run" >&2
   exit 2
 fi
 ```
@@ -280,7 +299,7 @@ curl -X POST "$SLACK_WEBHOOK" \
   -d "{\"text\": \"Hook ${decision} ${tool_name} operation\"}" \
   2>/dev/null
 
-echo '{"decision": "deny"}' >&2
+echo "Operation blocked and reported to Slack" >&2
 exit 2
 ```
 
@@ -319,8 +338,12 @@ exit 0
 input=$(cat)
 command=$(echo "$input" | jq -r '.tool_input.command')
 
-# Track command frequency
-rate_file="/tmp/hook-rate-$$"
+# Track command frequency. Key the rate-limit file off session_id (from the
+# stdin JSON payload), not $$ — each hook invocation is a separate process,
+# so $$ would never match between invocations and rate limiting would never
+# trigger.
+session_id=$(echo "$input" | jq -r '.session_id')
+rate_file="/tmp/hook-rate-${session_id}"
 current_minute=$(date +%Y%m%d%H%M)
 
 if [ -f "$rate_file" ]; then
@@ -329,7 +352,7 @@ if [ -f "$rate_file" ]; then
 
   if [ "$current_minute" = "$last_minute" ]; then
     if [ "$count" -gt 10 ]; then
-      echo '{"decision": "deny", "reason": "Rate limit exceeded"}' >&2
+      echo "Rate limit exceeded" >&2
       exit 2
     fi
     count=$((count + 1))
@@ -369,7 +392,7 @@ content=$(echo "$input" | jq -r '.tool_input.content')
 
 # Check for common secret patterns
 if echo "$content" | grep -qE "(api[_-]?key|password|secret|token).{0,20}['\"]?[A-Za-z0-9]{20,}"; then
-  echo '{"decision": "deny", "reason": "Potential secret detected in content"}' >&2
+  echo "Potential secret detected in content" >&2
   exit 2
 fi
 

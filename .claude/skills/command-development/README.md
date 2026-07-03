@@ -18,7 +18,7 @@ This skill provides knowledge about:
 
 ## Skill Structure
 
-### SKILL.md (~2,470 words)
+### SKILL.md (~2,250 words)
 
 Core skill content covering:
 
@@ -57,6 +57,38 @@ Detailed documentation:
   - Integration with plugin agents, skills, and hooks
   - Validation patterns and error handling
 
+- **interactive-commands.md**: AskUserQuestion-based interactive commands
+  - When to use AskUserQuestion vs. positional arguments
+  - Question and option design, multi-select guidance
+  - Multi-stage and conditional question flows
+  - Full worked example (multi-agent swarm launch)
+
+- **advanced-workflows.md**: Multi-step command sequences
+  - Sequential, state-carrying, and conditional workflow patterns
+  - Command composition (chaining, pipelines, parallel execution)
+  - Workflow state management via `.local.md` files
+
+- **testing-strategies.md**: Testing commands before release
+  - Seven testing levels, from frontmatter syntax to distribution
+  - Edge cases, performance, and user-experience testing
+  - Points to the real validators in `scripts/`
+
+- **documentation-patterns.md**: Self-documenting commands
+  - Complete command documentation template
+  - Help text, error messages, and changelog conventions
+
+- **marketplace-considerations.md**: Distribution-specific guidance
+  - Dependency awareness, namespace collisions, `.local.md` configurability
+  - Version compatibility and a pre-release checklist
+
+### Scripts
+
+Runnable validators (see `scripts/README.md`):
+
+- **validate-command.sh**: Validates command file structure (extension, non-empty, balanced frontmatter markers)
+- **validate-frontmatter.sh**: Validates frontmatter field values (`model`, `description` length, `disable-model-invocation`)
+- **test-commands.sh**: Runs both validators across every command in a directory and prints a summary
+
 ### Examples
 
 Practical command examples:
@@ -79,6 +111,11 @@ Practical command examples:
   - Validated input commands
   - Environment-aware commands
 
+### Evals
+
+- **evals/evals.json**: Task-based test cases (prompt, expected output, assertions) for exercising the skill end-to-end
+- **evals/eval_queries.json**: Labeled queries for testing whether the skill's description triggers correctly
+
 ## When This Skill Triggers
 
 Claude Code activates this skill when users:
@@ -95,20 +132,21 @@ Claude Code activates this skill when users:
 
 The skill uses progressive disclosure:
 
-1. **SKILL.md** (~2,470 words): Core concepts, common patterns, and plugin features overview
-2. **References** (~13,500 words total): Detailed specifications
+1. **SKILL.md** (~2,250 words): Core concepts, dynamic features, and a reference-files index
+2. **References** (~12,400 words total): Detailed specifications
    - frontmatter-reference.md (~1,200 words)
-   - plugin-features-reference.md (~1,800 words)
-   - interactive-commands.md (~2,500 words)
-   - advanced-workflows.md (~1,700 words)
-   - testing-strategies.md (~2,200 words)
-   - documentation-patterns.md (~2,000 words)
-   - marketplace-considerations.md (~2,200 words)
-3. **Examples** (~6,000 words total): Complete working command examples
-   - simple-commands.md
-   - plugin-commands.md
+   - plugin-features-reference.md (~1,825 words)
+   - interactive-commands.md (~2,850 words)
+   - advanced-workflows.md (~1,735 words)
+   - testing-strategies.md (~1,950 words)
+   - documentation-patterns.md (~2,010 words)
+   - marketplace-considerations.md (~865 words)
+3. **Scripts**: `validate-command.sh`, `validate-frontmatter.sh`, `test-commands.sh` — runnable, not counted in prose word totals
+4. **Examples** (~2,740 words total): Complete working command examples
+   - simple-commands.md (~1,140 words)
+   - plugin-commands.md (~1,600 words)
 
-Claude loads references and examples as needed based on task.
+Claude loads references, scripts, and examples as needed based on task.
 
 ## Command Basics Quick Reference
 
@@ -246,12 +284,15 @@ Recent commits: !`git log --oneline -5`
 - ✓ Plugin command patterns (${CLAUDE_PLUGIN_ROOT}, discovery, organization)
 - ✓ Integration patterns (agents, skills, hooks coordination)
 - ✓ Validation patterns (input, file, resource validation, error handling)
+- ✓ Interactive commands (AskUserQuestion) — `references/interactive-commands.md`, linked from SKILL.md
+- ✓ Advanced workflows (multi-step command sequences) — `references/advanced-workflows.md`
+- ✓ Testing strategies, with runnable validators — `references/testing-strategies.md`, `scripts/`
+- ✓ Documentation patterns (command documentation best practices) — `references/documentation-patterns.md`
+- ✓ Marketplace considerations (publishing and distribution) — `references/marketplace-considerations.md`
+- ✓ Evals (`evals/evals.json`, `evals/eval_queries.json`)
 
-**Remaining enhancements (in progress):**
-- Advanced workflows (multi-step command sequences)
-- Testing strategies (how to test commands effectively)
-- Documentation patterns (command documentation best practices)
-- Marketplace considerations (publishing and distribution)
+**Known gaps (not yet implemented):**
+- No `create-command` scaffolding command/script exists yet in this skill. Deferred deliberately: whether to add one, and what it should scaffold (bare file vs. full frontmatter template vs. interactive wizard), is a product decision that needs a human call rather than an automatic fix.
 
 ## Maintenance
 
@@ -264,6 +305,18 @@ To update this skill:
 6. Test examples work with current Claude Code
 
 ## Version History
+
+**v0.2.0** (2026-07-03):
+- Linked all seven `references/` files from SKILL.md (previously only 2 of 7 were reachable; `interactive-commands.md`, `advanced-workflows.md`, `testing-strategies.md`, `documentation-patterns.md`, and `marketplace-considerations.md` were orphaned)
+- Added an "Interactive Commands (AskUserQuestion)" section to SKILL.md's body, matching the capability already promised in the frontmatter `description`
+- Flagged the legacy `.claude/commands/` scope explicitly in the `description` field to reduce over-triggering against the preferred `skill-development` format
+- Removed the fabricated `$IF(...)` conditional macro from SKILL.md and `references/plugin-features-reference.md`; replaced with real bash-conditional-plus-prose patterns
+- Trimmed SKILL.md from 884 to ~580 lines by moving content duplicated across SKILL.md, `references/plugin-features-reference.md`, and `examples/` (Common Patterns, Validation Patterns, most of Plugin-Specific Features/Integration) into references-only, leaving pointers
+- Moved the undocumented top-level `version` frontmatter key into `metadata.version`
+- Extracted the inline `validate-command.sh`, `validate-frontmatter.sh`, and `test-commands.sh` snippets from `references/testing-strategies.md` into real, executable files under `scripts/`, with `--help`, stdout/stderr separation, and distinct exit codes
+- Cut generic, non-Claude-Code-specific filler (platform/clipboard detection, emoji-branding checklists) from `references/marketplace-considerations.md`
+- Added `evals/evals.json` (task-based test cases) and `evals/eval_queries.json` (trigger-eval queries)
+- Fixed stale documentation: this Status section, the Examples word-count claim, and this version history
 
 **v0.1.0** (2025-01-15):
 - Initial release with basic command fundamentals

@@ -1,0 +1,41 @@
+{
+  "skill_name": "command-development",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Create a slash command that reviews a PR by number. Make sure it shows up with an argument hint so people know to pass the PR number when they type it.",
+      "expected_output": "A new command file (e.g. .claude/commands/review-pr.md) with valid YAML frontmatter that includes a `description` field and an `argument-hint: [pr-number]` field, and a body that references the PR number using `$1` (or `$ARGUMENTS`) rather than a placeholder that's never substituted. The command body is written as instructions to Claude, not as a message to the end user.",
+      "assertions": [
+        "The command file's frontmatter is delimited by exactly two '---' lines",
+        "The frontmatter includes an argument-hint field documenting the expected argument(s), e.g. [pr-number]",
+        "The command body uses $1 (or $ARGUMENTS) to reference the PR number, and that reference is actually used in the review instructions",
+        "The command content is phrased as directives to Claude (e.g. 'Review PR #$1 for...') rather than a message describing the command to the user",
+        "No invented syntax (e.g. $IF(), {{variable}} templating) appears anywhere in the command"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "I'm building a plugin and want a command that runs one of the plugin's scripts and then reads a report template to format the output. How do I reference the plugin's own files from inside the command?",
+      "expected_output": "A plugin command file that uses `${CLAUDE_PLUGIN_ROOT}` — not a relative path, not a hardcoded absolute path — both to execute the script inside a `!` bash-execution block (e.g. `` !`bash ${CLAUDE_PLUGIN_ROOT}/scripts/foo.sh` ``) and to read the template via `@${CLAUDE_PLUGIN_ROOT}/templates/foo.md` file-reference syntax. A bare './scripts/...' or an absolute filesystem path would break on other installations, so both references must go through ${CLAUDE_PLUGIN_ROOT}.",
+      "assertions": [
+        "The command uses the literal string ${CLAUDE_PLUGIN_ROOT} to reference plugin-internal files",
+        "The script is executed inside a `!` bash-execution block (backtick-delimited), not just mentioned in prose",
+        "The template is included with @${CLAUDE_PLUGIN_ROOT}/... file-reference syntax, not read via a Bash cat command",
+        "No hardcoded absolute path or relative './...' path is used to reach plugin-internal files",
+        "If allowed-tools is present, it permits the Bash pattern actually used (e.g. Bash(bash:*) or a narrower equivalent) rather than omitting Bash entirely"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Make me an interactive setup command that asks the user a few questions and configures things based on their answers.",
+      "expected_output": "A command file with `AskUserQuestion` included in `allowed-tools`, and body instructions that call the AskUserQuestion tool with question/header/options structure to gather answers, then branch behavior based on the answers using plain prose conditionals (e.g. 'If the user selected X, do Y') or a real bash conditional inside a `!` block. The command must NOT use any $IF(...) macro or other syntax that doesn't exist in Claude Code.",
+      "assertions": [
+        "allowed-tools includes AskUserQuestion",
+        "The command instructs Claude to call the AskUserQuestion tool to gather input, rather than relying only on $1/$ARGUMENTS for a multi-option decision",
+        "At least one question includes a header (short label), the question text, and 2-4 options with descriptions",
+        "Branching logic after the question is expressed as prose ('If the user answered X, do Y') or a real bash conditional inside a `!` block — not a $IF(...) macro",
+        "The literal string '$IF(' does not appear anywhere in the generated command"
+      ]
+    }
+  ]
+}

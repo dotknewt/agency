@@ -2,6 +2,41 @@
 
 This reference provides common, proven patterns for implementing Claude Code hooks. Use these patterns as starting points for typical hook use cases.
 
+## Quick Reference
+
+### Hook Events Summary
+
+| Event | When | Use For |
+|-------|------|---------|
+| PreToolUse | Before tool | Validation, modification |
+| PostToolUse | After tool | Feedback, logging |
+| UserPromptSubmit | User input | Context, validation |
+| Stop | Agent stopping | Completeness check |
+| SubagentStop | Subagent done | Task validation |
+| SessionStart | Session begins | Context loading |
+| SessionEnd | Session ends | Cleanup, logging |
+| PreCompact | Before compact | Preserve context |
+| Notification | User notified | Logging, reactions |
+
+### Best Practices Checklist
+
+**DO:**
+- Use prompt-based hooks for complex, context-dependent logic
+- Use `${CLAUDE_PLUGIN_ROOT}` for portability
+- Validate all inputs in command hooks
+- Quote all bash variables (`"$var"`, not `$var`)
+- Set appropriate timeouts
+- Deny via a plain-text reason on stderr + `exit 2`; use structured `hookSpecificOutput` JSON on stdout + `exit 0` for `allow`/`ask`/`updatedInput` (see SKILL.md's Exit Codes section)
+- Test hooks thoroughly with `scripts/test-hook.sh` and `scripts/hook-linter.sh`
+
+**DON'T:**
+- Use hardcoded absolute paths
+- Trust user input without validation
+- Create long-running hooks (keep under the configured timeout)
+- Rely on hook execution order (hooks matching the same event run in parallel)
+- Key shared state files off `$$` — use `session_id` from the hook's stdin JSON instead (see `references/advanced.md`)
+- Log sensitive information (secrets, credentials, full file contents)
+
 ## Pattern 1: Security Validation
 
 Block dangerous file writes using prompt-based hooks:
@@ -325,7 +360,7 @@ input=$(cat)
 file_size=$(echo "$input" | jq -r '.tool_input.content | length')
 
 if [ "$file_size" -gt "$max_file_size" ]; then
-  echo '{"decision": "deny", "reason": "File exceeds configured size limit"}' >&2
+  echo "File exceeds configured size limit ($max_file_size bytes)" >&2
   exit 2
 fi
 ```

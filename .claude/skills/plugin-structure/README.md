@@ -96,8 +96,7 @@ Claude loads references and examples only as needed based on the task.
 
 This skill works well with:
 - **hook-development**: For creating plugin hooks
-- **mcp-integration**: For integrating MCP servers (when available)
-- **marketplace-publishing**: For publishing plugins (when available)
+- **mcp-integration**: For integrating MCP servers
 
 ## Maintenance
 
@@ -105,5 +104,5 @@ To update this skill:
 1. Keep SKILL.md lean and focused on core concepts
 2. Move detailed information to references/
 3. Add new examples/ for common patterns
-4. Update version in SKILL.md frontmatter
+4. Update `metadata.version` in SKILL.md frontmatter
 5. Ensure all documentation uses imperative/infinitive form

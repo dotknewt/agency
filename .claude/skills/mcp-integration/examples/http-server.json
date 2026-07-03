@@ -1,5 +1,13 @@
 {
-  "_comment": "Example HTTP MCP server configuration for REST APIs",
+  "_comment": "Example HTTP MCP server configuration for REST APIs and hosted services. HTTP is the recommended transport for remote servers (including OAuth-based ones) -- see examples/sse-server.json for a note on the deprecated SSE alternative.",
+  "github": {
+    "_comment": "GitHub's official hosted MCP server. Uses HTTP with a GitHub personal access token as a bearer header -- not SSE.",
+    "type": "http",
+    "url": "https://api.githubcopilot.com/mcp/",
+    "headers": {
+      "Authorization": "Bearer ${GITHUB_PAT}"
+    }
+  },
   "rest-api": {
     "type": "http",
     "url": "https://api.example.com/mcp",
