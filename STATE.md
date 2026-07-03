@@ -14,11 +14,11 @@ Must use an **SSH url** (`git@github.com:...`) — HTTPS fails for these private
 
 ## WIP
 
-- Migrating remaining standalone skills into `dotknewt/skills`: `context-engineering`, `make-a-monorepo` (on disk, never registered in marketplace.json), `eyeball` (currently nested in `agents/agent-eyeball/skills/eyeball` — `agent-eyeball` has no agent file, so it's being reclassified as a skill, not an agent)
+- Creating `dotknewt/agents` repo; migrating `agent-doublecheck`, `agent-ember` (kept bundled: each is an `agent.md` + its own dedicated skills)
 
 ## ToDo
 
-- Create `dotknewt/agents` repo; migrate `agent-doublecheck`, `agent-ember` (kept bundled: each is an `agent.md` + its own dedicated skills)
+
 - Create `dotknewt/toolkits` repo; migrate `agency-toolkit`, `github-toolkit`, `docker-toolkit`, `hooks-toolkit`, `instruction-management`
 - Create `dotknewt/ludus-toolkit` repo; flatten `plugins/ludus-toolkit/*` to repo root; reference from `agency` as a whole-repo `github` source (not `git-subdir`)
 - Once everything is migrated: remove leftover `instructions/`, `templates/` from `dotknewt/agency`; update its root `README.md`/`AGENTS.md` to describe the new split
@@ -28,8 +28,7 @@ Must use an **SSH url** (`git@github.com:...`) — HTTPS fails for these private
 
 ## Completed
 
-- 2026-07-03 ??:?? — Updated `dotknewt/agency` marketplace.json: `agentic-eval` now sourced via `git-subdir` from `dotknewt/skills`; committed (`0bc04fb`) and pushed to `main`; verified live via `claude plugin marketplace update agency` + reinstall, correct SKILL.md content resolved
-- 2026-07-03 ??:?? — Created `dotknewt/skills` (private repo), seeded with `agentic-eval/` + its own `.claude-plugin/marketplace.json`
+- 2026-07-03 ??:?? — `dotknewt/skills` complete with all 4 skills (`agentic-eval`, `context-engineering`, `make-a-monorepo`, `eyeball`) + its own `.claude-plugin/marketplace.json`; `dotknewt/agency` marketplace.json updated to source all 4 via `git-subdir` (commits `0bc04fb`, `2977016`, `5ea5955` — the last one a fixup after `marketplace.json` edits were left unstaged in `2977016` and silently didn't ship); local `skills/` and `agents/agent-eyeball/` directories removed from `dotknewt/agency`; verified live by installing all 4 from `@agency` and inspecting cached content
 - 2026-07-03 ??:?? — Phase 0 smoke test: confirmed a cross-repo `git-subdir` source to a bare `SKILL.md` directory (no `plugin.json`) resolves correctly via `claude plugin install` — the core assumption the whole split depends on
 
 ## Decisions
@@ -40,3 +39,4 @@ Must use an **SSH url** (`git@github.com:...`) — HTTPS fails for these private
 - One marketplace entry per skill/agent, not thematic bundles — maximizes install/discovery granularity
 - `ludus-toolkit` gets its own repo — it bundles a full separate npm/TS MCP server project, heavier than the other toolkits
 - `agent-eyeball` has no agent file — reclassified as a skill-only plugin, moves to skills-repo as `eyeball`, not agents-repo (this renames its install key from `agent-eyeball@agency` to `eyeball@agency`)
+- Always `git add` the manifest file explicitly and `git diff --cached` before committing marketplace.json edits — `git status` showing "M" (unstaged) next to it is easy to miss when a commit is otherwise dominated by `git rm` deletions (which auto-stage), and a silently-unstaged manifest edit ships a no-op commit that looks correct in the diff summary
