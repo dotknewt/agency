@@ -14,8 +14,10 @@
   },
   "model": "sonnet",
   "enabledPlugins": {
-    "instruction-management@agency": true,
-    "agency-toolkit@agency": true
+    "agency-toolkit@agency": true,
+    "agentic-eval@agency": false,
+    "superpowers@claude-plugins-official": false,
+    "github-toolkit@agency": false
   },
   "skillOverrides": {
     "monorepo": "off"
