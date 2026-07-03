@@ -14,20 +14,18 @@ Must use an **SSH url** (`git@github.com:...`) — HTTPS fails for these private
 
 ## WIP
 
-- Creating `dotknewt/ludus-toolkit` repo; flattening `plugins/ludus-toolkit/*` to its root
+(none — the 5-repo split is complete and verified end-to-end on this machine)
 
 ## ToDo
 
-
-- Create `dotknewt/toolkits` repo; migrate `agency-toolkit`, `github-toolkit`, `docker-toolkit`, `hooks-toolkit`, `instruction-management`
-- Create `dotknewt/ludus-toolkit` repo; flatten `plugins/ludus-toolkit/*` to repo root; reference from `agency` as a whole-repo `github` source (not `git-subdir`)
-- Once everything is migrated: remove leftover `instructions/`, `templates/` from `dotknewt/agency`; update its root `README.md`/`AGENTS.md` to describe the new split
-- Give `toolkits-repo` its own `validate.yml` CI using its now-local `hooks-toolkit` scripts; give `dotknewt/agency` a lightweight schema-only validator with no plugin dependency
-- Re-verify installs across all known consumers of the `agency` marketplace: this machine (user + project scope), `/home/dotme/Code/tidereach`, `/home/dotme/Code/llm/spektralia`
+- Re-verify/reinstall plugins in `/home/dotme/Code/tidereach` and `/home/dotme/Code/llm/spektralia`, which have project-scoped `...@agency` installs from before the split (not touched by this work — out of scope without an explicit ask on those repos, but their cached plugin content is now stale relative to the new cross-repo sources)
 - Flag orphaned `naming-toolkit@agency` install in `spektralia` — no longer exists anywhere in the `agency` repo/history, doesn't map onto any new repo bucket
+- Optional polish: `docker-toolkit` and `github-toolkit` `plugin.json` files (now in `dotknewt/toolkits`) still lack an `author` field — pre-existing, not caused by the split, flagged by `claude plugin validate`
 
 ## Completed
 
+- 2026-07-03 ??:?? — Full split verified end-to-end: `dotknewt/agency` marketplace.json now lists 12 plugins, all cross-repo sourced, `claude plugin validate` passes clean with zero warnings; `ludus-toolkit` force-reinstalled and its `.mcp.json` `${CLAUDE_PLUGIN_ROOT}/mcp/ludus/...` path confirmed intact after the flatten
+- 2026-07-03 ??:?? — `dotknewt/ludus-toolkit` created (repo root = plugin root, `mcp/ludus/` nested project's internal layout preserved); `dotknewt/agency` updated to source it as a whole-repo `github` source (commit `8532e72`); local `plugins/` (now empty) and dead `templates/`/`.claudeignore` removed; `AGENTS.md`/`README.md` rewritten for the new structure — kept `instructions/AGENTS-Global.md` (general guidance, not toolkit-specific, wasn't actually `@`-included by the old AGENTS.md either) despite the original plan saying to remove "leftover instructions/"; dropped the two `@plugins/github-toolkit/instructions/*.md` references since that content no longer lives locally
 - 2026-07-03 ??:?? — `dotknewt/toolkits` created with all 5 composite plugins (`agency-toolkit`, `github-toolkit`, `docker-toolkit`, `hooks-toolkit`, `instruction-management`) + its own `validate.yml` CI (using the now-local `hooks-toolkit` scripts, sanity-checked locally with 0 failures) + its own `.claude-plugin/marketplace.json`; `dotknewt/agency` updated to source all 5 via `git-subdir` (commit `ada6e02`); local `plugins/` contents removed except `ludus-toolkit` (still pending); root `validate.yml` rewritten as a lightweight jq-only schema check since it no longer has local access to `hooks-toolkit` scripts; verified live — all 5 install with correct nested agents/skills/commands/hooks content (forced a clean uninstall+reinstall of `instruction-management` since it hit a stale pre-migration cache entry that "already installed" would have silently passed through)
 - 2026-07-03 ??:?? — `dotknewt/agents` created with `agent-doublecheck` + `agent-ember` (each kept bundled: `plugin.json` + `agents/*.md` + its own dedicated skills) and its own `.claude-plugin/marketplace.json`; `dotknewt/agency` updated to source both via `git-subdir` (commit `0bb1c96`); local `agents/` directory removed entirely; verified live — both install with full agent + skills content intact
 - 2026-07-03 ??:?? — `dotknewt/skills` complete with all 4 skills (`agentic-eval`, `context-engineering`, `make-a-monorepo`, `eyeball`) + its own `.claude-plugin/marketplace.json`; `dotknewt/agency` marketplace.json updated to source all 4 via `git-subdir` (commits `0bc04fb`, `2977016`, `5ea5955` — the last one a fixup after `marketplace.json` edits were left unstaged in `2977016` and silently didn't ship); local `skills/` and `agents/agent-eyeball/` directories removed from `dotknewt/agency`; verified live by installing all 4 from `@agency` and inspecting cached content
