@@ -1,6 +1,6 @@
 {
 	"name": "agency",
-	"description": "Aggregating marketplace for dotKnewt's Claude Code extensions — plugins are sourced from dotknewt/skills, dotknewt/agents, dotknewt/toolkits, and dotknewt/ludus-toolkit.",
+	"description": "Aggregating marketplace for dotKnewt's Claude Code extensions — plugins are sourced from dotknewt/skills, dotknewt/agents, and dotknewt/toolkits.",
 	"owner": {
 		"name": "dotKnewt",
 		"email": "dotknewt@keemail.me"
@@ -128,8 +128,10 @@
 		{
 			"name": "ludus-toolkit",
 			"source": {
-				"source": "github",
-				"repo": "dotknewt/ludus-toolkit"
+				"source": "git-subdir",
+				"url": "git@github.com:dotknewt/toolkits.git",
+				"path": "ludus-toolkit",
+				"ref": "main"
 			},
 			"description": "Ludus cyber-range toolkit — skills for CLI, range config, environment setup, and troubleshooting, plus a bundled MCP server for the Ludus API.",
 			"version": "0.1.0",
