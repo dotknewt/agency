@@ -2,57 +2,49 @@
 
 Use this template to generate agents using Claude with the agent creation system prompt.
 
+> **See also:** this template duplicates most of what the live `.claude/agents/agent-creator.md` agent already automates end-to-end. If you're working inside Claude Code, just ask for the `agent-creator` agent (or run `/create-agent`) instead of driving this by hand. Use this template when you need to drive the prompt manually — outside the Task tool, via a raw API call, or to understand the underlying pattern.
+
 ## Usage Pattern
 
 ### Step 1: Describe Your Agent Need
 
 Think about:
 - What task should the agent handle?
-- When should it be triggered?
-- Should it be proactive or reactive?
+- When should it be triggered — explicit request, proactive, or both?
+- What phrasings would a real user use?
 - What are the key responsibilities?
 
 ### Step 2: Use the Generation Prompt
 
-Send this to Claude (with the agent-creation-system-prompt loaded):
+Send this to Claude (with `references/agent-creation-system-prompt.md` loaded as the system prompt):
 
 ```
 Create an agent configuration based on this request: "[YOUR DESCRIPTION]"
 
-Return ONLY the JSON object, no other text.
+Write the complete agent markdown file directly, including 2-4 <example>/<commentary>
+blocks in the description field.
 ```
 
-**Replace [YOUR DESCRIPTION] with your agent requirements.**
+**Replace `[YOUR DESCRIPTION]` with your agent requirements.**
 
-### Step 3: Claude Returns JSON
+### Step 3: Claude Designs and Writes the Agent File
 
-Claude will return:
+Following the system prompt's 6 steps (see `references/agent-creation-system-prompt.md`), Claude:
 
-```json
-{
-  "identifier": "agent-name",
-  "whenToUse": "Use this agent when... Typical triggers include [scenario 1], [scenario 2], and [scenario 3]. See \"When to invoke\" in the agent body for worked scenarios.",
-  "systemPrompt": "You are...\n\n## When to invoke\n\n- **[Scenario A].** [Description]\n- **[Scenario B].** [Description]\n\n**Your Core Responsibilities:**..."
-}
-```
+1. Extracts the core intent and responsibilities
+2. Designs an expert persona
+3. Architects the system prompt (responsibilities, process, quality standards, output format, edge cases)
+4. Picks an identifier (lowercase, hyphens, 3-50 chars)
+5. Crafts 2-4 `<example>`/`<commentary>` blocks covering different phrasings and both explicit and proactive triggering
+6. Writes the finished file directly to `agents/[identifier].md` — there is no JSON intermediate step to convert afterward
 
-`whenToUse` is flat prose. `systemPrompt` includes a "When to invoke" section with prose bullets.
+### Step 4: Review the Result
 
-### Step 4: Convert to Agent File
-
-Create `agents/[identifier].md`:
-
-```markdown
----
-name: [identifier from JSON]
-description: [whenToUse from JSON]
-model: inherit
-color: [choose: blue/cyan/green/yellow/magenta/red]
-tools: ["Read", "Write", "Grep"]  # Optional: restrict tools
----
-
-[systemPrompt from JSON]
-```
+Read the generated `agents/[identifier].md` and confirm:
+- `name` and `description` are present (the only required fields)
+- `description:` opens with "Use this agent when..." and contains 2-4 `<example>` blocks
+- The examples cover varied phrasing and both explicit and proactive triggers
+- The system prompt has clear responsibilities, process, and output format
 
 ## Example 1: Code Review Agent
 
@@ -61,34 +53,38 @@ tools: ["Read", "Write", "Grep"]  # Optional: restrict tools
 I need an agent that reviews code changes for quality issues, security vulnerabilities, and adherence to best practices. It should be called after code is written and provide specific feedback.
 ```
 
-**Claude generates:**
-```json
-{
-  "identifier": "code-quality-reviewer",
-  "whenToUse": "Use this agent when the user has written code and needs quality review, or explicitly asks to review code changes. Typical triggers include proactive review after the assistant writes new code, and an explicit user request for review of recent changes. See \"When to invoke\" in the agent body for worked scenarios.",
-  "systemPrompt": "You are an expert code quality reviewer specializing in identifying issues in software implementations.\n\n## When to invoke\n\n- **Proactive review after new code.** The assistant has just written or modified code (e.g. an authentication feature). Run a review for quality, security, and best practices before declaring the task done.\n- **Explicit review request.** The user asks for the recent changes to be reviewed for issues. Run a thorough review and report findings.\n\n**Your Core Responsibilities:**\n1. Analyze code changes for quality issues (readability, maintainability, performance)\n2. Identify security vulnerabilities (injection, XSS, authentication issues)\n3. Check adherence to project best practices and coding standards\n4. Provide actionable, specific feedback with line numbers\n\n**Review Process:**\n1. Read the code changes using available tools\n2. Analyze for:\n   - Code quality (duplication, complexity, clarity)\n   - Security (OWASP top 10, input validation)\n   - Best practices (error handling, logging, testing)\n   - Project-specific standards (from CLAUDE.md)\n3. Identify issues with severity (critical/major/minor)\n4. Provide specific recommendations with examples\n\n**Output Format:**\nProvide a structured review:\n1. Summary (2-3 sentences)\n2. Critical Issues (must fix)\n3. Major Issues (should fix)\n4. Minor Issues (nice to fix)\n5. Positive observations\n6. Overall assessment\n\nInclude file names and line numbers for all findings."
-}
-```
-
-**You create:**
-
-File: `agents/code-quality-reviewer.md`
+**Claude generates `agents/code-quality-reviewer.md`:**
 
 ```markdown
 ---
 name: code-quality-reviewer
-description: Use this agent when the user has written code and needs quality review, or explicitly asks to review code changes. Typical triggers include proactive review after the assistant writes new code, and an explicit user request for review of recent changes. See "When to invoke" in the agent body for worked scenarios.
+description: |
+  Use this agent when the user has written code and needs quality review, or explicitly asks to review code changes. Examples:
+
+  <example>
+  Context: Assistant just implemented an authentication feature
+  user: "Add login with email and password"
+  assistant: "Here's the login flow. Now let me review it for quality and security before we call it done."
+  <commentary>
+  Proactive review after writing security-sensitive code — trigger before declaring the task complete.
+  </commentary>
+  assistant: "I'll use the code-quality-reviewer agent to check the new login flow."
+  </example>
+
+  <example>
+  Context: User explicitly asks for a review
+  user: "Can you review the changes I just made?"
+  assistant: "I'll use the code-quality-reviewer agent to review the recent changes."
+  <commentary>
+  Direct request to review recent changes.
+  </commentary>
+  </example>
 model: inherit
 color: blue
 tools: ["Read", "Grep", "Glob"]
 ---
 
 You are an expert code quality reviewer specializing in identifying issues in software implementations.
-
-## When to invoke
-
-- **Proactive review after new code.** The assistant has just written or modified code (e.g. an authentication feature). Run a review for quality, security, and best practices before declaring the task done.
-- **Explicit review request.** The user asks for the recent changes to be reviewed for issues. Run a thorough review and report findings.
 
 **Your Core Responsibilities:**
 1. Analyze code changes for quality issues (readability, maintainability, performance)
@@ -125,16 +121,7 @@ Include file names and line numbers for all findings.
 Create an agent that generates unit tests for code. It should analyze existing code and create comprehensive test suites following project conventions.
 ```
 
-**Claude generates:**
-```json
-{
-  "identifier": "test-generator",
-  "whenToUse": "Use this agent when the user asks to generate tests, needs test coverage, or has written code that needs testing. Typical triggers include proactive test generation after the assistant writes new functions, and an explicit user request for tests on a specific module. See \"When to invoke\" in the agent body.",
-  "systemPrompt": "You are an expert test engineer specializing in creating comprehensive unit tests.\n\n## When to invoke\n\n- **Proactive coverage after new code.** The assistant has just implemented new functions (e.g. user authentication functions) without tests. Generate a comprehensive test suite before declaring the task done.\n- **Explicit test request.** The user asks for tests on a specific surface. Generate the requested suite following project conventions.\n\n**Your Core Responsibilities:**\n1. Analyze code to understand behavior\n2. Generate test cases covering happy paths and edge cases\n3. Follow project testing conventions\n4. Ensure high code coverage\n\n**Test Generation Process:**\n1. Read target code\n2. Identify testable units (functions, classes, methods)\n3. Design test cases (inputs, expected outputs, edge cases)\n4. Generate tests following project patterns\n5. Add assertions and error cases\n\n**Output Format:**\nGenerate complete test files with:\n- Test suite structure\n- Setup/teardown if needed\n- Descriptive test names\n- Comprehensive assertions"
-}
-```
-
-**You create:** `agents/test-generator.md` with the structure above.
+**Claude generates `agents/test-generator.md`** with identifier `test-generator`, a `description:` containing `<example>` blocks for both an explicit test request and proactive coverage after new untested code, and a system prompt covering test analysis, generation process, and output format — same structure as Example 1 above.
 
 ## Example 3: Documentation Agent
 
@@ -143,7 +130,7 @@ Create an agent that generates unit tests for code. It should analyze existing c
 Build an agent that writes and updates API documentation. It should analyze code and generate clear, comprehensive docs.
 ```
 
-**Result:** Agent file with identifier `api-docs-writer`, prose-style trigger description, and a "When to invoke" body section covering proactive doc generation after new API surface and explicit doc requests.
+**Result:** Agent file with identifier `api-docs-writer`, a `description:` with `<example>` blocks covering an explicit doc request and proactive documentation after new API surface, and a system prompt for analyzing code and generating docs in the project's standard format.
 
 ## Tips for Effective Agent Generation
 
@@ -161,7 +148,7 @@ Build an agent that writes and updates API documentation. It should analyze code
 
 ### Include Triggering Preferences
 
-Tell Claude when the agent should activate:
+Tell Claude when the agent should activate, including whether it should be proactive:
 
 ```
 "Create an agent that generates tests. It should be triggered proactively after code is written, not just when explicitly requested."
@@ -187,18 +174,17 @@ Always validate generated agents:
 # Validate structure
 ./scripts/validate-agent.sh agents/your-agent.md
 
-# Check triggering works
-# Test with realistic invocation phrasings
+# Check triggering works — test with realistic invocation phrasings
 ```
 
 ## Iterating on Generated Agents
 
-If generated agent needs improvement:
+If a generated agent needs improvement:
 
 1. Identify what's missing or wrong
 2. Manually edit the agent file
 3. Focus on:
-   - Better-named trigger scenarios in `description:` and "When to invoke"
+   - Better-varied `<example>`/`<commentary>` blocks in `description:`
    - More specific system prompt
    - Clearer process steps
    - Better output format definition
@@ -207,18 +193,18 @@ If generated agent needs improvement:
 
 ## Advantages of AI-Assisted Generation
 
-- **Comprehensive**: Claude includes edge cases and quality checks
-- **Consistent**: Follows proven patterns
-- **Fast**: Seconds vs manual writing
-- **Complete**: Provides full system prompt structure
+- **Comprehensive**: includes edge cases and quality checks
+- **Consistent**: follows the proven, actually-used pattern
+- **Fast**: seconds vs. manual writing
+- **Complete**: full system prompt plus properly-formed `<example>` triggers
 
 ## When to Edit Manually
 
 Edit generated agents when:
-- Need very specific project patterns
-- Require custom tool combinations
-- Want unique persona or style
-- Integrating with existing agents
-- Need precise triggering conditions
+- You need very specific project patterns
+- You require custom tool combinations
+- You want a unique persona or style
+- You're integrating with existing agents
+- You need more precise triggering examples
 
 Start with generation, then refine manually for best results.

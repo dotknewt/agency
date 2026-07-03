@@ -1,0 +1,22 @@
+[
+  { "query": "Create an agent that reviews code for quality issues", "should_trigger": true },
+  { "query": "hey can you whip up a subagent that generates unit tests for me", "should_trigger": true },
+  { "query": "I need to add a new agent to my plugin that validates JSON schemas against a spec file", "should_trigger": true },
+  { "query": "What should go in the description field so my agent actually triggers?", "should_trigger": true },
+  { "query": "how many <example> blocks should a good agent have, and what goes inside one?", "should_trigger": true },
+  { "query": "my agent never fires when I ask for a review, how do I fix the triggering examples", "should_trigger": true },
+  { "query": "what colors can I use in agent frontmatter, and is color actually required?", "should_trigger": true },
+  { "query": "is model a required field in an agent file or can I leave it out?", "should_trigger": true },
+  { "query": "write me an autonomous agent for summarizing PRs — it should trigger both when I ask and proactively after a PR is opened", "should_trigger": true },
+  { "query": "can u make an agent that checks for security issues in new auth code, model should be opus", "should_trigger": true },
+  { "query": "can you write a python script that reads a csv and uploads each row to our postgres database", "should_trigger": false },
+  { "query": "create a new slash command that formats the current file with prettier", "should_trigger": false },
+  { "query": "add a PreToolUse hook that blocks rm -rf commands before they run", "should_trigger": false },
+  { "query": "I want to create a new skill for PDF processing, what fields go in SKILL.md?", "should_trigger": false },
+  { "query": "what's the weather like today", "should_trigger": false },
+  { "query": "can you review this pull request for me and check for bugs", "should_trigger": false },
+  { "query": "set up an MCP server connection so we can talk to our internal API from Claude", "should_trigger": false },
+  { "query": "how do I pin my active plugins to project settings so they install automatically for the team", "should_trigger": false },
+  { "query": "can you scaffold a new plugin for me with commands, hooks, and a manifest", "should_trigger": false },
+  { "query": "what's a good name for my new AI assistant startup", "should_trigger": false }
+]
