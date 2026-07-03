@@ -12,8 +12,7 @@
   "enabledPlugins": {
     "instruction-management@agency": true,
     "agency-toolkit@agency": true,
-    "claude-code-setup@claude-plugins-official": true
   },
   "effortLevel": "high",
-  "advisorModel": "claude-opus-4-8"
+  "advisorModel": "claude-opus-4-6"
 }
