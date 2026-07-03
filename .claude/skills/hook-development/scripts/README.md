@@ -9,6 +9,7 @@ Validates `hooks.json` configuration files for correct structure and common issu
 **Usage:**
 ```bash
 ./validate-hook-schema.sh path/to/hooks.json
+./validate-hook-schema.sh -h | --help
 ```
 
 **Checks:**
@@ -20,11 +21,15 @@ Validates `hooks.json` configuration files for correct structure and common issu
 - Hardcoded path detection
 - Prompt hook event compatibility
 
+**Formats:** Auto-detects and validates both the plugin `hooks/hooks.json` format (events wrapped in a `"hooks"` key, e.g. `{"description": "...", "hooks": {"PreToolUse": [...]}}`) and the settings.json format (events directly at the top level, e.g. `{"PreToolUse": [...]}`).
+
 **Example:**
 ```bash
 cd my-plugin
 ./validate-hook-schema.sh hooks/hooks.json
 ```
+
+**Output:** Progress/diagnostic messages go to stderr; validation results (per-check status, errors, warnings, summary) go to stdout.
 
 ## test-hook.sh
 
@@ -59,6 +64,8 @@ Tests individual hook scripts with sample input before deploying to Claude Code.
 - Shows exit codes and their meanings
 - Captures environment file output
 
+**Output:** Progress/diagnostic messages (banners, verbose input/environment dumps) go to stderr; test results (exit code, duration, hook output, environment file contents, pass/fail) go to stdout.
+
 ## hook-linter.sh
 
 Checks hook scripts for common issues and best practices violations.
@@ -66,6 +73,7 @@ Checks hook scripts for common issues and best practices violations.
 **Usage:**
 ```bash
 ./hook-linter.sh <hook-script.sh> [hook-script2.sh ...]
+./hook-linter.sh -h | --help
 ```
 
 **Checks:**
@@ -79,6 +87,7 @@ Checks hook scripts for common issues and best practices violations.
 - Long-running code detection
 - Error output to stderr
 - Input validation
+- Decision-output channel correctness (flags scripts that write `hookSpecificOutput`/`permissionDecision` JSON to stderr instead of stdout — see [Common Issues](#common-issues) below)
 
 **Example:**
 ```bash
@@ -88,6 +97,8 @@ Checks hook scripts for common issues and best practices violations.
 # Lint multiple scripts
 ./hook-linter.sh ../examples/*.sh
 ```
+
+**Output:** Progress/diagnostic banners go to stderr; lint results (per-check findings, final summary) go to stdout.
 
 ## Typical Workflow
 
@@ -155,6 +166,15 @@ Check:
 - Check exit codes (should be 0 or 2)
 - Ensure errors go to stderr (`>&2`)
 - Validate JSON output structure
+
+### "ask"/"deny" decision JSON is shown to Claude as raw text instead of being applied
+
+This means the JSON was written to stderr while exiting 2. Claude Code only parses `hookSpecificOutput`/`permissionDecision` JSON from **stdout on exit 0**. On exit 2, stderr is surfaced to Claude as plain text, not parsed as JSON. Fix:
+
+- For a simple deny/block: write a plain-text reason to stderr and `exit 2`.
+- For a structured decision (`allow`/`deny`/`ask`, `updatedInput`, `systemMessage`): print the JSON to stdout and `exit 0`.
+
+See `examples/validate-bash.sh` and `examples/validate-write.sh` for both paths used correctly, and run `./hook-linter.sh` to catch this pattern automatically.
 
 ### Injection vulnerabilities
 
