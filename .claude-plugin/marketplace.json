@@ -34,13 +34,20 @@
 			}
 		},
 		{
-			"name": "agent-eyeball",
-			"source": "./agents/agent-eyeball",
+			"name": "eyeball",
+			"source": {
+				"source": "git-subdir",
+				"url": "git@github.com:dotknewt/skills.git",
+				"path": "eyeball",
+				"ref": "main"
+			},
 			"description": "Document analysis with inline source screenshots. Generates a Word doc where every factual claim includes a highlighted screenshot from the source material for visual verification.",
 			"version": "1.0.0",
 			"author": {
 				"name": "Awesome Copilot Community"
-			}
+			},
+			"repository": "https://github.com/github/awesome-copilot",
+			"license": "MIT"
 		},
 		{
 			"name": "agentic-eval",
@@ -79,7 +86,12 @@
 		},
 		{
 			"name": "context-engineering",
-			"source": "./skills/context-engineering",
+			"source": {
+				"source": "git-subdir",
+				"url": "git@github.com:dotknewt/skills.git",
+				"path": "context-engineering",
+				"ref": "main"
+			},
 			"description": "Memory and context engineering concepts for LLMs — context window management, RAG patterns, prompt injection attacks (red-team), and defenses. Covers three angles: supporting development, exploiting, and defending.",
 			"version": "1.0.0",
 			"author": {
@@ -112,6 +124,21 @@
 			"source": "./plugins/docker-toolkit",
 			"description": "Build and validate Docker artifacts — multi-stage Dockerfiles, and packaging MCP servers as containers runnable via the Docker MCP Gateway.",
 			"version": "0.1.1",
+			"author": {
+				"name": "dotKnewt",
+				"email": "dotknewt@keemail.me"
+			}
+		},
+		{
+			"name": "make-a-monorepo",
+			"source": {
+				"source": "git-subdir",
+				"url": "git@github.com:dotknewt/skills.git",
+				"path": "make-a-monorepo",
+				"ref": "main"
+			},
+			"description": "Scaffold a flat monorepo from scratch or audit an existing project against monorepo conventions — /make-a-monorepo init <name> or /make-a-monorepo audit [--fix].",
+			"version": "1.0.0",
 			"author": {
 				"name": "dotKnewt",
 				"email": "dotknewt@keemail.me"
