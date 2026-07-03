@@ -1,0 +1,48 @@
+{
+  "skill_name": "mcp-integration",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I need to hook my plugin up to our internal REST API. It's authenticated with a bearer token that I'll set as an env var. Can you set up the MCP config for that?",
+      "expected_output": "An `.mcp.json` (or equivalent) snippet with a server entry using `\"type\": \"http\"`, a `url` pointing at the API, and an `Authorization: Bearer ${API_TOKEN}`-style header referencing an environment variable rather than a hardcoded secret. The response documents that `API_TOKEN` (or similarly named variable) must be set by the user and mentions it should be recorded in the plugin README.",
+      "assertions": [
+        "The generated config uses \"type\": \"http\" (not \"sse\" or stdio)",
+        "The config includes a \"url\" field",
+        "The Authorization header uses an ${ENV_VAR} placeholder, not a literal token value",
+        "The response tells the user to document the required environment variable"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "I want to bundle a local npm-based MCP server with my plugin so it just works after install, no separate setup step. It's a small server.js file living in the plugin's servers/ folder.",
+      "expected_output": "A stdio-type MCP server config (no `type` field, or `\"type\": \"stdio\"`) with `command` and `args` referencing the server via `${CLAUDE_PLUGIN_ROOT}` rather than a hardcoded or relative path, so the config keeps working regardless of where the plugin is installed.",
+      "assertions": [
+        "The generated config has a \"command\" field and no \"url\" field",
+        "The path to the bundled server uses ${CLAUDE_PLUGIN_ROOT}, not a hardcoded absolute path or a bare relative path",
+        "The response does not suggest publishing the server to npm or running it as a separate hosted service"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "My plugin needs to connect to a hosted project-management service that uses OAuth for login. What does the MCP config look like?",
+      "expected_output": "An MCP server config using `\"type\": \"http\"` with just a `url` field (OAuth is handled automatically by Claude Code, no manual token config needed). The response explains that HTTP is the current recommended transport for OAuth-based hosted servers and that `\"type\": \"sse\"` is a deprecated legacy option that should only be used if the specific service hasn't migrated off it.",
+      "assertions": [
+        "The generated config uses \"type\": \"http\", not \"type\": \"sse\"",
+        "The response does not present SSE and HTTP as equally good, interchangeable choices",
+        "The response mentions the OAuth flow is handled automatically by Claude Code without extra config",
+        "If SSE is mentioned at all, it is described as deprecated/legacy"
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "Add a websocket MCP server to my plugin for a real-time internal service. I don't have the auth details yet, will figure that out later.",
+      "expected_output": "The skill produces a `\"type\": \"ws\"` config with the `url` field, but explicitly flags that authentication headers are still required and unknown rather than inventing a placeholder token or omitting the topic. It asks the user for (or clearly marks as TODO) the auth scheme and env var name before treating the config as complete, instead of silently guessing a header name/value.",
+      "assertions": [
+        "The generated config uses \"type\": \"ws\"",
+        "The response does not fabricate a specific header name or token value without flagging it as a placeholder/unknown",
+        "The response explicitly calls out that auth/headers are still needed and asks the user to supply them, rather than silently proceeding as if the config were complete",
+        "The response does not claim the server will work as-is without the missing auth information"
+      ]
+    }
+  ]
+}

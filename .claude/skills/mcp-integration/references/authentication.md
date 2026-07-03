@@ -10,7 +10,7 @@ MCP servers support multiple authentication methods depending on the server type
 
 ### How It Works
 
-Claude Code automatically handles the complete OAuth 2.0 flow for SSE and HTTP servers:
+Claude Code automatically handles the complete OAuth 2.0 flow for HTTP servers (and legacy SSE servers, which are deprecated — see [server-types.md](server-types.md#sse-server-sent-events)):
 
 1. User attempts to use MCP tool
 2. Claude Code detects authentication needed
@@ -21,24 +21,26 @@ Claude Code automatically handles the complete OAuth 2.0 flow for SSE and HTTP s
 
 ### Configuration
 
+Use `type: "http"` — this is the current recommended transport, including for OAuth-based servers:
+
 ```json
 {
   "service": {
-    "type": "sse",
-    "url": "https://mcp.example.com/sse"
+    "type": "http",
+    "url": "https://mcp.example.com/mcp"
   }
 }
 ```
 
-No additional auth configuration needed! Claude Code handles everything.
+No additional auth configuration needed! Claude Code handles everything. Only use `type: "sse"` if the specific server you're connecting to hasn't migrated off the deprecated SSE transport.
 
 ### Supported Services
 
 **Known OAuth-enabled MCP servers:**
-- Asana: `https://mcp.asana.com/sse`
-- GitHub (when available)
+- GitHub: `https://api.githubcopilot.com/mcp/` (HTTP transport; note GitHub also supports a personal-access-token bearer header as a non-OAuth alternative — see [Token-Based Authentication](#token-based-authentication) below)
+- Asana: `https://mcp.asana.com/sse` (still documented by Asana as SSE at time of writing; prefer HTTP if/when Asana publishes an HTTP endpoint)
 - Google services (when available)
-- Custom OAuth servers
+- Custom OAuth servers — prefer exposing them over HTTP rather than SSE
 
 ### OAuth Scopes
 
@@ -127,8 +129,8 @@ Services may use custom authentication headers.
 ```json
 {
   "service": {
-    "type": "sse",
-    "url": "https://mcp.example.com/sse",
+    "type": "http",
+    "url": "https://mcp.example.com/mcp",
     "headers": {
       "X-Auth-Token": "${AUTH_TOKEN}",
       "X-User-ID": "${USER_ID}",
@@ -233,7 +235,7 @@ For tokens that change or expire, use a helper script:
 ```json
 {
   "api": {
-    "type": "sse",
+    "type": "http",
     "url": "https://api.example.com",
     "headersHelper": "${CLAUDE_PLUGIN_ROOT}/scripts/get-headers.sh"
   }
@@ -444,8 +446,8 @@ curl -H "Authorization: Bearer $API_TOKEN" \
 **After:**
 ```json
 {
-  "type": "sse",
-  "url": "https://mcp.example.com/sse"
+  "type": "http",
+  "url": "https://mcp.example.com/mcp"
 }
 ```
 
@@ -454,6 +456,7 @@ curl -H "Authorization: Bearer $API_TOKEN" \
 - No credential management
 - Automatic token refresh
 - Scoped permissions
+- Uses the current recommended transport (HTTP) rather than the deprecated SSE transport
 
 ## Advanced Authentication
 

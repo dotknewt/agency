@@ -1,0 +1,22 @@
+[
+  { "query": "hook my plugin up to a hosted service like Asana", "should_trigger": true },
+  { "query": "how do I wire in an MCP server for our internal db", "should_trigger": true },
+  { "query": "can you add an MCP server config to my plugin for the Stripe API, it needs a bearer token", "should_trigger": true },
+  { "query": "my plugin needs to talk to a websocket-based real-time service, how do I set that up in .mcp.json", "should_trigger": true },
+  { "query": "what's ${CLAUDE_PLUGIN_ROOT} for and how does it relate to setting up MCP servers", "should_trigger": true },
+  { "query": "teammate said i need a .mcp.json to bundle a local database tool with my plugin -- whats supposed to go in it", "should_trigger": true },
+  { "query": "we want to give Claude access to our company's Jira instance from inside our plugin, what's the setup look like", "should_trigger": true },
+  { "query": "how do I set up OAuth for a hosted MCP server my plugin connects to", "should_trigger": true },
+  { "query": "quick q: how do i expose our internal REST api as tools for a claude code plugin", "should_trigger": true },
+  { "query": "trying to connect my custom plugin to GitHub's hosted MCP server, what transport/url do I use", "should_trigger": true },
+  { "query": "write me an MCP server from scratch in Python", "should_trigger": false },
+  { "query": "explain what the Model Context Protocol is", "should_trigger": false },
+  { "query": "how do I write a slash command for my plugin that takes arguments", "should_trigger": false },
+  { "query": "what's the difference between an agent and a skill in a Claude Code plugin", "should_trigger": false },
+  { "query": "can you review my plugin.json for syntax errors before I publish", "should_trigger": false },
+  { "query": "how do I set environment variables for my Claude Code PreToolUse hook", "should_trigger": false },
+  { "query": "build me a Python client library that calls the Asana REST API directly", "should_trigger": false },
+  { "query": "my Node.js server keeps crashing on startup, can you help me debug it", "should_trigger": false },
+  { "query": "what's the best way to store user-configurable settings for my plugin, like a .local.md file", "should_trigger": false },
+  { "query": "how do I add a new command to my plugin's commands folder and give it a description", "should_trigger": false }
+]

@@ -102,7 +102,9 @@ Execute local MCP servers as child processes with communication via stdin/stdout
 
 ### Overview
 
-Connect to hosted MCP servers via HTTP with server-sent events for streaming. Best for cloud services and OAuth authentication.
+> **Deprecated.** The HTTP+SSE transport is a legacy transport superseded by the HTTP (Streamable HTTP) transport. Claude Code's current documentation lists SSE as deprecated in favor of `type: "http"`, which supports the same use cases (including OAuth and hosted cloud services) without a separate streaming connection. Use `type: "http"` for all new integrations — see the [HTTP (REST API)](#http-rest-api) section below. Only use SSE when connecting to an existing hosted server that hasn't migrated off the legacy transport yet.
+
+Connect to hosted MCP servers via HTTP with server-sent events for streaming. Historically used for cloud services and OAuth authentication; superseded by HTTP.
 
 ### Configuration
 
@@ -171,21 +173,23 @@ Claude Code handles OAuth flow:
 
 ### Use Cases
 
-**Official Services:**
-- Asana: `https://mcp.asana.com/sse`
-- GitHub: `https://mcp.github.com/sse`
-- Other hosted MCP servers
+**Legacy Hosted Services:**
+- Asana (still commonly documented as SSE): `https://mcp.asana.com/sse`
+- Other hosted MCP servers that haven't migrated to HTTP
 
 **Custom Hosted Servers:**
-Deploy your own MCP server and expose via HTTPS + SSE.
+If you're deploying your own server, prefer HTTP (Streamable HTTP) over SSE — see [HTTP (REST API)](#http-rest-api).
+
+> **Note:** GitHub's official hosted MCP server does **not** use SSE. It's `https://api.githubcopilot.com/mcp/`, connected via the **HTTP** transport with a personal-access-token bearer header. See [HTTP (REST API) → Use Cases](#use-cases-2) below.
 
 ### Best Practices
 
-1. **Always use HTTPS, never HTTP**
-2. **Let OAuth handle authentication when available**
-3. **Use environment variables for tokens**
-4. **Handle connection failures gracefully**
-5. **Document OAuth scopes required**
+1. **Prefer HTTP over SSE for new integrations** — SSE is deprecated
+2. **Always use HTTPS, never HTTP**
+3. **Let OAuth handle authentication when available**
+4. **Use environment variables for tokens**
+5. **Handle connection failures gracefully**
+6. **Document OAuth scopes required**
 
 ### Troubleshooting
 
@@ -205,7 +209,9 @@ Deploy your own MCP server and expose via HTTPS + SSE.
 
 ### Overview
 
-Connect to RESTful MCP servers via standard HTTP requests. Best for token-based auth and stateless interactions.
+Connect to MCP servers via standard HTTP requests (the "Streamable HTTP" transport in the MCP spec). This is the **recommended transport for remote/hosted MCP servers**, superseding SSE — it supports both simple token-based auth and OAuth flows, so use it for hosted cloud services as well as REST API backends.
+
+> **Alias:** `type: "http"` also accepts `type: "streamable-http"` — the MCP spec's own name for this transport. Both values behave identically, so configs copied from third-party server docs that use `"streamable-http"` work unmodified.
 
 ### Configuration
 
@@ -277,6 +283,22 @@ Connect to RESTful MCP servers via standard HTTP requests. Best for token-based 
 - Internal services
 - Microservices
 - Serverless functions
+- Official hosted MCP servers, including OAuth-based ones
+
+**Official Services:**
+- GitHub: `https://api.githubcopilot.com/mcp/` — HTTP transport with a GitHub personal access token as a bearer header:
+  ```json
+  {
+    "github": {
+      "type": "http",
+      "url": "https://api.githubcopilot.com/mcp/",
+      "headers": {
+        "Authorization": "Bearer ${GITHUB_PAT}"
+      }
+    }
+  }
+  ```
+- Other hosted MCP servers (check the provider's docs — most have migrated to HTTP)
 
 ### Best Practices
 
@@ -285,6 +307,7 @@ Connect to RESTful MCP servers via standard HTTP requests. Best for token-based 
 3. **Implement retry logic for transient failures**
 4. **Handle rate limiting**
 5. **Set appropriate timeouts**
+6. **Prefer HTTP over SSE** when a provider offers both
 
 ### Troubleshooting
 
@@ -370,16 +393,17 @@ Connect to MCP servers via WebSocket for real-time bidirectional communication. 
 
 ## Comparison Matrix
 
-| Feature | stdio | SSE | HTTP | WebSocket |
-|---------|-------|-----|------|-----------|
-| **Transport** | Process | HTTP/SSE | HTTP | WebSocket |
-| **Direction** | Bidirectional | Server→Client | Request/Response | Bidirectional |
-| **State** | Stateful | Stateful | Stateless | Stateful |
-| **Auth** | Env vars | OAuth/Headers | Headers | Headers |
-| **Use Case** | Local tools | Cloud services | REST APIs | Real-time |
+| Feature | stdio | HTTP | SSE (deprecated) | WebSocket |
+|---------|-------|------|-------------------|-----------|
+| **Transport** | Process | HTTP | HTTP/SSE | WebSocket |
+| **Direction** | Bidirectional | Request/Response | Server→Client | Bidirectional |
+| **State** | Stateful | Stateless | Stateful | Stateful |
+| **Auth** | Env vars | OAuth/Headers | OAuth/Headers | Headers |
+| **Use Case** | Local tools | REST APIs, cloud services | Legacy cloud services | Real-time |
 | **Latency** | Lowest | Medium | Medium | Low |
-| **Setup** | Easy | Medium | Easy | Medium |
-| **Reconnect** | Process respawn | Automatic | N/A | Automatic |
+| **Setup** | Easy | Easy | Medium | Medium |
+| **Reconnect** | Process respawn | N/A | Automatic | Automatic |
+| **Status** | Current | **Recommended for remote servers** | **Deprecated — use HTTP** | Current |
 
 ## Choosing the Right Type
 
@@ -389,17 +413,18 @@ Connect to MCP servers via WebSocket for real-time bidirectional communication. 
 - Working with file systems or local databases
 - Distributing server with plugin
 
-**Use SSE when:**
-- Connecting to hosted services
-- Need OAuth authentication
-- Using official MCP servers (Asana, GitHub)
-- Want automatic reconnection
-
 **Use HTTP when:**
-- Integrating with REST APIs
-- Need stateless interactions
+- Connecting to hosted/cloud services (this is the default choice for any remote server)
+- Need OAuth authentication
+- Using official MCP servers (Asana, GitHub, etc.)
+- Integrating with REST APIs or need stateless interactions
 - Using token-based auth
-- Simple request/response pattern
+- **This is the recommended transport — reach for HTTP before SSE or a custom solution**
+
+**Use SSE only when:**
+- Connecting to an existing hosted server that hasn't migrated off the legacy SSE transport yet
+- You don't control the server and its docs still specify `type: "sse"`
+- Otherwise, prefer HTTP — SSE is deprecated
 
 **Use WebSocket when:**
 - Need real-time updates
@@ -409,7 +434,7 @@ Connect to MCP servers via WebSocket for real-time bidirectional communication. 
 
 ## Migration Between Types
 
-### From stdio to SSE
+### From stdio to HTTP
 
 **Before (stdio):**
 ```json
@@ -421,7 +446,19 @@ Connect to MCP servers via WebSocket for real-time bidirectional communication. 
 }
 ```
 
-**After (SSE - deploy server):**
+**After (HTTP - deploy server):**
+```json
+{
+  "hosted-server": {
+    "type": "http",
+    "url": "https://mcp.example.com/mcp"
+  }
+}
+```
+
+### From SSE to HTTP (recommended upgrade)
+
+**Before (deprecated):**
 ```json
 {
   "hosted-server": {
@@ -430,6 +467,18 @@ Connect to MCP servers via WebSocket for real-time bidirectional communication. 
   }
 }
 ```
+
+**After:**
+```json
+{
+  "hosted-server": {
+    "type": "http",
+    "url": "https://mcp.example.com/mcp"
+  }
+}
+```
+
+Check the server's docs for its HTTP endpoint — it's often a different path than the `/sse` endpoint, not just a type change.
 
 ### From HTTP to WebSocket
 
@@ -468,8 +517,8 @@ Combine different types:
     "args": ["-y", "mcp-server-sqlite", "./data.db"]
   },
   "cloud-api": {
-    "type": "sse",
-    "url": "https://mcp.example.com/sse"
+    "type": "http",
+    "url": "https://mcp.example.com/mcp"
   },
   "internal-service": {
     "type": "http",
@@ -529,8 +578,8 @@ Set different values for dev/prod:
 
 Choose the MCP server type based on your use case:
 - **stdio** for local, custom, or NPM-packaged servers
-- **SSE** for hosted services with OAuth
-- **HTTP** for REST APIs with token auth
+- **HTTP** for hosted services and REST APIs, including OAuth — the recommended transport for anything remote
+- **SSE** only for legacy hosted servers that haven't migrated off it yet (deprecated — prefer HTTP)
 - **WebSocket** for real-time bidirectional communication
 
 Test thoroughly and handle errors gracefully for robust MCP integration.
