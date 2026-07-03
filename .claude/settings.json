@@ -11,7 +11,10 @@
   "model": "sonnet",
   "enabledPlugins": {
     "instruction-management@agency": true,
-    "agency-toolkit@agency": true,
+    "agency-toolkit@agency": true
+  },
+  "skillOverrides": {
+    "monorepo": "off"
   },
   "effortLevel": "high",
   "advisorModel": "claude-opus-4-6"
