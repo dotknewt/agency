@@ -44,7 +44,12 @@
 		},
 		{
 			"name": "agentic-eval",
-			"source": "./skills/agentic-eval",
+			"source": {
+				"source": "git-subdir",
+				"url": "git@github.com:dotknewt/skills.git",
+				"path": "agentic-eval",
+				"ref": "main"
+			},
 			"description": "Patterns and techniques for evaluating and improving AI agent outputs — self-critique loops, evaluator-optimizer pipelines, rubric-based scoring, and iterative refinement.",
 			"version": "1.0.0",
 			"author": {
