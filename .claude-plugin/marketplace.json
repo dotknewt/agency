@@ -171,21 +171,6 @@
 			}
 		},
 		{
-			"name": "superpowers",
-			"source": {
-				"source": "git-subdir",
-				"url": "git@github.com:dotknewt/toolkits.git",
-				"path": "superpower-toolkit",
-				"ref": "main"
-			},
-			"description": "Core skills library for Claude Code: TDD, debugging, collaboration patterns, and proven techniques",
-			"version": "6.1.1",
-			"author": {
-				"name": "Jesse Vincent",
-				"email": "jesse@fsck.com"
-			}
-		},
-		{
 			"name": "engineering-toolkit",
 			"source": {
 				"source": "git-subdir",
