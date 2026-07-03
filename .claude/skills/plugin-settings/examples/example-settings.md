@@ -48,6 +48,8 @@ Contact @team-lead with questions about this configuration.
 
 ## Template: Agent State File
 
+`multi-agent-swarm` below is an illustrative plugin name used to demonstrate the pattern — not a real plugin in this marketplace.
+
 **.claude/multi-agent-swarm.local.md:**
 
 ```markdown

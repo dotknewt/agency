@@ -1,0 +1,20 @@
+{
+  "skill_name": "plugin-settings",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I'm building a PreToolUse hook for my 'lint-guard' plugin. It should read .claude/lint-guard.local.md and only run its checks when the settings file has `enabled: true` in its frontmatter — if the file is missing, or enabled is anything other than true, it should exit cleanly without doing any work.",
+      "expected_output": "A bash hook script that uses the quick-exit pattern: exits 0 immediately if .claude/lint-guard.local.md doesn't exist, otherwise extracts the frontmatter (e.g. with sed between the --- markers) and the `enabled` field (e.g. with grep/sed, quote-stripped), then exits 0 without running any checks unless `enabled` is exactly \"true\". Field-extraction pipelines are guarded (e.g. `|| true`) so an absent optional field doesn't abort the script under `set -e`/`pipefail`."
+    },
+    {
+      "id": 2,
+      "prompt": "Write a /setup-review-bot command that asks the user for a strictness level (strict/standard/lenient) and a max file size, then creates .claude/review-bot.local.md with those values in the frontmatter and a short markdown note in the body.",
+      "expected_output": "A command definition that gathers strictness level and max file size from the user (e.g. via AskUserQuestion), validates/sanitizes the input (mode is one of the allowed values, max size is numeric), and writes .claude/review-bot.local.md with YAML frontmatter containing fields like `validation_level` and `max_file_size` plus a short markdown body. Tells the user the file is saved, is gitignored (not committed), and that Claude Code must be restarted for the new settings to take effect."
+    },
+    {
+      "id": 3,
+      "prompt": "Here's my plugin's settings file .claude/build-guard.local.md — my hook keeps silently doing nothing and I can't figure out why:\n\n```\nenabled: true\nstrict: false\n---\nSome notes here.\n```\n\nCan you tell me what's wrong with this file and fix the parsing logic in my hook so it fails loudly instead of silently no-oping?",
+      "expected_output": "Identifies that the file is malformed: it has only one `---` marker (the closing one) instead of the required opening-and-closing pair, so the standard `sed -n '/^---$/,/^---$/{ /^---$/d; p; }'` frontmatter extraction doesn't find a proper frontmatter block and every field parses as empty, which is why the hook silently behaves as if nothing is configured. Recommends fixing the settings file to add the missing opening `---`, and adding a marker-count validation step (e.g. `grep -c '^---$'` must be >= 2, or running `scripts/validate-settings.sh` first) so a malformed file produces a clear error instead of a silent no-op."
+    }
+  ]
+}
