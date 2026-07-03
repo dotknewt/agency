@@ -14,7 +14,7 @@ Must use an **SSH url** (`git@github.com:...`) — HTTPS fails for these private
 
 ## WIP
 
-- Creating `dotknewt/agents` repo; migrating `agent-doublecheck`, `agent-ember` (kept bundled: each is an `agent.md` + its own dedicated skills)
+- Creating `dotknewt/toolkits` repo; migrating `agency-toolkit`, `github-toolkit`, `docker-toolkit`, `hooks-toolkit`, `instruction-management`
 
 ## ToDo
 
@@ -28,6 +28,7 @@ Must use an **SSH url** (`git@github.com:...`) — HTTPS fails for these private
 
 ## Completed
 
+- 2026-07-03 ??:?? — `dotknewt/agents` created with `agent-doublecheck` + `agent-ember` (each kept bundled: `plugin.json` + `agents/*.md` + its own dedicated skills) and its own `.claude-plugin/marketplace.json`; `dotknewt/agency` updated to source both via `git-subdir` (commit `0bb1c96`); local `agents/` directory removed entirely; verified live — both install with full agent + skills content intact
 - 2026-07-03 ??:?? — `dotknewt/skills` complete with all 4 skills (`agentic-eval`, `context-engineering`, `make-a-monorepo`, `eyeball`) + its own `.claude-plugin/marketplace.json`; `dotknewt/agency` marketplace.json updated to source all 4 via `git-subdir` (commits `0bc04fb`, `2977016`, `5ea5955` — the last one a fixup after `marketplace.json` edits were left unstaged in `2977016` and silently didn't ship); local `skills/` and `agents/agent-eyeball/` directories removed from `dotknewt/agency`; verified live by installing all 4 from `@agency` and inspecting cached content
 - 2026-07-03 ??:?? — Phase 0 smoke test: confirmed a cross-repo `git-subdir` source to a bare `SKILL.md` directory (no `plugin.json`) resolves correctly via `claude plugin install` — the core assumption the whole split depends on
 
